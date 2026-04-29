@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SessionStart hook for superpowers plugin
+# SessionStart hook for Sweet plugin
 
 set -euo pipefail
 
@@ -9,13 +9,79 @@ PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 # Check if legacy skills directory exists and build warning
 warning_message=""
-legacy_skills_dir="${HOME}/.config/superpowers/skills"
+legacy_skills_dir="${HOME}/.config/sweet/skills"
 if [ -d "$legacy_skills_dir" ]; then
-    warning_message="\n\n<important-reminder>IN YOUR FIRST REPLY AFTER SEEING THIS MESSAGE YOU MUST TELL THE USER:⚠️ **WARNING:** Superpowers now uses Claude Code's skills system. Custom skills in ~/.config/superpowers/skills will not be read. Move custom skills to ~/.claude/skills instead. To make this message go away, remove ~/.config/superpowers/skills</important-reminder>"
+    warning_message="\n\n<important-reminder>IN YOUR FIRST REPLY AFTER SEEING THIS MESSAGE YOU MUST TELL THE USER:⚠️ **WARNING:** Sweet now uses Claude Code's skills system. Custom skills in ~/.config/sweet/skills will not be read. Move custom skills to ~/.claude/skills instead. To make this message go away, remove ~/.config/sweet/skills</important-reminder>"
 fi
 
-# Read using-superpowers content
-using_superpowers_content=$(cat "${PLUGIN_ROOT}/skills/using-superpowers/SKILL.md" 2>&1 || echo "Error reading using-superpowers skill")
+# Read using-sweet content
+using_sweet_content=$(cat "${PLUGIN_ROOT}/skills/using-sweet/SKILL.md" 2>&1 || echo "Error reading using-sweet skill")
+
+project_slug() {
+    local remote
+    remote="$(git remote get-url origin 2>/dev/null || true)"
+    if [ -n "$remote" ]; then
+        printf '%s' "$remote" \
+            | sed -E 's#^[a-zA-Z]+://##; s#^git@##; s#:#/#; s#\.git$##; s#[^A-Za-z0-9._/-]+#-#g; s#[/]+#-#g' \
+            | tr '[:upper:]' '[:lower:]'
+    else
+        basename "$(pwd)" | tr '[:upper:]' '[:lower:]' | sed -E 's#[^a-z0-9._-]+#-#g'
+    fi
+}
+
+append_if_exists() {
+    local title="$1"
+    local file="$2"
+    local max_lines="${3:-120}"
+
+    if [ -f "$file" ]; then
+        printf '\n## %s\n\n' "$title"
+        sed -n "1,${max_lines}p" "$file"
+        line_count="$(wc -l < "$file" | tr -d ' ')"
+        if [ "$line_count" -gt "$max_lines" ]; then
+            printf '\n[Truncated to first %s lines of %s]\n' "$max_lines" "$file"
+        fi
+    fi
+}
+
+build_sweet_context() {
+    local slug memory_dir session_dir latest_session
+    slug="$(project_slug)"
+    memory_dir="${HOME}/.sweet/memory/${slug}"
+    session_dir="${memory_dir}/SESSIONS"
+
+    {
+        printf '<SWEET_PROJECT_CONTEXT>\n'
+        printf 'Project slug: %s\n' "$slug"
+        printf 'Working directory: %s\n' "$(pwd)"
+
+        if git rev-parse --git-dir >/dev/null 2>&1; then
+            printf '\n## Git Status\n\n'
+            git status --short 2>/dev/null || true
+            printf '\n## Recent Commits\n\n'
+            git log --oneline -10 2>/dev/null || true
+        fi
+
+        append_if_exists "Sweet Memory" "${memory_dir}/MEMORY.md" 120
+        append_if_exists "Sweet Failure Modes" "${memory_dir}/FAILURES.md" 120
+
+        if [ -d "$session_dir" ]; then
+            latest_session="$(find "$session_dir" -type f -name '*.md' -mtime -7 2>/dev/null | sort | tail -1 || true)"
+            if [ -n "$latest_session" ]; then
+                append_if_exists "Latest Sweet Session" "$latest_session" 80
+            fi
+        fi
+
+        append_if_exists "Sweet FRD" ".sweet/FRD.md" 160
+        append_if_exists "Sweet FRD" "docs/sweet/FRD.md" 160
+        append_if_exists "Sweet PLAN" ".sweet/PLAN.md" 160
+        append_if_exists "Sweet PLAN" "docs/sweet/PLAN.md" 160
+        append_if_exists "Sweet Caveats" ".sweet/CAVEATS.md" 100
+        append_if_exists "Sweet Caveats" "docs/sweet/CAVEATS.md" 100
+
+        printf '\n</SWEET_PROJECT_CONTEXT>'
+    }
+}
 
 # Escape string for JSON embedding using bash parameter substitution.
 # Each ${s//old/new} is a single C-level pass - orders of magnitude
@@ -30,27 +96,22 @@ escape_for_json() {
     printf '%s' "$s"
 }
 
-using_superpowers_escaped=$(escape_for_json "$using_superpowers_content")
+using_sweet_escaped=$(escape_for_json "$using_sweet_content")
 warning_escaped=$(escape_for_json "$warning_message")
-session_context="<EXTREMELY_IMPORTANT>\nYou have superpowers.\n\n**Below is the full content of your 'superpowers:using-superpowers' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_superpowers_escaped}\n\n${warning_escaped}\n</EXTREMELY_IMPORTANT>"
+sweet_context_content="$(build_sweet_context 2>/dev/null || true)"
+sweet_context_escaped=$(escape_for_json "$sweet_context_content")
+session_context="<EXTREMELY_IMPORTANT>\nYou have Sweet, a cross-harness SWE workflow.\n\n**Below is the full content of your 'using-sweet' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_sweet_escaped}\n\n${warning_escaped}\n\n${sweet_context_escaped}\n</EXTREMELY_IMPORTANT>"
 
 # Output context injection as JSON.
-# Cursor hooks expect additional_context (snake_case).
 # Claude Code hooks expect hookSpecificOutput.additionalContext (nested).
 # Copilot CLI (v1.0.11+) and others expect additionalContext (top-level, SDK standard).
-# Claude Code reads BOTH additional_context and hookSpecificOutput without
-# deduplication, so we must emit only the field the current platform consumes.
 #
-# Uses printf instead of heredoc to work around bash 5.3+ heredoc hang.
-# See: https://github.com/obra/superpowers/issues/571
-if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
-  # Cursor sets CURSOR_PLUGIN_ROOT (may also set CLAUDE_PLUGIN_ROOT)
-  printf '{\n  "additional_context": "%s"\n}\n' "$session_context"
-elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
+# Uses printf instead of heredoc to avoid shell compatibility issues.
+if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
   # Claude Code sets CLAUDE_PLUGIN_ROOT without COPILOT_CLI
   printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
 else
-  # Copilot CLI (sets COPILOT_CLI=1) or unknown platform — SDK standard format
+  # Unknown platform — SDK standard format
   printf '{\n  "additionalContext": "%s"\n}\n' "$session_context"
 fi
 
