@@ -1,16 +1,16 @@
 {
-  "name": "superpowers",
+  "name": "sweet",
   "version": "5.0.7",
-  "description": "An agentic skills framework & software development methodology that works: planning, TDD, debugging, and collaboration workflows.",
+  "description": "A personal cross-harness SWE workflow plugin for Codex and Claude Code: structured specs, component acceptance gates, memory, and agentic delivery skills.",
   "author": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com",
-    "url": "https://github.com/obra"
+    "name": "mattoh91",
+    "url": "https://github.com/mattoh91"
   },
-  "homepage": "https://github.com/obra/superpowers",
-  "repository": "https://github.com/obra/superpowers",
+  "homepage": "https://github.com/mattoh91/sweet",
+  "repository": "https://github.com/mattoh91/sweet",
   "license": "MIT",
   "keywords": [
+    "swe-harness",
     "brainstorming",
     "subagent-driven-development",
     "skills",
@@ -22,10 +22,10 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Superpowers",
-    "shortDescription": "Planning, TDD, debugging, and delivery workflows for coding agents",
-    "longDescription": "Use Superpowers to guide agent work through brainstorming, implementation planning, test-driven development, systematic debugging, parallel execution, code review, and finish-the-branch workflows.",
-    "developerName": "Jesse Vincent",
+    "displayName": "Sweet",
+    "shortDescription": "Structured SWE harness workflows for Codex and Claude Code",
+    "longDescription": "Use Sweet to guide agent work through structured requirements, architecture artifacts, implementation planning, component-level automated acceptance gates, test-driven development, memory, debugging, parallel execution, code review, and finish-the-branch workflows.",
+    "developerName": "mattoh91",
     "category": "Coding",
     "capabilities": [
       "Interactive",
@@ -34,10 +34,10 @@
     ],
     "defaultPrompt": [
       "I've got an idea for something I'd like to build.",
-      "Let's add a feature to this project."
+      "Let's scaffold a Sweet project workflow."
     ],
     "brandColor": "#F59E0B",
-    "composerIcon": "./assets/superpowers-small.svg",
+    "composerIcon": "./assets/sweet-small.svg",
     "logo": "./assets/app-icon.png",
     "screenshots": []
   }

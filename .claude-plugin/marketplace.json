@@ -1,19 +1,17 @@
 {
-  "name": "superpowers-dev",
-  "description": "Development marketplace for Superpowers core skills library",
+  "name": "sweet-dev",
+  "description": "Development marketplace for the Sweet cross-harness SWE workflow plugin",
   "owner": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com"
+    "name": "mattoh91"
   },
   "plugins": [
     {
-      "name": "superpowers",
-      "description": "Core skills library for Claude Code: TDD, debugging, collaboration patterns, and proven techniques",
+      "name": "sweet",
+      "description": "Personal cross-harness SWE workflow plugin: structured specs, component acceptance gates, memory, and agentic delivery skills.",
       "version": "5.0.7",
       "source": "./",
       "author": {
-        "name": "Jesse Vincent",
-        "email": "jesse@fsck.com"
+        "name": "mattoh91"
       }
     }
   ]

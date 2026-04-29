@@ -1,198 +1,218 @@
-# Superpowers
+# Sweet
 
-Superpowers is a complete software development methodology for your coding agents, built on top of a set of composable skills and some initial instructions that make sure your agent uses them.
+Sweet is an opinionated SWE harness for Claude Code and Codex. It packages reusable skills, project artifacts, component-level acceptance gates, and memory conventions so agents can move from idea to implementation with less context loss and less unit-test micromanagement.
 
-## How it works
+Sweet is built around two host surfaces:
 
-It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do. 
+- **Claude Code:** plugin manifest, skills, agents, slash commands, and lifecycle hooks.
+- **Codex:** plugin manifest, local marketplace metadata, and shared skills. Claude hook behavior is represented as explicit skill-side fallbacks.
 
-Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest. 
+## Core Contract
 
-After you've signed off on the design, your agent puts together an implementation plan that's clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY. 
+Sweet projects use these committed artifacts by default:
 
-Next up, once you say "go", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for Claude to be able to work autonomously for a couple hours at a time without deviating from the plan you put together.
+- `.sweet/PRD.md` — product and business requirements.
+- `.sweet/FRD.md` — epics, component/capability mapping, functional requirements, and progress.
+- `.sweet/ARD.md` — architecture decisions, options, and consequences.
+- `.sweet/CAVEATS.md` — assumptions, dependencies, constraints, risks, and known unknowns.
+- `.sweet/ARCHI.md` — C4 L1/L2 and sequence diagrams in Mermaid.
+- `.sweet/PLAN.md` — component-by-component implementation plan.
 
-There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers.
+`docs/sweet/` is also acceptable for repos that already keep planning docs under `docs/`. Root-level planning files are opt-in.
 
+Runtime memory is per-user and out of tree:
 
-## Sponsorship
-
-If Superpowers has helped you do stuff that makes money and you are so inclined, I'd greatly appreciate it if you'd consider [sponsoring my opensource work](https://github.com/sponsors/obra).
-
-Thanks! 
-
-- Jesse
-
-
-## Installation
-
-**Note:** Installation differs by platform. 
-
-### Claude Code Official Marketplace
-
-Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/superpowers)
-
-Install the plugin from Anthropic's official marketplace:
-
-```bash
-/plugin install superpowers@claude-plugins-official
+```text
+~/.sweet/memory/<project-slug>/
+├── MEMORY.md
+├── FAILURES.md
+└── SESSIONS/
 ```
 
-### Claude Code (Superpowers Marketplace)
+## Agentic Loop
 
-The Superpowers marketplace provides Superpowers and some other related plugins for Claude Code.
+```mermaid
+flowchart TD
+    A[User starts or resumes work] --> B{Host}
+    B -->|Claude Code| C[Plugin loads skills, agents, commands, hooks]
+    B -->|Codex| D[Plugin loads bundled skills]
 
-In Claude Code, register the marketplace first:
+    C --> E[SessionStart hook injects Sweet bootstrap + project context]
+    D --> F[Codex discovers Sweet skills from plugin]
+    E --> G[User prompt]
+    F --> G
 
-```bash
-/plugin marketplace add obra/superpowers-marketplace
+    G --> H{Relevant skill?}
+    H -->|new idea / feature| I[brainstorming]
+    H -->|spec exists| J[writing-plans]
+    H -->|plan exists| K[subagent-driven-development or executing-plans]
+    H -->|bug / failure| L[systematic-debugging]
+    H -->|resume context| M[preamble]
+    H -->|scaffold repo| N[scaffolding-repo]
+
+    I --> I1[Probe requirements: sample data, scenarios, analogous tools]
+    I1 --> I2[Write PRD, FRD, ARD, CAVEATS, ARCHI]
+    I2 --> J
+
+    J --> J1[Write component-level PLAN]
+    J1 --> J2[Define automated component acceptance gates]
+    J2 --> K
+
+    K --> K1[Implement with internal TDD]
+    K1 --> K2[Run focused tests]
+    K2 --> K3[Run component acceptance gate]
+    K3 --> K4[Code review]
+    K4 --> K5[Update FRD progress and memory]
+    K5 --> O{More components?}
+    O -->|yes| K
+    O -->|no| P[finishing-a-development-branch]
+
+    L --> L1[Root cause and fix]
+    L1 --> L2[verification-before-completion]
+    L2 --> K5
+
+    P --> Q[Merge, PR, keep branch, or discard]
 ```
 
-Then install the plugin from this marketplace:
+## Hook Lifecycle
 
-```bash
-/plugin install superpowers@superpowers-marketplace
+Claude Code has lifecycle hooks. Codex plugin skills do not receive the same hook events, so Sweet provides explicit skills such as `preamble` and `capturing-failure-modes` for Codex.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Claude as Claude Code
+    participant Hooks as Sweet Hooks
+    participant Memory as ~/.sweet/memory
+    participant Agent
+
+    User->>Claude: Start / resume / clear / compact
+    Claude->>Hooks: SessionStart
+    Hooks->>Memory: Read MEMORY, FAILURES, recent SESSIONS
+    Hooks->>Hooks: Read .sweet/FRD.md, .sweet/PLAN.md, git status/log
+    Hooks-->>Claude: additionalContext
+    Claude->>Agent: Prompt + Sweet context
+
+    Agent->>Agent: Use skills and implement components
+    Agent->>Memory: Update MEMORY/FAILURES through skills when appropriate
+
+    User->>Claude: Compact
+    Claude->>Hooks: PreCompact manual/auto
+    Hooks->>Memory: Persist compaction marker and git state
+
+    User->>Claude: End session
+    Claude->>Hooks: SessionEnd
+    Hooks->>Memory: Persist session-end marker and git state
 ```
 
-### OpenAI Codex CLI
+Current hook files:
 
-- Open plugin search interface
+- `hooks/session-start` — injects Sweet bootstrap, memory, recent sessions, FRD/PLAN/CAVEATS snippets, and git state.
+- `hooks/pre-compact` — records compaction marker, raw hook payload, branch, and git status.
+- `hooks/session-end` — records session-end marker, raw hook payload, branch, and git status.
+
+## Component Acceptance Gates
+
+Each FRD epic/component must have an automated gate. Acceptable forms:
+
+- DTO or data-contract checks across system/domain boundaries.
+- API or CLI scenario tests.
+- Automated e2e/user-flow tests through Playwright, browser automation, computer-use tooling, or equivalent project harnesses.
+
+Unit TDD remains internal to implementation. Component completion is proven by the automated acceptance gate plus review.
+
+## Claude Code Setup
+
+For local plugin development:
 
 ```bash
+claude --plugin-dir /Users/OHM02/Repos/sweet
+```
+
+After edits:
+
+```text
+/reload-plugins
+```
+
+For local marketplace installation:
+
+```text
+/plugin marketplace add /Users/OHM02/Repos/sweet
+/plugin install sweet@sweet-dev
+```
+
+Restart Claude Code after installation.
+
+## Codex Setup
+
+Codex supports plugins. Sweet includes `.codex-plugin/plugin.json` and a local marketplace at `.agents/plugins/marketplace.json`.
+
+```bash
+codex plugin marketplace add /Users/OHM02/Repos/sweet
+```
+
+Restart Codex, open:
+
+```text
 /plugins
 ```
 
-Search for Superpowers
+Choose `Sweet Local`, install `Sweet`, then start a new thread. You can invoke skills explicitly with `@sweet` or by asking for the workflow by name.
+
+For direct skill development without plugin installation:
 
 ```bash
-superpowers
+mkdir -p ~/.agents/skills
+ln -sfn /Users/OHM02/Repos/sweet/skills ~/.agents/skills/sweet
 ```
 
-Select `Install Plugin`
+For subagent workflows in Codex, enable multi-agent support in `~/.codex/config.toml`:
 
-### OpenAI Codex App
+```toml
+[features]
+multi_agent = true
+```
 
-- In the Codex app, click on Plugins in the sidebar.
-- You should see `Superpowers` in the Coding section. 
-- Click the `+` next to Superpowers and follow the prompts.
+## Starting Work
 
-
-### Cursor (via Plugin Marketplace)
-
-In Cursor Agent chat, install from marketplace:
+New repo:
 
 ```text
-/add-plugin superpowers
+Use Sweet to scaffold this repo.
 ```
 
-or search for "superpowers" in the plugin marketplace.
+New feature:
 
-### OpenCode
-
-Tell OpenCode:
-
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
+```text
+Use Sweet to brainstorm and plan this feature.
 ```
 
-**Detailed docs:** [docs/README.opencode.md](docs/README.opencode.md)
+Resume after a cleared or compacted session:
 
-### GitHub Copilot CLI
+```text
+Use the preamble skill to generate my session context.
+```
+
+Capture lessons before stopping:
+
+```text
+Use the capturing-failure-modes skill before we end this session.
+```
+
+## Verification
+
+Useful checks:
 
 ```bash
-copilot plugin marketplace add obra/superpowers-marketplace
-copilot plugin install superpowers@superpowers-marketplace
+node -e "for (const f of ['.agents/plugins/marketplace.json','package.json','.claude-plugin/plugin.json','.claude-plugin/marketplace.json','.codex-plugin/plugin.json','gemini-extension.json','.version-bump.json','hooks/hooks.json']) JSON.parse(require('fs').readFileSync(f,'utf8'))"
+bash -n hooks/session-start hooks/pre-compact hooks/session-end scripts/sync-to-codex-plugin.sh
+tests/skill-triggering/run-all.sh
+tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 ```
 
-### Gemini CLI
-
-```bash
-gemini extensions install https://github.com/obra/superpowers
-```
-
-To update:
-
-```bash
-gemini extensions update superpowers
-```
-
-## The Basic Workflow
-
-1. **brainstorming** - Activates before writing code. Refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves design document.
-
-2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
-
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
-
-4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
-
-5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
-
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
-
-7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
-
-**The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
-
-## What's Inside
-
-### Skills Library
-
-**Testing**
-- **test-driven-development** - RED-GREEN-REFACTOR cycle (includes testing anti-patterns reference)
-
-**Debugging**
-- **systematic-debugging** - 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
-- **verification-before-completion** - Ensure it's actually fixed
-
-**Collaboration** 
-- **brainstorming** - Socratic design refinement
-- **writing-plans** - Detailed implementation plans
-- **executing-plans** - Batch execution with checkpoints
-- **dispatching-parallel-agents** - Concurrent subagent workflows
-- **requesting-code-review** - Pre-review checklist
-- **receiving-code-review** - Responding to feedback
-- **using-git-worktrees** - Parallel development branches
-- **finishing-a-development-branch** - Merge/PR decision workflow
-- **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
-
-**Meta**
-- **writing-skills** - Create new skills following best practices (includes testing methodology)
-- **using-superpowers** - Introduction to the skills system
-
-## Philosophy
-
-- **Test-Driven Development** - Write tests first, always
-- **Systematic over ad-hoc** - Process over guessing
-- **Complexity reduction** - Simplicity as primary goal
-- **Evidence over claims** - Verify before declaring success
-
-Read [the original release announcement](https://blog.fsck.com/2025/10/09/superpowers/).
-
-## Contributing
-
-The general contribution process for Superpowers is below. Keep in mind that we don't generally accept contributions of new skills and that any updates to skills must work across all of the coding agents we support.
-
-1. Fork the repository
-2. Switch to the 'dev' branch
-3. Create a branch for your work
-4. Follow the `writing-skills` skill for creating and testing new and modified skills
-5. Submit a PR, being sure to fill in the pull request template.
-
-See `skills/writing-skills/SKILL.md` for the complete guide.
-
-## Updating
-
-Superpowers updates are somewhat coding-agent dependent, but are often automatic.
+Some checks require Claude Code, Codex, GitHub CLI, or network access. If unavailable, run static validation and document what was skipped.
 
 ## License
 
-MIT License - see LICENSE file for details
-
-## Community
-
-Superpowers is built by [Jesse Vincent](https://blog.fsck.com) and the rest of the folks at [Prime Radiant](https://primeradiant.com).
-
-- **Discord**: [Join us](https://discord.gg/35wsABTejz) for community support, questions, and sharing what you're building with Superpowers
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Release announcements**: [Sign up](https://primeradiant.com/superpowers/) to get notified about new versions
+MIT.

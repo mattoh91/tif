@@ -1,67 +1,51 @@
-# Installing Superpowers for Codex
+# Installing Sweet for Codex
 
-Enable superpowers skills in Codex via native skill discovery. Just clone and symlink.
+Sweet can be installed as a Codex plugin from this local checkout.
 
-## Prerequisites
+## Local Plugin Installation
 
-- Git
+```bash
+codex plugin marketplace add /Users/OHM02/Repos/sweet
+```
 
-## Installation
+Restart Codex, open:
 
-1. **Clone the superpowers repository:**
-   ```bash
-   git clone https://github.com/obra/superpowers.git ~/.codex/superpowers
-   ```
+```text
+/plugins
+```
 
-2. **Create the skills symlink:**
-   ```bash
-   mkdir -p ~/.agents/skills
-   ln -s ~/.codex/superpowers/skills ~/.agents/skills/superpowers
-   ```
+Choose `Sweet Local`, install `Sweet`, then start a new thread.
 
-   **Windows (PowerShell):**
-   ```powershell
-   New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.agents\skills"
-   cmd /c mklink /J "$env:USERPROFILE\.agents\skills\superpowers" "$env:USERPROFILE\.codex\superpowers\skills"
-   ```
+## Direct Skill Symlink
 
-3. **Restart Codex** (quit and relaunch the CLI) to discover the skills.
+For raw skill development without installing the plugin:
 
-## Migrating from old bootstrap
+```bash
+mkdir -p ~/.agents/skills
+ln -sfn /Users/OHM02/Repos/sweet/skills ~/.agents/skills/sweet
+```
 
-If you installed superpowers before native skill discovery, you need to:
+Restart Codex after changing the symlink.
 
-1. **Update the repo:**
-   ```bash
-   cd ~/.codex/superpowers && git pull
-   ```
+## Subagents
 
-2. **Create the skills symlink** (step 2 above) — this is the new discovery mechanism.
+For subagent workflows, enable multi-agent support in `~/.codex/config.toml`:
 
-3. **Remove the old bootstrap block** from `~/.codex/AGENTS.md` — any block referencing `superpowers-codex bootstrap` is no longer needed.
-
-4. **Restart Codex.**
+```toml
+[features]
+multi_agent = true
+```
 
 ## Verify
 
-```bash
-ls -la ~/.agents/skills/superpowers
+Ask Codex:
+
+```text
+Use Sweet to scaffold this repo.
 ```
 
-You should see a symlink (or junction on Windows) pointing to your superpowers skills directory.
+Or:
 
-## Updating
-
-```bash
-cd ~/.codex/superpowers && git pull
+```text
+Use the preamble skill to generate my session context.
 ```
-
-Skills update instantly through the symlink.
-
-## Uninstalling
-
-```bash
-rm ~/.agents/skills/superpowers
-```
-
-Optionally delete the clone: `rm -rf ~/.codex/superpowers`.
