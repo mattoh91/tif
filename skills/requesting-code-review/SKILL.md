@@ -5,7 +5,7 @@ description: Use when completing tasks, implementing major features, or before m
 
 # Requesting Code Review
 
-Dispatch superpowers:code-reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history. This keeps the reviewer focused on the work product, not your thought process, and preserves your own context for continued work.
+Dispatch sweet:code-reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history. This keeps the reviewer focused on the work product, not your thought process, and preserves your own context for continued work.
 
 **Core principle:** Review early, review often.
 
@@ -13,6 +13,7 @@ Dispatch superpowers:code-reviewer subagent to catch issues before they cascade.
 
 **Mandatory:**
 - After each task in subagent-driven development
+- After each Sweet component acceptance gate passes
 - After completing major feature
 - Before merge to main
 
@@ -31,7 +32,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 **2. Dispatch code-reviewer subagent:**
 
-Use Task tool with superpowers:code-reviewer type, fill template at `code-reviewer.md`
+Use Task tool with sweet:code-reviewer type, fill template at `code-reviewer.md`
 
 **Placeholders:**
 - `{WHAT_WAS_IMPLEMENTED}` - What you just built
@@ -56,9 +57,9 @@ You: Let me request code review before proceeding.
 BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | awk '{print $1}')
 HEAD_SHA=$(git rev-parse HEAD)
 
-[Dispatch superpowers:code-reviewer subagent]
+[Dispatch sweet:code-reviewer subagent]
   WHAT_WAS_IMPLEMENTED: Verification and repair functions for conversation index
-  PLAN_OR_REQUIREMENTS: Task 2 from docs/superpowers/plans/deployment-plan.md
+  PLAN_OR_REQUIREMENTS: Task 2 from docs/sweet/plans/deployment-plan.md
   BASE_SHA: a7981ec
   HEAD_SHA: 3df7661
   DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
@@ -88,6 +89,13 @@ You: [Fix progress indicators]
 **Ad-Hoc Development:**
 - Review before merge
 - Review when stuck
+
+**Sweet Component Work:**
+- Verify the component acceptance gate exists and is automated
+- Confirm the gate matches the FRD epic/component
+- Confirm the gate was run and passed
+- Confirm `.sweet/FRD.md` or `docs/sweet/FRD.md` progress was updated when appropriate
+- Treat missing or non-runnable component gates as Important unless the component is genuinely not testable through an automated boundary
 
 ## Red Flags
 

@@ -9,7 +9,7 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 Guide completion of development work by presenting clear options and handling chosen workflow.
 
-**Core principle:** Verify tests → Present options → Execute choice → Clean up.
+**Core principle:** Verify tests and component gates → update Sweet state → present options → execute choice → clean up.
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
@@ -37,7 +37,36 @@ Stop. Don't proceed to Step 2.
 
 **If tests pass:** Continue to Step 2.
 
-### Step 2: Determine Base Branch
+### Step 2: Update Sweet State
+
+If this is a Sweet-managed project, update durable project state before presenting merge/PR options.
+
+Check for:
+
+- `.sweet/FRD.md` or `docs/sweet/FRD.md`
+- `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
+- `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md`
+- `~/.sweet/memory/<project-slug>/MEMORY.md`
+- `~/.sweet/memory/<project-slug>/FAILURES.md`
+
+For each completed component/epic:
+
+1. Verify the automated component acceptance gate passed, not just unit tests.
+2. Update FRD progress/status for the component.
+3. Record meaningful deviations from the plan in the plan, caveats, or memory.
+4. Append durable implementation notes to `~/.sweet/memory/<project-slug>/MEMORY.md`:
+   - component completed
+   - acceptance gate command/result
+   - design decisions made during implementation
+   - deviations from `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
+   - follow-ups
+5. If repeated failure patterns occurred, use `capturing-failure-modes` before ending the session.
+
+After a component is completed and state is updated, suggest clearing or compacting before starting another large component so the next session can restart from `.sweet/` artifacts and `~/.sweet/memory`.
+
+Derive `<project-slug>` from git remote when available, otherwise use the directory name.
+
+### Step 3: Determine Base Branch
 
 ```bash
 # Try common base branches
@@ -46,7 +75,7 @@ git merge-base HEAD main 2>/dev/null || git merge-base HEAD master 2>/dev/null
 
 Or ask: "This branch split from main - is that correct?"
 
-### Step 3: Present Options
+### Step 4: Present Options
 
 Present exactly these 4 options:
 
@@ -63,7 +92,7 @@ Which option?
 
 **Don't add explanation** - keep options concise.
 
-### Step 4: Execute Choice
+### Step 5: Execute Choice
 
 #### Option 1: Merge Locally
 
@@ -84,7 +113,7 @@ git merge <feature-branch>
 git branch -d <feature-branch>
 ```
 
-Then: Cleanup worktree (Step 5)
+Then: Cleanup worktree (Step 6)
 
 #### Option 2: Push and Create PR
 
@@ -103,7 +132,7 @@ EOF
 )"
 ```
 
-Then: Cleanup worktree (Step 5)
+Then: Cleanup worktree (Step 6)
 
 #### Option 3: Keep As-Is
 
@@ -131,9 +160,9 @@ git checkout <base-branch>
 git branch -D <feature-branch>
 ```
 
-Then: Cleanup worktree (Step 5)
+Then: Cleanup worktree (Step 6)
 
-### Step 5: Cleanup Worktree
+### Step 6: Cleanup Worktree
 
 **For Options 1, 2, 4:**
 
@@ -164,6 +193,10 @@ git worktree remove <worktree-path>
 - **Problem:** Merge broken code, create failing PR
 - **Fix:** Always verify tests before offering options
 
+**Skipping Sweet state updates**
+- **Problem:** Next session starts from stale FRD/PLAN/memory
+- **Fix:** Update FRD progress and `~/.sweet/memory/<project-slug>/MEMORY.md` before presenting completion options
+
 **Open-ended questions**
 - **Problem:** "What should I do next?" → ambiguous
 - **Fix:** Present exactly 4 structured options
@@ -180,12 +213,14 @@ git worktree remove <worktree-path>
 
 **Never:**
 - Proceed with failing tests
+- Mark Sweet components complete without a passing automated component acceptance gate
 - Merge without verifying tests on result
 - Delete work without confirmation
 - Force-push without explicit request
 
 **Always:**
 - Verify tests before offering options
+- Update Sweet FRD progress and memory when applicable
 - Present exactly 4 options
 - Get typed confirmation for Option 4
 - Clean up worktree for Options 1 & 4 only

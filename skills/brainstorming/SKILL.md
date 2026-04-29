@@ -24,12 +24,13 @@ You MUST create a task for each of these items and complete them in order:
 1. **Explore project context** — check files, docs, recent commits
 2. **Offer visual companion** (if topic will involve visual questions) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
 3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-4. **Propose 2-3 approaches** — with trade-offs and your recommendation
-5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+4. **Probe requirements for missed features/data** — request sample data or user scenarios; audit analogous tools when web/docs access is available; use user-provided/local materials when not
+5. **Propose 2-3 approaches** — with trade-offs and your recommendation
+6. **Present design** — in sections scaled to their complexity, get user approval after each section
+7. **Write Sweet spec set** — save `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, and `ARCHI.md` under `.sweet/` or `docs/sweet/`, then commit
+8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
+9. **User reviews written spec** — ask user to review the spec files before proceeding
+10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
@@ -39,10 +40,11 @@ digraph brainstorming {
     "Visual questions ahead?" [shape=diamond];
     "Offer Visual Companion\n(own message, no other content)" [shape=box];
     "Ask clarifying questions" [shape=box];
+    "Probe requirements\n(sample data/scenarios/tool audit)" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
-    "Write design doc" [shape=box];
+    "Write Sweet spec set" [shape=box];
     "Spec self-review\n(fix inline)" [shape=box];
     "User reviews spec?" [shape=diamond];
     "Invoke writing-plans skill" [shape=doublecircle];
@@ -51,14 +53,15 @@ digraph brainstorming {
     "Visual questions ahead?" -> "Offer Visual Companion\n(own message, no other content)" [label="yes"];
     "Visual questions ahead?" -> "Ask clarifying questions" [label="no"];
     "Offer Visual Companion\n(own message, no other content)" -> "Ask clarifying questions";
-    "Ask clarifying questions" -> "Propose 2-3 approaches";
+    "Ask clarifying questions" -> "Probe requirements\n(sample data/scenarios/tool audit)";
+    "Probe requirements\n(sample data/scenarios/tool audit)" -> "Propose 2-3 approaches";
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Write design doc" [label="yes"];
-    "Write design doc" -> "Spec self-review\n(fix inline)";
+    "User approves design?" -> "Write Sweet spec set" [label="yes"];
+    "Write Sweet spec set" -> "Spec self-review\n(fix inline)";
     "Spec self-review\n(fix inline)" -> "User reviews spec?";
-    "User reviews spec?" -> "Write design doc" [label="changes requested"];
+    "User reviews spec?" -> "Write Sweet spec set" [label="changes requested"];
     "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
 }
 ```
@@ -77,6 +80,13 @@ digraph brainstorming {
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
 
+**Probing for missed requirements:**
+
+- Ask for sample inputs, outputs, data files, screenshots, exports, or realistic user scenarios when the domain depends on data shape or workflows.
+- If web/docs access is available and useful, inspect analogous off-the-shelf tools, product docs, or API docs to identify missing features, edge cases, and data elements.
+- If web/docs access is unavailable, ask the user for comparable tools, docs, sample data, screenshots, exports, or 3-5 realistic scenarios and perform the same missing-feature audit from those materials.
+- Flag gaps explicitly before proposing approaches.
+
 **Exploring approaches:**
 
 - Propose 2-3 different approaches with trade-offs
@@ -89,6 +99,7 @@ digraph brainstorming {
 - Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced
 - Ask after each section whether it looks right so far
 - Cover: architecture, components, data flow, error handling, testing
+- For testing, identify the automated component acceptance gate for each epic/component: DTO/data-contract check, API scenario, automated e2e/user-flow, or equivalent project-specific harness check.
 - Be ready to go back and clarify if something doesn't make sense
 
 **Design for isolation and clarity:**
@@ -108,25 +119,32 @@ digraph brainstorming {
 
 **Documentation:**
 
-- Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
-  - (User preferences for spec location override this default)
+- Write the validated design as a Sweet spec set:
+  - `.sweet/PRD.md` or `docs/sweet/PRD.md` — product/business requirements, users, epics, non-goals
+  - `.sweet/FRD.md` or `docs/sweet/FRD.md` — functional requirements, epic-to-component map, automated component acceptance gates, progress
+  - `.sweet/ARD.md` or `docs/sweet/ARD.md` — architecture decisions, options, consequences
+  - `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md` — assumptions, dependencies, constraints, known unknowns
+  - `.sweet/ARCHI.md` or `docs/sweet/ARCHI.md` — Mermaid C4 L1/L2 and sequence diagrams
+- Use `.sweet/` by default. Use `docs/sweet/` when the repo already organizes project docs under `docs/`.
+- Root-level `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `PLAN.md` are allowed only when the user explicitly requests root-level planning files.
 - Use elements-of-style:writing-clearly-and-concisely skill if available
-- Commit the design document to git
+- Commit the spec set to git
 
 **Spec Self-Review:**
-After writing the spec document, look at it with fresh eyes:
+After writing the spec set, look at it with fresh eyes:
 
 1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
-2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
+2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the FRD? Does every PRD epic map to an FRD component?
 3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
+4. **Acceptance gate check:** Does every FRD component have an automated component acceptance gate?
+5. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
 
 Fix any issues inline. No need to re-review — just fix and move on.
 
 **User Review Gate:**
 After the spec review loop passes, ask the user to review the written spec before proceeding:
 
-> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
+> "Spec set written and committed under `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
 
 Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
 

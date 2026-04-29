@@ -13,6 +13,8 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 **Violating the letter of the rules is violating the spirit of the rules.**
 
+**Sweet layering:** TDD is the implementer-internal loop. For component/epic completion, also use `component-functional-testing` to define and run the automated component acceptance gate: DTO/data-contract checks, API scenarios, Playwright/browser/computer-use flows, or equivalent harness automation.
+
 ## When to Use
 
 **Always:**
@@ -194,6 +196,19 @@ Keep tests green. Don't add behavior.
 ### Repeat
 
 Next failing test for next feature.
+
+## Component Acceptance Gate
+
+After the focused TDD loop for a component is green, run the component acceptance gate from the FRD/plan before marking the component complete.
+
+The gate is not a replacement for TDD. It is the higher-level proof that the component works across the boundary that matters:
+
+- data shape across system/domain boundaries
+- public API or CLI scenario
+- automated e2e/user-flow journey
+- project-specific harness check
+
+If the gate fails, return to RED-GREEN-REFACTOR or systematic debugging. Do not mark the FRD epic complete from unit tests alone.
 
 ## Good Tests
 
