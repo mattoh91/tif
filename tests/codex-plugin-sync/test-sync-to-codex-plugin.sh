@@ -192,12 +192,12 @@ EOF
 
     cat > "$repo/.codex-plugin/plugin.json" <<EOF
 {
-  "name": "superpowers",
+  "name": "sweet",
   "version": "$MANIFEST_VERSION"
 }
 EOF
 
-    cat > "$repo/assets/superpowers-small.svg" <<'EOF'
+    cat > "$repo/assets/sweet-small.svg" <<'EOF'
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"></svg>
 EOF
 
@@ -219,7 +219,7 @@ EOF
         .codex-plugin/plugin.json \
         .gitignore \
         assets/app-icon.png \
-        assets/superpowers-small.svg \
+        assets/sweet-small.svg \
         package.json \
         scripts/sync-to-codex-plugin.sh \
         skills/example/SKILL.md
@@ -231,15 +231,15 @@ EOF
 write_destination_fixture() {
     local repo="$1"
 
-    mkdir -p "$repo/plugins/superpowers/skills/example"
-    printf 'fixture keep\n' > "$repo/plugins/superpowers/.fixture-keep"
-    cat > "$repo/plugins/superpowers/skills/example/SKILL.md" <<'EOF'
+    mkdir -p "$repo/plugins/sweet/skills/example"
+    printf 'fixture keep\n' > "$repo/plugins/sweet/.fixture-keep"
+    cat > "$repo/plugins/sweet/skills/example/SKILL.md" <<'EOF'
 # Example Skill
 
 Fixture content.
 EOF
-    git -C "$repo" add plugins/superpowers/.fixture-keep
-    git -C "$repo" add plugins/superpowers/skills/example/SKILL.md
+    git -C "$repo" add plugins/sweet/.fixture-keep
+    git -C "$repo" add plugins/sweet/skills/example/SKILL.md
 
     commit_fixture "$repo" "Initial destination fixture"
 }
@@ -247,7 +247,7 @@ EOF
 dirty_tracked_destination_skill() {
     local repo="$1"
 
-    cat > "$repo/plugins/superpowers/skills/example/SKILL.md" <<'EOF'
+    cat > "$repo/plugins/sweet/skills/example/SKILL.md" <<'EOF'
 # Example Skill
 
 Locally modified fixture content.
@@ -258,38 +258,38 @@ write_synced_destination_fixture() {
     local repo="$1"
 
     mkdir -p \
-        "$repo/plugins/superpowers/.codex-plugin" \
-        "$repo/plugins/superpowers/.private-journal" \
-        "$repo/plugins/superpowers/assets" \
-        "$repo/plugins/superpowers/skills/example"
+        "$repo/plugins/sweet/.codex-plugin" \
+        "$repo/plugins/sweet/.private-journal" \
+        "$repo/plugins/sweet/assets" \
+        "$repo/plugins/sweet/skills/example"
 
-    cat > "$repo/plugins/superpowers/.codex-plugin/plugin.json" <<EOF
+    cat > "$repo/plugins/sweet/.codex-plugin/plugin.json" <<EOF
 {
-  "name": "superpowers",
+  "name": "sweet",
   "version": "$MANIFEST_VERSION"
 }
 EOF
 
-    cat > "$repo/plugins/superpowers/assets/superpowers-small.svg" <<'EOF'
+    cat > "$repo/plugins/sweet/assets/sweet-small.svg" <<'EOF'
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"></svg>
 EOF
 
-    printf 'png fixture\n' > "$repo/plugins/superpowers/assets/app-icon.png"
+    printf 'png fixture\n' > "$repo/plugins/sweet/assets/app-icon.png"
 
-    cat > "$repo/plugins/superpowers/skills/example/SKILL.md" <<'EOF'
+    cat > "$repo/plugins/sweet/skills/example/SKILL.md" <<'EOF'
 # Example Skill
 
 Fixture content.
 EOF
 
-    printf 'tracked keep\n' > "$repo/plugins/superpowers/.private-journal/keep.txt"
+    printf 'tracked keep\n' > "$repo/plugins/sweet/.private-journal/keep.txt"
 
     git -C "$repo" add \
-        plugins/superpowers/.codex-plugin/plugin.json \
-        plugins/superpowers/assets/app-icon.png \
-        plugins/superpowers/assets/superpowers-small.svg \
-        plugins/superpowers/skills/example/SKILL.md \
-        plugins/superpowers/.private-journal/keep.txt
+        plugins/sweet/.codex-plugin/plugin.json \
+        plugins/sweet/assets/app-icon.png \
+        plugins/sweet/assets/sweet-small.svg \
+        plugins/sweet/skills/example/SKILL.md \
+        plugins/sweet/.private-journal/keep.txt
 
     commit_fixture "$repo" "Initial synced destination fixture"
 }
@@ -297,10 +297,10 @@ EOF
 write_stale_ignored_destination_fixture() {
     local repo="$1"
 
-    mkdir -p "$repo/plugins/superpowers/.private-journal"
-    printf 'fixture keep\n' > "$repo/plugins/superpowers/.fixture-keep"
-    printf 'stale ignored leak\n' > "$repo/plugins/superpowers/.private-journal/leak.txt"
-    git -C "$repo" add plugins/superpowers/.fixture-keep
+    mkdir -p "$repo/plugins/sweet/.private-journal"
+    printf 'fixture keep\n' > "$repo/plugins/sweet/.fixture-keep"
+    printf 'stale ignored leak\n' > "$repo/plugins/sweet/.private-journal/leak.txt"
+    git -C "$repo" add plugins/sweet/.fixture-keep
 
     commit_fixture "$repo" "Initial stale ignored destination fixture"
 }
@@ -489,7 +489,7 @@ main() {
     script_source="$(cat "$upstream/scripts/sync-to-codex-plugin.sh")"
     preview_section="$(printf '%s\n' "$preview_output" | sed -n '/^=== Preview (rsync --dry-run) ===$/,/^=== End preview ===$/p')"
     stale_preview_section="$(printf '%s\n' "$stale_preview_output" | sed -n '/^=== Preview (rsync --dry-run) ===$/,/^=== End preview ===$/p')"
-    dirty_skill_path="$dirty_apply_dest/plugins/superpowers/skills/example/SKILL.md"
+    dirty_skill_path="$dirty_apply_dest/plugins/sweet/skills/example/SKILL.md"
 
     echo ""
     echo "Preview assertions..."
@@ -497,16 +497,16 @@ main() {
     assert_contains "$preview_output" "Version:  $MANIFEST_VERSION" "Preview uses manifest version"
     assert_not_contains "$preview_output" "Version:  $PACKAGE_VERSION" "Preview does not use package.json version"
     assert_contains "$preview_section" ".codex-plugin/plugin.json" "Preview includes manifest path"
-    assert_contains "$preview_section" "assets/superpowers-small.svg" "Preview includes SVG asset"
+    assert_contains "$preview_section" "assets/sweet-small.svg" "Preview includes SVG asset"
     assert_contains "$preview_section" "assets/app-icon.png" "Preview includes PNG asset"
     assert_contains "$preview_section" ".private-journal/keep.txt" "Preview includes tracked ignored file"
     assert_not_contains "$preview_section" ".private-journal/leak.txt" "Preview excludes ignored untracked file"
     assert_not_contains "$preview_section" "ignored-cache/" "Preview excludes pure ignored directories"
     assert_not_contains "$preview_output" "Overlay file (.codex-plugin/plugin.json) will be regenerated" "Preview omits overlay regeneration note"
-    assert_not_contains "$preview_output" "Assets (superpowers-small.svg, app-icon.png) will be seeded from" "Preview omits assets seeding note"
+    assert_not_contains "$preview_output" "Assets (sweet-small.svg, app-icon.png) will be seeded from" "Preview omits assets seeding note"
     assert_contains "$preview_section" "skills/example/SKILL.md" "Preview reflects dirty tracked destination file"
     assert_current_branch "$dest" "$dest_branch" "Preview leaves destination checkout on its original branch"
-    assert_branch_absent "$dest" "sync/superpowers-*" "Preview does not create sync branch in destination checkout"
+    assert_branch_absent "$dest" "sync/sweet-*" "Preview does not create sync branch in destination checkout"
 
     echo ""
     echo "Mixed-directory assertions..."
@@ -522,26 +522,26 @@ main() {
     echo ""
     echo "Bootstrap assertions..."
     assert_equals "$bootstrap_status" "0" "Bootstrap preview exits successfully"
-    assert_contains "$bootstrap_output" "Mode:     BOOTSTRAP (creating plugins/superpowers/ when absent)" "Bootstrap preview describes directory creation"
+    assert_contains "$bootstrap_output" "Mode:     BOOTSTRAP (creating plugins/sweet when absent)" "Bootstrap preview describes directory creation"
     assert_not_contains "$bootstrap_output" "Assets:" "Bootstrap preview omits external assets path"
     assert_contains "$bootstrap_output" "Dry run only. Nothing was changed or pushed." "Bootstrap preview remains dry-run only"
-    assert_path_absent "$bootstrap_dest/plugins/superpowers" "Bootstrap preview does not create destination plugin directory"
+    assert_path_absent "$bootstrap_dest/plugins/sweet" "Bootstrap preview does not create destination plugin directory"
     assert_current_branch "$bootstrap_dest" "$bootstrap_dest_branch" "Bootstrap preview leaves destination checkout on its original branch"
-    assert_branch_absent "$bootstrap_dest" "bootstrap/superpowers-*" "Bootstrap preview does not create bootstrap branch in destination checkout"
+    assert_branch_absent "$bootstrap_dest" "bootstrap/sweet-*" "Bootstrap preview does not create bootstrap branch in destination checkout"
 
     echo ""
     echo "Apply assertions..."
     assert_equals "$dirty_apply_status" "1" "Dirty local apply exits with failure"
-    assert_contains "$dirty_apply_output" "ERROR: local checkout has uncommitted changes under 'plugins/superpowers'" "Dirty local apply reports protected destination path"
+    assert_contains "$dirty_apply_output" "ERROR: local checkout has uncommitted changes under 'plugins/sweet'" "Dirty local apply reports protected destination path"
     assert_current_branch "$dirty_apply_dest" "$dirty_apply_dest_branch" "Dirty local apply leaves destination checkout on its original branch"
-    assert_branch_absent "$dirty_apply_dest" "sync/superpowers-*" "Dirty local apply does not create sync branch in destination checkout"
+    assert_branch_absent "$dirty_apply_dest" "sync/sweet-*" "Dirty local apply does not create sync branch in destination checkout"
     assert_file_equals "$dirty_skill_path" "# Example Skill
 
 Locally modified fixture content." "Dirty local apply preserves tracked working-tree file content"
     assert_equals "$noop_apply_status" "0" "Clean no-op local apply exits successfully"
-    assert_contains "$noop_apply_output" "No changes — embedded plugin was already in sync with upstream" "Clean no-op local apply reports no changes"
+    assert_contains "$noop_apply_output" "No changes — embedded plugin was already in sync with source" "Clean no-op local apply reports no changes"
     assert_current_branch "$noop_apply_dest" "$noop_apply_dest_branch" "Clean no-op local apply leaves destination checkout on its original branch"
-    assert_branch_absent "$noop_apply_dest" "sync/superpowers-*" "Clean no-op local apply does not create sync branch in destination checkout"
+    assert_branch_absent "$noop_apply_dest" "sync/sweet-*" "Clean no-op local apply does not create sync branch in destination checkout"
 
     echo ""
     echo "Missing manifest assertions..."
