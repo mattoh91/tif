@@ -102,17 +102,9 @@ sweet_context_content="$(build_sweet_context 2>/dev/null || true)"
 sweet_context_escaped=$(escape_for_json "$sweet_context_content")
 session_context="<EXTREMELY_IMPORTANT>\nYou have Sweet, a cross-harness SWE workflow.\n\n**Below is the full content of your 'using-sweet' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_sweet_escaped}\n\n${warning_escaped}\n\n${sweet_context_escaped}\n</EXTREMELY_IMPORTANT>"
 
-# Output context injection as JSON.
-# Claude Code hooks expect hookSpecificOutput.additionalContext (nested).
-# Copilot CLI (v1.0.11+) and others expect additionalContext (top-level, SDK standard).
-#
+# Output context injection as JSON. Claude Code and Codex both accept
+# hookSpecificOutput.additionalContext for SessionStart.
 # Uses printf instead of heredoc to avoid shell compatibility issues.
-if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
-  # Claude Code sets CLAUDE_PLUGIN_ROOT without COPILOT_CLI
-  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
-else
-  # Unknown platform — SDK standard format
-  printf '{\n  "additionalContext": "%s"\n}\n' "$session_context"
-fi
+printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
 
 exit 0

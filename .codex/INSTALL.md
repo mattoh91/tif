@@ -27,14 +27,17 @@ ln -sfn /Users/OHM02/Repos/sweet/skills ~/.agents/skills/sweet
 
 Restart Codex after changing the symlink.
 
-## Subagents
+## Subagents and Hooks
 
-For subagent workflows, enable multi-agent support in `~/.codex/config.toml`:
+For subagent workflows and Sweet hook persistence, enable these features in `~/.codex/config.toml`:
 
 ```toml
 [features]
 multi_agent = true
+codex_hooks = true
 ```
+
+Codex loads project hooks from `.codex/hooks.json` when this repo's `.codex/` config layer is trusted. Sweet wires `SessionStart` to `hooks/session-start` and `Stop` to `hooks/codex-stop`.
 
 ## Verify
 

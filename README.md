@@ -5,7 +5,7 @@ Sweet is an opinionated SWE harness for Claude Code and Codex. It packages reusa
 Sweet is built around two host surfaces:
 
 - **Claude Code:** plugin manifest, skills, agents, slash commands, and lifecycle hooks.
-- **Codex:** plugin manifest, local marketplace metadata, and shared skills. Claude hook behavior is represented as explicit skill-side fallbacks.
+- **Codex:** plugin manifest, local marketplace metadata, shared skills, and Codex lifecycle hooks when `codex_hooks` is enabled.
 
 ## Core Contract
 
@@ -76,7 +76,7 @@ flowchart TD
 
 ## Hook Lifecycle
 
-Claude Code has lifecycle hooks. Codex plugin skills do not receive the same hook events, so Sweet provides explicit skills such as `preamble` and `capturing-failure-modes` for Codex.
+Sweet has host-specific hook adapters. Claude Code and Codex both support lifecycle hooks, but the event names and configuration locations differ.
 
 ```mermaid
 sequenceDiagram
@@ -110,6 +110,21 @@ Current hook files:
 - `hooks/session-start` — injects Sweet bootstrap, memory, recent sessions, FRD/PLAN/CAVEATS snippets, and git state.
 - `hooks/pre-compact` — records compaction marker, raw hook payload, branch, and git status.
 - `hooks/session-end` — records session-end marker, raw hook payload, branch, and git status.
+- `hooks/codex-stop` — records Codex turn-stop markers, raw hook payload, branch, and git status.
+
+Host configuration:
+
+- Claude Code reads `.claude-plugin/plugin.json` and `hooks/hooks.json`.
+- Codex reads hooks from active config layers such as `.codex/hooks.json` or `~/.codex/hooks.json`. Project-local Codex hooks require the `.codex/` layer to be trusted.
+
+Codex hooks are behind a feature flag:
+
+```toml
+[features]
+codex_hooks = true
+```
+
+Sweet currently wires Codex `SessionStart` to `hooks/session-start` and Codex `Stop` to `hooks/codex-stop`. Use the `preamble` and `capturing-failure-modes` skills explicitly when you want a curated handoff summary rather than raw hook persistence.
 
 ## Component Acceptance Gates
 
@@ -172,6 +187,7 @@ For subagent workflows in Codex, enable multi-agent support in `~/.codex/config.
 ```toml
 [features]
 multi_agent = true
+codex_hooks = true
 ```
 
 ## Starting Work
