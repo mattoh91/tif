@@ -1,19 +1,23 @@
 # Functional Requirements
 
-## Epic to Component Map
+## Feature to Component Map
 
-| Epic | Component / Capability | Boundary | Automated Acceptance Gate | Status |
+| Feature | Component / Capability | Boundary | Feature Gate | Component Contract Gate | Status |
 | --- | --- | --- | --- | --- |
-| E1 | Component name | System/domain boundary or user-flow boundary | DTO/data-contract check, API scenario, Playwright/browser flow, or equivalent harness check | Draft |
+| F1 | Component name | System/domain boundary or user-flow boundary | API scenario, Playwright/browser flow, CLI scenario, or equivalent harness check | DTO/data-contract check, schema check, adapter payload check, or equivalent boundary check | Draft |
 
 ## Requirements
 
-### E1: Component Name
+### F1: Feature Name
 
 Functional behavior:
 
 - Define externally visible behavior.
 
-Acceptance gate:
+Feature acceptance gate:
 
-- Define the automated functional check that proves the component works.
+- Define the automated functional check that proves the feature works.
+
+Component contract gates:
+
+- Define automated boundary checks for each touched component.

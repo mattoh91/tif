@@ -98,8 +98,8 @@ digraph brainstorming {
 - Once you believe you understand what you're building, present the design
 - Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced
 - Ask after each section whether it looks right so far
-- Cover: architecture, components, data flow, error handling, testing
-- For testing, identify the automated component acceptance gate for each epic/component: DTO/data-contract check, API scenario, automated e2e/user-flow, or equivalent project-specific harness check.
+- Cover: architecture, features, components, data flow, error handling, testing
+- For testing, identify the automated feature acceptance gate for each user/system capability and the component contract gates for each touched boundary: DTO/data-contract check, schema check, API scenario, automated e2e/user-flow, or equivalent project-specific harness check.
 - Be ready to go back and clarify if something doesn't make sense
 
 **Design for isolation and clarity:**
@@ -121,7 +121,7 @@ digraph brainstorming {
 
 - Write the validated design as a Sweet spec set:
   - `.sweet/PRD.md` or `docs/sweet/PRD.md` — product/business requirements, users, epics, non-goals
-  - `.sweet/FRD.md` or `docs/sweet/FRD.md` — functional requirements, epic-to-component map, automated component acceptance gates, progress
+  - `.sweet/FRD.md` or `docs/sweet/FRD.md` — functional requirements, feature-to-component map, automated feature acceptance gates, component contract gates, progress
   - `.sweet/ARD.md` or `docs/sweet/ARD.md` — architecture decisions, options, consequences
   - `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md` — assumptions, dependencies, constraints, known unknowns
   - `.sweet/ARCHI.md` or `docs/sweet/ARCHI.md` — Mermaid C4 L1/L2 and sequence diagrams
@@ -134,9 +134,9 @@ digraph brainstorming {
 After writing the spec set, look at it with fresh eyes:
 
 1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
-2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the FRD? Does every PRD epic map to an FRD component?
+2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the FRD? Does every PRD feature map to FRD components and gates?
 3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Acceptance gate check:** Does every FRD component have an automated component acceptance gate?
+4. **Gate check:** Does every FRD feature have an automated feature acceptance gate? Does every touched component boundary have an automated component contract gate?
 5. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
 
 Fix any issues inline. No need to re-review — just fix and move on.

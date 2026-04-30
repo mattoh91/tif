@@ -5,7 +5,7 @@ You are reviewing code changes for production readiness.
 **Your task:**
 1. Review {WHAT_WAS_IMPLEMENTED}
 2. Compare against {PLAN_OR_REQUIREMENTS}
-3. Check code quality, architecture, testing, and Sweet component acceptance gates when present
+3. Check code quality, architecture, testing, Sweet feature acceptance gates, and component contract gates when present
 4. Categorize issues by severity
 5. Assess production readiness
 
@@ -42,21 +42,23 @@ git diff {BASE_SHA}..{HEAD_SHA}
 - Performance implications?
 - Security concerns?
 
-**Testing:**
+**Testing and Gates:**
 - Tests actually test logic (not mocks)?
 - Edge cases covered?
 - Integration tests where needed?
 - All tests passing?
-- If this is Sweet component work, is there an automated component acceptance gate?
-- Does the gate verify a DTO/data contract, API scenario, e2e/user-flow, or equivalent boundary?
-- Was the gate run, and does it match the FRD epic/component?
+- If this is Sweet feature work, is there an automated feature acceptance gate?
+- If this is Sweet component work, is there an automated component contract gate?
+- Does the component gate verify a DTO/data contract, schema, adapter payload, public API behavior, or equivalent boundary?
+- Was each relevant gate run, and does it match the FRD feature/component?
 
 **Requirements:**
 - All plan requirements met?
 - Implementation matches spec?
 - No scope creep?
 - Breaking changes documented?
-- `.sweet/FRD.md` or `docs/sweet/FRD.md` progress updated if a component gate passed?
+- `.sweet/FRD.md` or `docs/sweet/FRD.md` progress updated if a feature/component gate passed?
+- Sweet memory updated for durable design decisions, deviations, or failure patterns?
 
 **Production Readiness:**
 - Migration strategy (if schema changes)?

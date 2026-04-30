@@ -12,7 +12,7 @@ Use this skill to turn session problems into reusable memory.
 - Before `clear`, `compact`, or ending a long session
 - After the same mistake happens more than once
 - After debugging reveals a misleading assumption
-- After a component acceptance gate failed for a non-obvious reason
+- After a feature acceptance gate or component contract gate failed for a non-obvious reason
 
 Claude-compatible hooks persist raw session markers under `~/.sweet/memory/<project>/SESSIONS/`. Hooks do not load this skill. The agent uses this skill to summarize and update durable memory.
 

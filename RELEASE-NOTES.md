@@ -74,10 +74,6 @@ Dramatically reduces token usage and speeds up spec and plan reviews by eliminat
 
 ## v5.0.3 (2026-03-15)
 
-### Cursor Support
-
-- **Cursor hooks** — added `hooks/hooks-cursor.json` with Cursor's camelCase format (`sessionStart`, `version: 1`) and updated `.cursor-plugin/plugin.json` to reference it. Fixed platform detection in `session-start` to check `CURSOR_PLUGIN_ROOT` first (Cursor may also set `CLAUDE_PLUGIN_ROOT`). (Based on PR #709)
-
 ### Bug Fixes
 
 - **Stop firing SessionStart hook on `--resume`** — the startup hook was re-injecting context on resumed sessions, which already have the context in their conversation history. The hook now fires only on `startup`, `clear`, and `compact`.

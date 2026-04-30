@@ -73,10 +73,10 @@ If a command is unknown, keep the target present but make it fail with a clear m
 Initialize planning docs with useful structure, not fake content:
 
 - `PRD.md`: product goal, users, epics, non-goals
-- `FRD.md`: epic-to-component mapping and automated component acceptance gates
+- `FRD.md`: feature-to-component mapping, automated feature acceptance gates, component contract gates, and progress
 - `ARD.md`: architecture decisions with options and consequences
 - `CAVEATS.md`: assumptions, dependencies, constraints, known unknowns
 - `ARCHI.md`: Mermaid C4 L1/L2 and sequence diagram placeholders
-- `PLAN.md`: component-by-component implementation plan with nested TDD blocks
+- `PLAN.md`: feature-by-feature implementation plan with component contract gates and nested TDD blocks
 
-Every generated acceptance gate should be automatable where feasible: DTO/data-contract checks, API scenario tests, Playwright/browser/computer-use flows, or equivalent project-specific harness automation.
+Every generated gate should be automatable where feasible. Feature gates prove user/system outcomes through API/CLI scenarios, Playwright/browser/computer-use flows, or equivalent project-specific harness automation. Component gates prove boundaries through DTO/data-contract checks, schema checks, adapter payload checks, public API behavior, or equivalent contract verification.

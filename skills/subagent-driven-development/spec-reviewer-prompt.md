@@ -13,6 +13,7 @@ Task tool (general-purpose):
     ## What Was Requested
 
     [FULL TEXT of task requirements]
+    [FRD feature/component status, feature acceptance gate, component contract gate]
 
     ## What Implementer Claims They Built
 
@@ -42,6 +43,7 @@ Task tool (general-purpose):
     - Did they implement everything that was requested?
     - Are there requirements they skipped or missed?
     - Did they claim something works but didn't actually implement it?
+    - Did they preserve the specified DTO/data-contract shapes and boundary behavior?
 
     **Extra/unneeded work:**
     - Did they build things that weren't requested?
@@ -54,6 +56,11 @@ Task tool (general-purpose):
     - Did they implement the right feature but wrong way?
 
     **Verify by reading code, not by trusting report.**
+
+    **Gate and state checks:**
+    - Confirm the component contract gate exists, is automated, and matches the boundary.
+    - Confirm the feature acceptance gate exists when this task completes or changes an integrated feature.
+    - Confirm FRD progress and Sweet memory were updated when status or durable decisions changed.
 
     Report:
     - ✅ Spec compliant (if everything matches after code inspection)

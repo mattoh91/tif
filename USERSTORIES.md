@@ -30,10 +30,10 @@
   I have to manually prompt the coding agent with refs to mem / git commit logs and planning docs which may be stale.                                                                
   ### 4.2. Prescription                                                                                                                                                              
   Need standardised repo structure per anthropic blog (https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)                                            
-  Need to update memory after each component is built with design decisions, failure modes/patterns.                                                                                 
+  Need to update memory after each coherent feature/component slice is built with design decisions, failure modes/patterns.
   Need to edit planning documents with any deviations or additional details.                                                                                                         
-  Need to update FRD.md progress tracking whenever components are tested successfully against automated component acceptance gates: DTO/data-contract checks across boundaries,         
-  automated e2e/user-flow scenarios, API scenario tests, Playwright/browser/computer-use automation, or equivalent project-specific harness checks.                                    
+  Need to update FRD.md progress tracking whenever features pass automated feature acceptance gates and touched components pass automated component contract gates: DTO/data-contract
+  checks across boundaries, automated e2e/user-flow scenarios, API scenario tests, Playwright/browser/computer-use automation, or equivalent project-specific harness checks.
   Need to create a /preamble skill to generate a prefix to my first prompt for my new cleared session that captures what's next by bootstrapping from memory and reading git logs,   
   and has references to finished components, failure modes, and all planning docs.                                                                                                   
   Should suggest for me the user to clear or compact after each component is done (see: https://github.com/affaan-m/everything-claude-code/tree/main/skills/strategic-compact)       

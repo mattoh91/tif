@@ -9,6 +9,8 @@ Execute plan by dispatching fresh subagent per task, with two-stage review after
 
 **Why subagents:** You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history — you construct exactly what they need. This also preserves your own context for coordination work.
 
+**Context contract:** Subagents rely on the current plan, recent commits, FRD progress, Sweet memory, and explicit feature/component gates. Keep those artifacts current so each subagent can load the latest recoverable context in addition to its assigned task.
+
 **Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration
 
 ## When to Use
@@ -58,12 +60,12 @@ digraph process {
         "Mark task complete in TodoWrite" [shape=box];
     }
 
-    "Read plan, extract all tasks with full text, note context, create TodoWrite" [shape=box];
+    "Read plan, extract tasks, feature gates, component contracts, recent commits, and Sweet memory; create TodoWrite" [shape=box];
     "More tasks remain?" [shape=diamond];
     "Dispatch final code reviewer subagent for entire implementation" [shape=box];
     "Use sweet:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
 
-    "Read plan, extract all tasks with full text, note context, create TodoWrite" -> "Dispatch implementer subagent (./implementer-prompt.md)";
+    "Read plan, extract tasks, feature gates, component contracts, recent commits, and Sweet memory; create TodoWrite" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer subagent asks questions?";
     "Implementer subagent asks questions?" -> "Answer questions, provide context" [label="yes"];
     "Answer questions, provide context" -> "Dispatch implementer subagent (./implementer-prompt.md)";
@@ -128,8 +130,9 @@ Implementer subagents report one of four statuses. Handle each appropriately:
 ```
 You: I'm using Subagent-Driven Development to execute this plan.
 
-[Read plan file once: docs/sweet/plans/feature-plan.md]
-[Extract all 5 tasks with full text and context]
+[Read plan file once: .sweet/PLAN.md or docs/sweet/PLAN.md]
+[Read FRD progress, relevant Sweet memory, and recent commits]
+[Extract all feature/component tasks with gates, boundary contracts, full text, and context]
 [Create TodoWrite with all tasks]
 
 Task 1: Hook installation script
@@ -216,6 +219,7 @@ Done!
 - No file reading overhead (controller provides full text)
 - Controller curates exactly what context is needed
 - Subagent gets complete information upfront
+- Recent commits, Sweet memory, FRD status, and gate commands give each subagent a current foundation
 - Questions surfaced before work begins (not after)
 
 **Quality gates:**

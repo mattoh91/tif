@@ -13,7 +13,7 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 **Violating the letter of the rules is violating the spirit of the rules.**
 
-**Sweet layering:** TDD is the implementer-internal loop. For component/epic completion, also use `component-functional-testing` to define and run the automated component acceptance gate: DTO/data-contract checks, API scenarios, Playwright/browser/computer-use flows, or equivalent harness automation.
+**Sweet layering:** TDD is the implementer-internal loop. For component completion, also use `component-functional-testing` to define and run the automated component contract gate: DTO/data-contract checks, schema checks, adapter payload checks, public API behavior, or equivalent boundary automation. For feature completion, run the automated feature acceptance gate: API/CLI scenarios, Playwright/browser/computer-use flows, or equivalent harness automation.
 
 ## When to Use
 
@@ -197,18 +197,19 @@ Keep tests green. Don't add behavior.
 
 Next failing test for next feature.
 
-## Component Acceptance Gate
+## Sweet Gates
 
-After the focused TDD loop for a component is green, run the component acceptance gate from the FRD/plan before marking the component complete.
+After the focused TDD loop for a component is green, run the component contract gate from the FRD/plan before marking the component complete. If the component completes an integrated feature slice, run the feature acceptance gate before marking the feature complete.
 
-The gate is not a replacement for TDD. It is the higher-level proof that the component works across the boundary that matters:
+The gates are not replacements for TDD. They are the higher-level proof that the code works across the boundaries that matter:
 
-- data shape across system/domain boundaries
-- public API or CLI scenario
+- component data shape across system/domain boundaries
+- schema, adapter payload, public API, or domain command/result behavior
+- feature-level public API or CLI scenario
 - automated e2e/user-flow journey
 - project-specific harness check
 
-If the gate fails, return to RED-GREEN-REFACTOR or systematic debugging. Do not mark the FRD epic complete from unit tests alone.
+If a gate fails, return to RED-GREEN-REFACTOR or systematic debugging. Do not mark the FRD feature or component complete from unit tests alone.
 
 ## Good Tests
 

@@ -9,7 +9,7 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 Guide completion of development work by presenting clear options and handling chosen workflow.
 
-**Core principle:** Verify tests and component gates → update Sweet state → present options → execute choice → clean up.
+**Core principle:** Verify tests, component contract gates, and feature gates → update Sweet state → present options → execute choice → clean up.
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
@@ -49,20 +49,22 @@ Check for:
 - `~/.sweet/memory/<project-slug>/MEMORY.md`
 - `~/.sweet/memory/<project-slug>/FAILURES.md`
 
-For each completed component/epic:
+For each completed feature/component slice:
 
-1. Verify the automated component acceptance gate passed, not just unit tests.
-2. Update FRD progress/status for the component.
-3. Record meaningful deviations from the plan in the plan, caveats, or memory.
-4. Append durable implementation notes to `~/.sweet/memory/<project-slug>/MEMORY.md`:
-   - component completed
-   - acceptance gate command/result
+1. Verify the automated component contract gates passed, not just unit tests.
+2. Verify the feature acceptance gate passed before marking the feature complete.
+3. Update FRD progress/status for the feature and touched components.
+4. Record meaningful deviations from the plan in the plan, caveats, or memory.
+5. Append durable implementation notes to `~/.sweet/memory/<project-slug>/MEMORY.md`:
+   - feature/component completed
+   - feature acceptance gate command/result
+   - component contract gate command/result
    - design decisions made during implementation
    - deviations from `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
    - follow-ups
-5. If repeated failure patterns occurred, use `capturing-failure-modes` before ending the session.
+6. If repeated failure patterns occurred, use `capturing-failure-modes` before ending the session.
 
-After a component is completed and state is updated, suggest clearing or compacting before starting another large component so the next session can restart from `.sweet/` artifacts and `~/.sweet/memory`.
+After a coherent feature/component slice is completed and state is updated, suggest clearing or compacting before starting another large slice so the next session can restart from `.sweet/` artifacts, recent commits, and `~/.sweet/memory`.
 
 Derive `<project-slug>` from git remote when available, otherwise use the directory name.
 
@@ -213,7 +215,8 @@ git worktree remove <worktree-path>
 
 **Never:**
 - Proceed with failing tests
-- Mark Sweet components complete without a passing automated component acceptance gate
+- Mark Sweet components complete without passing automated component contract gates
+- Mark Sweet features complete without a passing automated feature acceptance gate
 - Merge without verifying tests on result
 - Delete work without confirmation
 - Force-push without explicit request

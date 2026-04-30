@@ -20,7 +20,7 @@ Use what exists:
 - `.sweet/FRD.md` or `docs/sweet/FRD.md`
 - `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
 - `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md`
-- component source/test files referenced by the current FRD/PLAN task
+- feature/component source, test, DTO, schema, adapter, and gate files referenced by the current FRD/PLAN task
 
 ## Workflow
 
@@ -28,10 +28,10 @@ Use what exists:
 2. Read the files above if present. Do not fail if some are missing.
 3. Summarize only what is needed to resume work:
    - project goal
-   - current component/epic
+   - current feature and component
    - completed components
    - next task
-   - acceptance gate to run next
+   - feature acceptance gate and component contract gate to run next
    - key component code references to inspect before editing
    - relevant decisions/caveats
    - known failure modes
@@ -39,7 +39,7 @@ Use what exists:
 4. Include code references only when they help the next session start safely:
    - component entry points
    - public interfaces, DTOs, schemas, adapters, or boundary modules
-   - acceptance gate files
+   - feature acceptance gate and component contract gate files
    - focused unit/integration tests
    - recently changed files from `git diff --stat` or recent commits
    - files with known caveats or failure modes
@@ -57,12 +57,14 @@ Project: ...
 Current goal: ...
 Current state: ...
 Completed components: ...
-Next component/task: ...
-Acceptance gate: ...
+Next feature/component/task: ...
+Feature acceptance gate: ...
+Component contract gate: ...
 Code references to inspect:
 - path/to/component.ts — component entry point; key symbols: ...
 - path/to/component.test.ts — focused tests for ...
-- path/to/acceptance.spec.ts — automated component acceptance gate
+- path/to/contract.test.ts — automated component contract gate
+- path/to/feature.spec.ts — automated feature acceptance gate
 Important decisions: ...
 Known caveats/failure modes: ...
 Relevant files:

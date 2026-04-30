@@ -15,6 +15,10 @@ Task tool (general-purpose):
     ## Context
 
     [Scene-setting: where this fits, dependencies, architectural context]
+    [Relevant FRD feature/component status]
+    [Feature acceptance gate and component contract gate commands]
+    [Relevant DTOs, schemas, public interfaces, adapters, and boundary modules]
+    [Recent commits and Sweet memory notes needed for this task]
 
     ## Before You Begin
 
@@ -31,10 +35,12 @@ Task tool (general-purpose):
     Once you're clear on requirements:
     1. Implement exactly what the task specifies
     2. Write tests (following TDD if task says to)
-    3. Verify implementation works
-    4. Commit your work
-    5. Self-review (see below)
-    6. Report back
+    3. Run focused tests and the component contract gate
+    4. Run the feature acceptance gate if this task completes the integrated feature
+    5. Update FRD progress and Sweet memory if the task completed a coherent slice
+    6. Commit your work
+    7. Self-review (see below)
+    8. Report back
 
     Work from: [directory]
 
@@ -93,7 +99,14 @@ Task tool (general-purpose):
     **Testing:**
     - Do tests actually verify behavior (not just mock behavior)?
     - Did I follow TDD if required?
-    - Are tests comprehensive?
+    - Did the component contract gate pass?
+    - Did the feature acceptance gate pass if this completed the feature?
+    - Are tests comprehensive enough for the boundary being changed?
+
+    **Handoff State:**
+    - Did I update FRD progress when a feature/component status changed?
+    - Did I update Sweet memory with durable decisions or deviations?
+    - Is the commit message descriptive enough for the next agent to understand the slice?
 
     If you find issues during self-review, fix them now before reporting.
 
@@ -103,6 +116,9 @@ Task tool (general-purpose):
     - **Status:** DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
     - What you implemented (or what you attempted, if blocked)
     - What you tested and test results
+    - Feature acceptance gate and component contract gate results
+    - FRD/memory updates made, if any
+    - Commit SHA, if committed
     - Files changed
     - Self-review findings (if any)
     - Any issues or concerns

@@ -7,7 +7,7 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 
 ## Overview
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each component, code, testing, docs they might need to check, how to test it. Give them a component-by-component plan with implementer-internal TDD blocks. DRY. YAGNI. TDD. Frequent commits.
+Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which feature is being advanced, which files to touch for each component, code, testing, docs they might need to check, how to test it, and what state to update. Give them a feature-by-feature plan with component-level contract gates and implementer-internal TDD blocks. DRY. YAGNI. TDD. Frequent commits.
 
 Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
 
@@ -23,6 +23,8 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
 
+Follow `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` when available. Feature progress, component contracts, git commits, FRD updates, and Sweet memory are the context substrate for subagents and future sessions.
+
 ## File Structure
 
 Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
@@ -34,19 +36,19 @@ Before defining tasks, map out which files will be created or modified and what 
 
 This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
 
-## Component Task Granularity
+## Feature and Component Granularity
 
-Each top-level task should map to one FRD epic/component/capability. Inside each component task, include TDD step blocks that are bite-sized:
+Each top-level task should map to one FRD feature/capability. Under that feature, list each component being created or changed. Inside each component block, include TDD step blocks that are bite-sized:
 
 - write the failing focused test
 - run it to verify RED
 - implement minimal code
 - run focused tests to verify GREEN
 - refactor while green
-- run the automated component acceptance gate
+- run the automated component contract gate
 - update FRD progress and memory/caveats if needed
 
-The visible progress unit is the component acceptance gate, not each unit-test step.
+The visible progress unit is the feature acceptance gate. The implementation ownership unit is the component contract gate. Do not mark a feature complete until the feature gate passes; do not mark a component complete until its contract gate passes.
 
 ## Plan Document Header
 
@@ -55,7 +57,7 @@ The visible progress unit is the component acceptance gate, not each unit-test s
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use sweet:subagent-driven-development (recommended) or sweet:executing-plans to implement this plan component-by-component. On hosts that expose unnamespaced skills, use subagent-driven-development or executing-plans. TDD steps are implementer-internal. Component completion requires the automated component acceptance gate to pass.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use sweet:subagent-driven-development (recommended) or sweet:executing-plans to implement this plan feature-by-feature and component-by-component. On hosts that expose unnamespaced skills, use subagent-driven-development or executing-plans. TDD steps are implementer-internal. Component completion requires the automated component contract gate to pass; feature completion requires the feature acceptance gate to pass.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -71,12 +73,22 @@ The visible progress unit is the component acceptance gate, not each unit-test s
 ## Task Structure
 
 ````markdown
-### Component N: [Component / Epic Name]
+### Feature N: [Feature / Capability Name]
 
-**FRD Epic:** [E1 / exact FRD section]
+**FRD Feature:** [F1 / exact FRD section]
 
-**Automated Component Acceptance Gate:**
-- Type: [DTO/data-contract | API scenario | automated e2e/user-flow | project-specific harness]
+**Automated Feature Acceptance Gate:**
+- Type: [API scenario | CLI scenario | automated e2e/user-flow | project-specific harness]
+- Command: `exact command`
+- Test data/scenario: [exact fixture, sample, or user-flow]
+- Expected result: [observable pass condition]
+
+#### Component N.M: [Component Name]
+
+**Boundary / Contract:** [DTOs, schemas, public API, adapter payloads, domain command/result, or UI state boundary]
+
+**Automated Component Contract Gate:**
+- Type: [DTO/data-contract | schema check | adapter payload | API behavior | automated UI state check | project-specific harness]
 - Command: `exact command`
 - Test data/scenario: [exact fixture, sample, or user-flow]
 - Expected result: [observable pass condition]
@@ -111,16 +123,21 @@ def function(input):
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: PASS
 
-- [ ] **Acceptance Step 5: Run the component acceptance gate**
+- [ ] **Contract Step 5: Run the component contract gate**
 
 Run: `exact command`
 Expected: PASS with [observable result]
 
-- [ ] **Documentation Step 6: Update FRD progress and notes**
+- [ ] **Feature Step 6: Run the feature acceptance gate when all components in this feature are integrated**
 
-Update `.sweet/FRD.md` or `docs/sweet/FRD.md` for this component. Record meaningful deviations in `.sweet/CAVEATS.md` or memory if applicable.
+Run: `exact command`
+Expected: PASS with [observable result]
 
-- [ ] **Commit Step 7: Commit**
+- [ ] **Documentation Step 7: Update FRD progress and notes**
+
+Update `.sweet/FRD.md` or `docs/sweet/FRD.md` for this feature and its components. Record meaningful deviations in `.sweet/CAVEATS.md` or memory if applicable.
+
+- [ ] **Commit Step 8: Commit**
 
 ```bash
 git add tests/path/test.py src/path/file.py
@@ -137,13 +154,17 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - "Similar to Task N" (repeat the code — the engineer may be reading tasks out of order)
 - Steps that describe what to do without showing how (code blocks required for code steps)
 - References to types, functions, or methods not defined in any task
-- Component tasks without an automated acceptance gate command
+- Feature tasks without an automated feature gate command
+- Component blocks without an automated contract gate command
 
 ## Remember
 - Exact file paths always
 - Complete code in every step — if a step changes code, show the code
 - Exact commands with expected output
 - DRY, YAGNI, TDD, frequent commits
+- Feature acceptance gates for user/system outcomes
+- Component contract gates for DTO/data-contract and boundary clarity
+- FRD progress and Sweet memory updates after coherent completed slices
 
 ## Self-Review
 
@@ -151,7 +172,7 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 
 **1. Spec coverage:** Skim each section/requirement in the Sweet spec set. Can you point to a component task that implements it? List any gaps.
 
-**2. Acceptance gate coverage:** Does every component task have a runnable automated acceptance gate matching the FRD?
+**2. Gate coverage:** Does every feature have a runnable feature acceptance gate? Does every touched component have a runnable contract gate matching the FRD and boundary design?
 
 **3. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
 

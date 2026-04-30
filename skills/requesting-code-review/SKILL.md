@@ -13,8 +13,9 @@ Dispatch sweet:code-reviewer subagent to catch issues before they cascade. The r
 
 **Mandatory:**
 - After each task in subagent-driven development
-- After each Sweet component acceptance gate passes
+- After each Sweet component contract gate passes
 - After completing major feature
+- After each Sweet feature acceptance gate passes
 - Before merge to main
 
 **Optional but valuable:**
@@ -91,11 +92,17 @@ You: [Fix progress indicators]
 - Review when stuck
 
 **Sweet Component Work:**
-- Verify the component acceptance gate exists and is automated
-- Confirm the gate matches the FRD epic/component
+- Verify the component contract gate exists and is automated
+- Confirm the gate matches the FRD feature/component boundary
 - Confirm the gate was run and passed
 - Confirm `.sweet/FRD.md` or `docs/sweet/FRD.md` progress was updated when appropriate
 - Treat missing or non-runnable component gates as Important unless the component is genuinely not testable through an automated boundary
+
+**Sweet Feature Work:**
+- Verify the feature acceptance gate exists and is automated
+- Confirm the gate proves the user-visible or system-visible outcome
+- Confirm all touched component contract gates passed
+- Confirm feature status, component status, commits, and Sweet memory are current enough for a fresh agent to resume
 
 ## Red Flags
 

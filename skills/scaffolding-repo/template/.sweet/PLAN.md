@@ -1,20 +1,30 @@
 # Implementation Plan
 
-> For agentic workers: implement one component at a time. Keep unit TDD internal to the implementation loop. The visible completion gate is the automated component acceptance gate listed for the component.
+> For agentic workers: implement one feature/component slice at a time. Keep unit TDD internal to the implementation loop. Component completion requires the automated component contract gate; feature completion requires the automated feature acceptance gate.
 
 ## Goal
 
 Describe the implementation outcome.
 
-## Components
+## Features
 
-### Component 1: Name
+### Feature 1: Name
 
-FRD epic: E1
+FRD feature: F1
 
-Automated acceptance gate:
+Automated feature acceptance gate:
 
-- Define the DTO/data-contract check, API scenario, Playwright/browser flow, or equivalent harness automation.
+- Define the API scenario, Playwright/browser flow, CLI scenario, or equivalent harness automation.
+
+#### Component 1.1: Name
+
+Boundary / contract:
+
+- Define the DTOs, schemas, public API, adapter payloads, domain command/result, or UI state boundary.
+
+Automated component contract gate:
+
+- Define the DTO/data-contract check, schema check, adapter payload check, public API behavior check, or equivalent boundary automation.
 
 Files:
 
@@ -28,5 +38,6 @@ TDD block:
 - [ ] Run it and verify it fails for the expected reason.
 - [ ] Implement the minimal code.
 - [ ] Run the focused test and verify it passes.
-- [ ] Run the component acceptance gate.
+- [ ] Run the component contract gate.
+- [ ] Run the feature acceptance gate when all components in this feature are integrated.
 - [ ] Update `.sweet/FRD.md` status and memory notes.

@@ -1,6 +1,6 @@
 # Sweet
 
-Sweet is an opinionated SWE harness for Claude Code and Codex. It packages reusable skills, project artifacts, component-level acceptance gates, and memory conventions so agents can move from idea to implementation with less context loss and less unit-test micromanagement.
+Sweet is an opinionated SWE harness for Claude Code and Codex. It packages reusable skills, project artifacts, feature acceptance gates, component contract gates, and memory conventions so agents can move from idea to implementation with less context loss and less unit-test micromanagement.
 
 Sweet is built around two host surfaces:
 
@@ -12,11 +12,12 @@ Sweet is built around two host surfaces:
 Sweet projects use these committed artifacts by default:
 
 - `.sweet/PRD.md` — product and business requirements.
-- `.sweet/FRD.md` — epics, component/capability mapping, functional requirements, and progress.
+- `.sweet/FRD.md` — features, component/capability mapping, functional requirements, gates, and progress.
 - `.sweet/ARD.md` — architecture decisions, options, and consequences.
 - `.sweet/CAVEATS.md` — assumptions, dependencies, constraints, risks, and known unknowns.
 - `.sweet/ARCHI.md` — C4 L1/L2 and sequence diagrams in Mermaid.
 - `.sweet/PLAN.md` — component-by-component implementation plan.
+- `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` — shared engineering contract for feature progress, component contracts, verification loops, commits, memory, and subagent handoffs.
 
 `docs/sweet/` is also acceptable for repos that already keep planning docs under `docs/`. Root-level planning files are opt-in.
 
@@ -54,22 +55,23 @@ flowchart TD
     I1 --> I2[Write PRD, FRD, ARD, CAVEATS, ARCHI]
     I2 --> J
 
-    J --> J1[Write component-level PLAN]
-    J1 --> J2[Define automated component acceptance gates]
+    J --> J1[Write feature/component PLAN]
+    J1 --> J2[Define feature gates + component contract gates]
     J2 --> K
 
     K --> K1[Implement with internal TDD]
     K1 --> K2[Run focused tests]
-    K2 --> K3[Run component acceptance gate]
-    K3 --> K4[Code review]
-    K4 --> K5[Update FRD progress and memory]
-    K5 --> O{More components?}
+    K2 --> K3[Run component contract gate]
+    K3 --> K4[Run feature gate when slice is integrated]
+    K4 --> K5[Code review]
+    K5 --> K6[Update FRD progress, memory, and commit]
+    K6 --> O{More components?}
     O -->|yes| K
     O -->|no| P[finishing-a-development-branch]
 
     L --> L1[Root cause and fix]
     L1 --> L2[verification-before-completion]
-    L2 --> K5
+    L2 --> K6
 
     P --> Q[Merge, PR, keep branch, or discard]
 ```
@@ -126,15 +128,16 @@ codex_hooks = true
 
 Sweet currently wires Codex `SessionStart` to `hooks/session-start` and Codex `Stop` to `hooks/codex-stop`. Use the `preamble` and `capturing-failure-modes` skills explicitly when you want a curated handoff summary rather than raw hook persistence.
 
-## Component Acceptance Gates
+## Feature and Component Gates
 
-Each FRD epic/component must have an automated gate. Acceptable forms:
+Sweet tracks work at two levels:
 
-- DTO or data-contract checks across system/domain boundaries.
-- API or CLI scenario tests.
-- Automated e2e/user-flow tests through Playwright, browser automation, computer-use tooling, or equivalent project harnesses.
+- Features are the user-visible progress unit and should have an automated feature acceptance gate.
+- Components are the implementation ownership unit and should have automated contract gates for the boundaries other agents or systems depend on.
 
-Unit TDD remains internal to implementation. Component completion is proven by the automated acceptance gate plus review.
+Feature gates usually take the form of API/CLI scenarios, e2e/user-flow automation through Playwright/browser/computer-use tooling, or equivalent project harnesses. Component gates usually verify DTO/data-contract shape, schema behavior, adapter payloads, public API behavior, and error cases across system/domain boundaries.
+
+Unit TDD remains internal to implementation. Completion is proven by the relevant feature/component gate plus review, followed by FRD progress, memory, and commit updates. See `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` for the full contract.
 
 ## Claude Code Setup
 

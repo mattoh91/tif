@@ -13,13 +13,15 @@ When working in this repo:
 3. Prefer small phases with clear verification over broad rewrites.
 4. Do not add third-party runtime dependencies unless the user explicitly approves them.
 5. When modifying skills, treat them as behavior-shaping code: keep wording deliberate, test triggering, and avoid casual prose churn.
+6. Follow `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` for Sweet's shared engineering contract: feature-level progress, component-level contracts, closed verification loops, memory updates, and commit hygiene.
 
 ## Harness Goals
 
 Sweet provides:
 
 - structured project artifacts under `.sweet/` or `docs/sweet/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `PLAN.md`
-- automated component acceptance gates backed by DTO/data-contract checks, e2e/user-flow automation, API scenario tests, or equivalent project-specific harness checks
+- feature acceptance gates backed by automated e2e/user-flow, API scenario, CLI, or equivalent project-specific checks
+- component contract gates backed by DTO/data-contract checks, schema checks, adapter payload checks, public API behavior, or equivalent boundary verification
 - context-aware requirements probing with no-network fallbacks
 - out-of-tree memory under `~/.sweet/memory/<project-slug>/`
 - failure-mode capture and session bootstrap via `/preamble`
