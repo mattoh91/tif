@@ -1,0 +1,177 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mode="${1:-}"
+silent=0
+if [ "$mode" = "--hook" ]; then
+  silent=1
+fi
+
+project_slug() {
+  local remote
+  remote="$(git remote get-url origin 2>/dev/null || true)"
+  if [ -n "$remote" ]; then
+    printf '%s' "$remote" \
+      | sed -E 's#^[a-zA-Z]+://##; s#^git@##; s#:#/#; s#\.git$##; s#[^A-Za-z0-9._/-]+#-#g; s#[/]+#-#g' \
+      | tr '[:upper:]' '[:lower:]'
+  else
+    basename "$(pwd)" | tr '[:upper:]' '[:lower:]' | sed -E 's#[^a-z0-9._-]+#-#g'
+  fi
+}
+
+has_sweet_file() {
+  local rel="$1"
+  [ -f ".sweet/${rel}" ] || [ -f "docs/sweet/${rel}" ]
+}
+
+first_sweet_file() {
+  local rel="$1"
+  if [ -f ".sweet/${rel}" ]; then
+    printf '.sweet/%s' "$rel"
+  elif [ -f "docs/sweet/${rel}" ]; then
+    printf 'docs/sweet/%s' "$rel"
+  fi
+}
+
+append_issue() {
+  local severity="$1"
+  local message="$2"
+  issue_count=$((issue_count + 1))
+  printf -- '- [%s] %s\n' "$severity" "$message" >> "$issues_tmp"
+}
+
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+slug="$(project_slug)"
+memory_dir="${HOME}/.sweet/memory/${slug}"
+session_dir="${memory_dir}/SESSIONS"
+mkdir -p "$session_dir"
+
+now="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+today="$(date -u +%Y-%m-%d)"
+audit_file="${memory_dir}/STATE_AUDIT.md"
+preamble_file="${memory_dir}/PREAMBLE.md"
+session_file="${session_dir}/${today}.md"
+issues_tmp="$(mktemp)"
+trap 'rm -f "$issues_tmp"' EXIT
+issue_count=0
+
+git_status="$(git status --short 2>/dev/null || true)"
+changed_files="$(git diff --name-only HEAD 2>/dev/null || true)"
+recent_commits="$(git log --oneline -8 2>/dev/null || true)"
+
+if [ -n "$git_status" ]; then
+  append_issue "attention" "Working tree has uncommitted changes; review or commit before clearing context."
+fi
+
+for doc in PRD.md FRD.md ARD.md CAVEATS.md ARCHI.md PLAN.md; do
+  if ! has_sweet_file "$doc"; then
+    append_issue "missing" "Sweet planning artifact is missing: .sweet/${doc} or docs/sweet/${doc}."
+  fi
+done
+
+if [ -n "$changed_files" ]; then
+  if printf '%s\n' "$changed_files" | grep -Eq '(^|/)(src|app|lib|packages|cmd|internal|components|pages|routes|api|server|client|tests?)/|\.([cm]?[jt]sx?|py|go|rs|java|kt|rb|php|swift|cs|cpp|h|hpp)$'; then
+    if ! printf '%s\n' "$changed_files" | grep -Eq '(^|/)(\.sweet|docs/sweet)/'; then
+      append_issue "possible-stale" "Code/test files changed without Sweet planning docs in the current diff; check FRD/PLAN/ARD/ARCHI/CAVEATS."
+    fi
+  fi
+fi
+
+if has_sweet_file "ARCHI.md"; then
+  archi_file="$(first_sweet_file "ARCHI.md")"
+  if ! grep -Eq '```mermaid|graph |flowchart |sequenceDiagram|C4Context|C4Container' "$archi_file" 2>/dev/null; then
+    append_issue "possible-stale" "${archi_file} does not appear to contain Mermaid/C4/sequence diagrams."
+  fi
+fi
+
+if has_sweet_file "ARD.md"; then
+  ard_file="$(first_sweet_file "ARD.md")"
+  if ! grep -Eiq 'decision|options|consequence|status' "$ard_file" 2>/dev/null; then
+    append_issue "possible-stale" "${ard_file} does not appear to record decisions/options/consequences."
+  fi
+fi
+
+if [ ! -f "${memory_dir}/MEMORY.md" ]; then
+  append_issue "missing" "Sweet memory file is missing: ${memory_dir}/MEMORY.md."
+fi
+
+if [ ! -f "${memory_dir}/FAILURES.md" ]; then
+  append_issue "missing" "Sweet failure-mode file is missing: ${memory_dir}/FAILURES.md."
+fi
+
+{
+  printf '# Sweet State Audit\n\n'
+  printf 'Generated: %s\n' "$now"
+  printf 'Project: %s\n' "$slug"
+  printf 'Working directory: %s\n\n' "$(pwd)"
+  printf '## Issues\n\n'
+  if [ "$issue_count" -eq 0 ]; then
+    printf -- '- [ok] No obvious stale-state issues detected by static checks.\n'
+  else
+    cat "$issues_tmp"
+  fi
+  printf '\n## Git Status\n\n'
+  if [ -n "$git_status" ]; then
+    printf '```text\n%s\n```\n' "$git_status"
+  else
+    printf 'Clean.\n'
+  fi
+  printf '\n## Changed Files\n\n'
+  if [ -n "$changed_files" ]; then
+    printf '```text\n%s\n```\n' "$changed_files"
+  else
+    printf 'None relative to HEAD.\n'
+  fi
+  printf '\n## Recent Commits\n\n'
+  if [ -n "$recent_commits" ]; then
+    printf '```text\n%s\n```\n' "$recent_commits"
+  else
+    printf 'Unavailable.\n'
+  fi
+} > "$audit_file"
+
+{
+  printf '<sweet-preamble>\n'
+  printf 'Project: %s\n' "$slug"
+  printf 'Generated: %s\n' "$now"
+  printf 'Current state: See %s\n' "$audit_file"
+  printf 'Working tree: '
+  if [ -n "$git_status" ]; then
+    printf 'dirty; inspect git status before continuing.\n'
+  else
+    printf 'clean.\n'
+  fi
+  printf 'State issues:\n'
+  if [ "$issue_count" -eq 0 ]; then
+    printf -- '- No obvious stale-state issues detected by static checks.\n'
+  else
+    cat "$issues_tmp"
+  fi
+  printf 'Recent commits:\n'
+  if [ -n "$recent_commits" ]; then
+    printf '%s\n' "$recent_commits" | sed 's/^/- /'
+  else
+    printf -- '- Unavailable.\n'
+  fi
+  printf 'Next session checklist:\n'
+  printf -- '- Read .sweet/FRD.md or docs/sweet/FRD.md for current feature/component status.\n'
+  printf -- '- Read .sweet/PLAN.md or docs/sweet/PLAN.md for next task and gates.\n'
+  printf -- '- Read %s and update stale docs or memory before implementation.\n' "$audit_file"
+  printf -- '- Run the relevant feature acceptance gate and component contract gate before claiming completion.\n'
+  printf '</sweet-preamble>\n'
+} > "$preamble_file"
+
+{
+  printf '\n## Sweet Refresh State — %s\n\n' "$now"
+  printf -- '- Event: %s\n' "${SWEET_HOOK_EVENT:-manual}"
+  printf -- '- Audit: %s\n' "$audit_file"
+  printf -- '- Preamble: %s\n' "$preamble_file"
+  printf -- '- Issues: %s\n' "$issue_count"
+} >> "$session_file"
+
+if [ "$silent" -eq 0 ]; then
+  printf 'Sweet state refreshed.\n'
+  printf 'Audit: %s\n' "$audit_file"
+  printf 'Preamble: %s\n' "$preamble_file"
+  printf 'Issues: %s\n' "$issue_count"
+fi

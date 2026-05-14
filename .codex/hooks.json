@@ -18,7 +18,8 @@
           {
             "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/hooks/codex-stop\"",
-            "statusMessage": "Persisting Sweet turn state"
+            "statusMessage": "Persisting Sweet turn state",
+            "timeout": 30
           }
         ]
       }
