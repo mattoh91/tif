@@ -56,8 +56,19 @@ trap 'rm -f "$issues_tmp"' EXIT
 issue_count=0
 
 git_status="$(git status --short 2>/dev/null || true)"
-changed_files="$(git diff --name-only HEAD 2>/dev/null || true)"
+changed_files="$({
+  git diff --name-only HEAD 2>/dev/null || true
+  git ls-files --others --exclude-standard 2>/dev/null || true
+} | sort -u)"
 recent_commits="$(git log --oneline -8 2>/dev/null || true)"
+
+if [ ! -f "${memory_dir}/MEMORY.md" ]; then
+  printf '# Sweet Memory\n' > "${memory_dir}/MEMORY.md"
+fi
+
+if [ ! -f "${memory_dir}/FAILURES.md" ]; then
+  printf '# Sweet Failure Modes\n' > "${memory_dir}/FAILURES.md"
+fi
 
 if [ -n "$git_status" ]; then
   append_issue "attention" "Working tree has uncommitted changes; review or commit before clearing context."
@@ -89,14 +100,6 @@ if has_sweet_file "ARD.md"; then
   if ! grep -Eiq 'decision|options|consequence|status' "$ard_file" 2>/dev/null; then
     append_issue "possible-stale" "${ard_file} does not appear to record decisions/options/consequences."
   fi
-fi
-
-if [ ! -f "${memory_dir}/MEMORY.md" ]; then
-  append_issue "missing" "Sweet memory file is missing: ${memory_dir}/MEMORY.md."
-fi
-
-if [ ! -f "${memory_dir}/FAILURES.md" ]; then
-  append_issue "missing" "Sweet failure-mode file is missing: ${memory_dir}/FAILURES.md."
 fi
 
 {

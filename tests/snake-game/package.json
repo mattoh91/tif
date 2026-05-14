@@ -1,0 +1,9 @@
+{
+  "name": "sweet-snake-game-test",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test game.test.mjs"
+  }
+}
