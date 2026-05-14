@@ -233,7 +233,7 @@ Useful checks:
 ```bash
 node -e "for (const f of ['.agents/plugins/marketplace.json','package.json','.claude-plugin/plugin.json','.claude-plugin/marketplace.json','.codex-plugin/plugin.json','gemini-extension.json','.version-bump.json','hooks/hooks.json']) JSON.parse(require('fs').readFileSync(f,'utf8'))"
 bash -n hooks/session-start hooks/pre-compact hooks/session-end scripts/sync-to-codex-plugin.sh
-scripts/check-sweet-spec-set.sh tests/snake-game
+tmpdir="$(mktemp -d)" && mkdir -p "$tmpdir/.sweet" && touch "$tmpdir/.sweet"/{PRD,FRD,ARD,CAVEATS,ARCHI,PLAN}.md && scripts/check-sweet-spec-set.sh "$tmpdir"
 tests/skill-triggering/run-all.sh
 tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 ```
