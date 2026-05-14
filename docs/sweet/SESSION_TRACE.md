@@ -97,15 +97,15 @@ Check the relevant FRD/PLAN gates and memory files.
 
 Expected manual command:
 
-- `/sweet-refresh-state`
+- `/update-state`
 
 Expected skill:
 
-- `sweet-refresh-state`
+- `update-state`
 
 Expected script:
 
-- `hooks/sweet-refresh-state`
+- `hooks/update-state`
 
 Expected artifacts:
 
@@ -115,7 +115,7 @@ Expected artifacts:
 Verify locally:
 
 ```bash
-hooks/sweet-refresh-state
+hooks/update-state
 ```
 
 ## 6. Compact
@@ -127,7 +127,7 @@ Expected host trigger:
 Expected scripts:
 
 - `hooks/pre-compact`
-- `hooks/sweet-refresh-state --hook`
+- `hooks/update-state --hook`
 
 Expected artifacts:
 
@@ -151,8 +151,8 @@ Expected host trigger:
 
 Expected scripts:
 
-- Claude Code: `hooks/session-end`, then `hooks/sweet-refresh-state --hook`
-- Codex: `hooks/codex-stop`, then `hooks/sweet-refresh-state --hook`
+- Claude Code: `hooks/session-end`, then `hooks/update-state --hook`
+- Codex: `hooks/codex-stop`, then `hooks/update-state --hook`
 
 Expected artifacts:
 

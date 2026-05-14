@@ -113,7 +113,7 @@ Current hook files:
 - `hooks/pre-compact` — records compaction marker, raw hook payload, branch, and git status.
 - `hooks/session-end` — records session-end marker, raw hook payload, branch, and git status.
 - `hooks/codex-stop` — records Codex turn-stop markers, raw hook payload, branch, and git status.
-- `hooks/sweet-refresh-state` — writes a static Sweet state audit and mechanical next-session preamble under `~/.sweet/memory/<project-slug>/`.
+- `hooks/update-state` — writes a static Sweet state audit and mechanical next-session preamble under `~/.sweet/memory/<project-slug>/`.
 
 Host configuration:
 
@@ -223,7 +223,7 @@ Use the capturing-failure-modes skill before we end this session.
 Refresh state before clearing context:
 
 ```text
-/sweet-refresh-state
+/update-state
 ```
 
 ## Verification

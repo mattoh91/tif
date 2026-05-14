@@ -162,7 +162,7 @@ fi
 } > "$preamble_file"
 
 {
-  printf '\n## Sweet Refresh State — %s\n\n' "$now"
+  printf '\n## Sweet Update State — %s\n\n' "$now"
   printf -- '- Event: %s\n' "${SWEET_HOOK_EVENT:-manual}"
   printf -- '- Audit: %s\n' "$audit_file"
   printf -- '- Preamble: %s\n' "$preamble_file"

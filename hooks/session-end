@@ -37,6 +37,6 @@ cat > "$payload_file" || true
   echo "- Raw hook payload: ${payload_file}"
 } >> "$session_file"
 
-SWEET_HOOK_EVENT=SessionEnd "${BASH_SOURCE%/*}/sweet-refresh-state" --hook || true
+SWEET_HOOK_EVENT=SessionEnd "${BASH_SOURCE%/*}/update-state" --hook || true
 
 printf '{}\n'

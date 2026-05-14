@@ -1,9 +1,9 @@
 ---
-name: sweet-refresh-state
+name: update-state
 description: Use before clearing, compacting, ending a session, dispatching follow-on agents, or when asked to refresh/check Sweet state; audits planning docs, memory, failure modes, git state, and next-session preamble readiness.
 ---
 
-# Sweet Refresh State
+# Sweet Update State
 
 Use this skill to turn the hook-generated static audit into a curated state refresh. The shell hook can detect obvious stale state and write a mechanical preamble; this skill decides what actually needs updating.
 
@@ -24,7 +24,7 @@ Use this skill to turn the hook-generated static audit into a curated state refr
 
 ## Workflow
 
-1. Run `hooks/sweet-refresh-state` from the repo root to generate the latest static audit and mechanical preamble.
+1. Run `hooks/update-state` from the repo root to generate the latest static audit and mechanical preamble.
 2. Read the generated audit and the files listed above.
 3. Check for stale or orphaned state:
    - completed feature/component work not reflected in FRD progress
