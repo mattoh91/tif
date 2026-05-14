@@ -41,6 +41,19 @@ digraph when_to_use {
 
 ## The Process
 
+## Required Spec Set Gate
+
+Before dispatching any implementer subagent in a Sweet-managed project, verify the full spec set exists in either `.sweet/` or `docs/sweet/`:
+
+- `PRD.md`
+- `FRD.md`
+- `ARD.md`
+- `CAVEATS.md`
+- `ARCHI.md`
+- `PLAN.md`
+
+If any file is missing, stop. Do not dispatch implementation work. Use `brainstorming`, `scaffolding-repo`, or `writing-plans` to create the missing artifact first.
+
 ```dot
 digraph process {
     rankdir=TB;

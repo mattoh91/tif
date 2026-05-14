@@ -25,6 +25,18 @@ If the spec covers multiple independent subsystems, it should have been broken i
 
 Follow `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` when available. Feature progress, component contracts, git commits, FRD updates, and Sweet memory are the context substrate for subagents and future sessions.
 
+## Required Spec Set Gate
+
+Before writing or updating an implementation plan, verify the full Sweet spec set exists in either `.sweet/` or `docs/sweet/`:
+
+- `PRD.md`
+- `FRD.md`
+- `ARD.md`
+- `CAVEATS.md`
+- `ARCHI.md`
+
+`PLAN.md` may be missing only when this skill is creating it for the first time. If any required spec file is missing, stop and use `brainstorming` or `scaffolding-repo` to create the missing file before planning. Do not proceed with a partial spec set.
+
 ## File Structure
 
 Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
