@@ -27,7 +27,7 @@ Follow `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` when available. Feature pr
 
 ## Required Spec Set Gate
 
-Before writing or updating an implementation plan, verify the full Sweet spec set exists in either `.sweet/` or `docs/sweet/`:
+Before writing or updating an implementation plan, verify the full Sweet spec set exists as top-level files in either `.sweet/` or `docs/sweet/`:
 
 - `PRD.md`
 - `FRD.md`
@@ -36,6 +36,8 @@ Before writing or updating an implementation plan, verify the full Sweet spec se
 - `ARCHI.md`
 
 `PLAN.md` may be missing only when this skill is creating it for the first time. If any required spec file is missing, stop and use `brainstorming` or `scaffolding-repo` to create the missing file before planning. Do not proceed with a partial spec set.
+
+Dated archives such as `docs/sweet/specs/*.md`, `docs/sweet/plans/*.md`, or `docs/plans/*.md` are historical reference only. They do not satisfy this gate unless the user explicitly promotes one into the active `.sweet/` or `docs/sweet/` spec set.
 
 ## File Structure
 

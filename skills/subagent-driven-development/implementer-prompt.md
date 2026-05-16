@@ -20,6 +20,23 @@ Task tool (general-purpose):
     [Relevant DTOs, schemas, public interfaces, adapters, and boundary modules]
     [Recent commits and Sweet memory notes needed for this task]
 
+    ## Boundary and Data Contract
+
+    System/module boundary:
+    [Exact module, package, route, service, adapter, UI surface, or domain boundary this task owns]
+
+    Task boundary:
+    [Exact files/symbols/behaviors this task may create or modify, and what is out of scope]
+
+    Input DTO/data shape:
+    [Fields, required/optional status, IDs, enums/status values, validation rules, and realistic sample input]
+
+    Output DTO/data shape:
+    [Returned fields, side effects, emitted events, persistence shape, error shape, and realistic sample output]
+
+    Neighbor contracts to preserve:
+    [Public interfaces, schemas, adapters, API endpoints, UI state, or events that must remain compatible]
+
     ## Before You Begin
 
     If you have questions about:

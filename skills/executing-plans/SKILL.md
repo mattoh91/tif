@@ -17,7 +17,7 @@ Load plan, review critically, execute all tasks, report when complete.
 
 ### Step 0: Verify Sweet Spec Set
 
-Before executing any plan in a Sweet-managed project, verify the full spec set exists in either `.sweet/` or `docs/sweet/`:
+Before executing any plan in a Sweet-managed project, verify the full spec set exists as top-level files in either `.sweet/` or `docs/sweet/`:
 
 - `PRD.md`
 - `FRD.md`
@@ -27,6 +27,8 @@ Before executing any plan in a Sweet-managed project, verify the full spec set e
 - `PLAN.md`
 
 If any file is missing, stop. Do not implement. Use `brainstorming`, `scaffolding-repo`, or `writing-plans` to create the missing artifact first.
+
+Dated archives such as `docs/sweet/specs/*.md`, `docs/sweet/plans/*.md`, or `docs/plans/*.md` are historical reference only. They do not satisfy this gate unless the user explicitly promotes one into the active `.sweet/` or `docs/sweet/` spec set.
 
 ### Step 1: Load and Review Plan
 1. Read plan file

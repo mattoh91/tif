@@ -43,7 +43,7 @@ digraph when_to_use {
 
 ## Required Spec Set Gate
 
-Before dispatching any implementer subagent in a Sweet-managed project, verify the full spec set exists in either `.sweet/` or `docs/sweet/`:
+Before dispatching any implementer subagent in a Sweet-managed project, verify the full spec set exists as top-level files in either `.sweet/` or `docs/sweet/`:
 
 - `PRD.md`
 - `FRD.md`
@@ -53,6 +53,21 @@ Before dispatching any implementer subagent in a Sweet-managed project, verify t
 - `PLAN.md`
 
 If any file is missing, stop. Do not dispatch implementation work. Use `brainstorming`, `scaffolding-repo`, or `writing-plans` to create the missing artifact first.
+
+Dated archives such as `docs/sweet/specs/*.md`, `docs/sweet/plans/*.md`, or `docs/plans/*.md` are historical reference only. They do not satisfy this gate unless the user explicitly promotes one into the active `.sweet/` or `docs/sweet/` spec set.
+
+## Subagent Task Contract
+
+Every implementer subagent prompt must include a precise task contract, not just a prose task title:
+
+- **System/module boundary:** the module, package, route, adapter, service, or UI boundary the subagent owns.
+- **Task boundary:** exactly what the subagent may create/modify, and what it must not touch.
+- **Input DTO/data shape:** fields, required/optional status, IDs, enums/status values, validation rules, and sample input.
+- **Output DTO/data shape:** returned fields, side effects, emitted events, persistence shape, error shape, and sample output.
+- **Neighbor contracts:** public interfaces, schemas, adapters, API endpoints, or UI state the task must preserve.
+- **Gate commands:** component contract gate and feature acceptance gate commands the subagent must run.
+
+If the plan does not state these shapes clearly enough to dispatch a fresh agent without inherited context, stop and update the plan before dispatching.
 
 ```dot
 digraph process {

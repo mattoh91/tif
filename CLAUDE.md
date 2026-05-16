@@ -31,6 +31,8 @@ Sweet provides:
 
 Root-level `PLAN.md` and `USERSTORIES.md` describe work on this harness itself. Generated artifacts for downstream projects should default to `.sweet/` or `docs/sweet/` to avoid colliding with harness-maintenance docs.
 
+Active Sweet project artifacts are only the top-level files under `.sweet/` or `docs/sweet/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `PLAN.md`. Dated files under `docs/sweet/specs/`, `docs/sweet/plans/`, or `docs/plans/` are historical archives unless the user explicitly says to use them. Do not treat archived dated plans/specs as satisfying the active Sweet spec-set gate.
+
 ## Verification
 
 Use the existing test harness where possible:
