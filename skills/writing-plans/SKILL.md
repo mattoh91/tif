@@ -25,6 +25,8 @@ If the spec covers multiple independent subsystems, it should have been broken i
 
 Follow `docs/cutiepie/AGENTIC_ENGINEERING_GUIDELINES.md` when available. Feature progress, component contracts, git commits, FRD updates, and Cutiepie memory are the context substrate for subagents and future sessions.
 
+The active spec set may be intentionally lightweight for small projects, but keep roles distinct: `PLAN.md` is the executable implementation plan; `FRD.md` is the feature/component map, gate registry, and progress tracker; the other docs provide intent, decisions, caveats, diagrams, and config context.
+
 ## Required Spec Set Gate
 
 Before writing or updating an implementation plan, verify the full Cutiepie spec set exists as top-level files in either `.cutiepie/` or `docs/cutiepie/`:
@@ -65,6 +67,22 @@ Each top-level task should map to one FRD feature/capability. Under that feature
 
 The visible progress unit is the feature acceptance gate. The implementation ownership unit is the component contract gate. Do not mark a feature complete until the feature gate passes; do not mark a component complete until its contract gate passes.
 
+## Subagent Dispatchability
+
+Every component block must be dispatchable to a fresh subagent. The agent should be able to implement the component using only that block plus linked active Cutiepie docs, recent commits, and memory. If a component task depends on hidden conversation context, the plan is not ready.
+
+For each component, define:
+
+- system/module boundary owned by the task
+- task boundary: exact files, symbols, and behaviors in scope and out of scope
+- input DTO/data shape: fields, required/optional status, IDs, enums, validation rules, sample input
+- output DTO/data shape: returned fields, side effects, persistence shape, emitted events, error shape, sample output
+- neighbor contracts: public interfaces, schemas, adapters, endpoints, UI state, or events to preserve
+- settings/config contract and related `CONFIG.md` entries
+- component contract gate and related feature acceptance gate commands
+
+If these details are unclear, stop and update the plan or spec set before offering subagent-driven execution.
+
 ## Plan Document Header
 
 **Every plan MUST start with this header:**
@@ -100,7 +118,35 @@ The visible progress unit is the feature acceptance gate. The implementation own
 
 #### Component N.M: [Component Name]
 
+**System / Module Boundary:** [module, package, route, service, adapter, UI surface, domain boundary, or other owned boundary]
+
+**Task Boundary:**
+- In scope: [exact files, symbols, behaviors, and tests this task may create or modify]
+- Out of scope: [neighbor components, public contracts, refactors, or behaviors this task must not change]
+
 **Boundary / Contract:** [DTOs, schemas, public API, adapter payloads, domain command/result, or UI state boundary]
+
+**Input DTO / Data Shape:**
+- Fields: [name, type, required/optional, validation]
+- IDs/enums/status values: [exact values]
+- Sample input:
+
+```json
+{}
+```
+
+**Output DTO / Data Shape:**
+- Fields: [name, type, required/optional]
+- Side effects / persistence / events: [exact shape or "none"]
+- Error shape: [exact shape]
+- Sample output:
+
+```json
+{}
+```
+
+**Neighbor Contracts To Preserve:**
+- [public interface, schema, adapter payload, API endpoint, UI state, or event]
 
 **Automated Component Contract Gate:**
 - Type: [DTO/data-contract | schema check | adapter payload | API behavior | automated UI state check | project-specific harness]
@@ -176,6 +222,7 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - References to types, functions, or methods not defined in any task
 - Feature tasks without an automated feature gate command
 - Component blocks without an automated contract gate command
+- Component blocks that are not dispatchable to a fresh subagent because system boundary, task boundary, input/output DTO/data shape, neighbor contracts, settings/config contract, or gate commands are missing
 - New hyperparameters, thresholds, retry counts, timeouts, model names, token limits, temperatures, feature flags, or batch sizes without a settings owner and `CONFIG.md` entry
 
 ## Remember
@@ -201,6 +248,8 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 **4. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Component 3 but `clearFullLayers()` in Component 7 is a bug.
 
 **5. Config consistency:** Are all hyperparameters and tunables routed through the settings/config owner and documented in CONFIG.md?
+
+**6. Subagent dispatchability:** Can a fresh subagent implement each component task from that task block plus linked active Cutiepie docs, recent commits, and memory? If not, add the missing boundary, DTO/data-shape, neighbor-contract, config, or gate detail.
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 

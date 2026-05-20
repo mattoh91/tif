@@ -33,7 +33,13 @@ Root-level `PLAN.md` and `USERSTORIES.md` describe work on this harness itself. 
 
 Active Cutiepie project artifacts are only the top-level files under `.cutiepie/` or `docs/cutiepie/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md`. Dated files under `docs/cutiepie/specs/`, `docs/cutiepie/plans/`, or `docs/plans/` are historical archives unless the user explicitly says to use them. Do not treat archived dated plans/specs as satisfying the active Cutiepie spec-set gate.
 
+The seven active artifacts may be intentionally lightweight for small projects, but their responsibilities should stay distinct. `PLAN.md` is the executable implementation plan. `FRD.md` is the feature/component map, gate registry, and progress tracker. The other artifacts provide product intent, decisions, caveats, diagrams, and configuration context for agents and fresh sessions.
+
 All hyperparameters and tunable settings belong in a proper settings/config owner in the project code and must be documented in active `CONFIG.md`: model names, temperatures, token limits, thresholds, retry counts, timeouts, polling intervals, batch sizes, feature flags, and similar values. Do not scatter magic numbers or configuration literals through implementation code without documenting why they are intentionally local constants.
+
+## Subagent Divisibility
+
+Write plans so a fresh subagent can implement a component task without inherited conversation context. A component task is not dispatchable until it names the system/module boundary, allowed files, input and output DTO/data shapes, neighbor contracts, settings/config contract, component contract gate, and related feature acceptance gate. If those details are missing, update the plan before dispatching work.
 
 ## Verification
 

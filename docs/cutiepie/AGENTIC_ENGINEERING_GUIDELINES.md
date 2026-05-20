@@ -13,6 +13,8 @@ Cutiepie tracks work at two levels:
 
 Every feature should have a feature acceptance gate. Every component touched by that feature should have a component contract gate. Feature gates prove the user/system outcome; component gates make the boundaries safe for independent agents to implement and review.
 
+The active Cutiepie artifact set can be lightweight for small projects, but keep the roles distinct. `PLAN.md` is the executable implementation plan. `FRD.md` is the feature/component map, gate registry, and progress tracker. `PRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `CONFIG.md` provide intent, decisions, risks, diagrams, and settings context that subagents and fresh sessions can reload.
+
 ## Multi-Agent Context Contract
 
 Subagents and fresh sessions must be able to reconstruct the current state without inheriting hidden context. To make that possible:
@@ -24,6 +26,20 @@ Subagents and fresh sessions must be able to reconstruct the current state witho
 - Keep DTOs, schemas, public interfaces, adapters, and boundary modules easy to find from the plan, preamble, and recent commits.
 
 Git history, Cutiepie memory, FRD progress, and explicit contract gates are the shared substrate that lets multiple agents work in parallel without relying on one session's context window.
+
+## Subagent Divisibility Rule
+
+A component task is ready for subagent execution only when a fresh agent can implement it from the task block plus linked active Cutiepie docs, without relying on hidden conversation context. Each dispatchable component task must define:
+
+- the system/module boundary it owns
+- the task boundary: files, symbols, and behaviors it may change, plus what is out of scope
+- input DTO/data shape with fields, required/optional status, validation, IDs, enums, and sample input
+- output DTO/data shape with returned fields, side effects, persistence, emitted events, errors, and sample output
+- neighbor contracts it must preserve
+- settings/config owner and documented tunables
+- exact component contract gate and related feature acceptance gate commands
+
+If those details are missing, update `PLAN.md` and the relevant active docs before dispatching implementation work.
 
 ## Think Before Coding
 
