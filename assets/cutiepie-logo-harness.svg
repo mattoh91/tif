@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Cutiepie mascot harness variant</title>
+  <desc id="desc">A cute Cutiepie mascot wearing a small software harness with connected workflow badges.</desc>
+  <rect width="512" height="512" rx="96" fill="#ecfeff"/>
+  <circle cx="256" cy="250" r="118" fill="#f59e0b" stroke="#164e63" stroke-width="14"/>
+  <path d="M256 132a118 118 0 0 1 104 62l-104 56z" fill="#fdba74"/>
+  <path d="M360 194a118 118 0 0 1-24 140l-80-84z" fill="#fb923c"/>
+  <path d="M162 200c-32-22-62-16-78 10 28 5 49 20 62 44" fill="#f59e0b" stroke="#164e63" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M350 200c32-22 62-16 78 10-28 5-49 20-62 44" fill="#f59e0b" stroke="#164e63" stroke-width="12" stroke-linejoin="round"/>
+  <circle cx="216" cy="232" r="13" fill="#164e63"/>
+  <circle cx="296" cy="232" r="13" fill="#164e63"/>
+  <path d="M218 294c24 20 52 20 76 0" fill="none" stroke="#164e63" stroke-width="11" stroke-linecap="round"/>
+  <path d="M178 354c54 42 102 42 156 0" fill="none" stroke="#164e63" stroke-width="16" stroke-linecap="round"/>
+  <path d="M190 356v66M322 356v66M190 392h132" stroke="#164e63" stroke-width="16" stroke-linecap="round"/>
+  <rect x="154" y="408" width="72" height="48" rx="16" fill="#ffffff" stroke="#2563eb" stroke-width="10"/>
+  <rect x="286" y="408" width="72" height="48" rx="16" fill="#ffffff" stroke="#7c3aed" stroke-width="10"/>
+  <path d="M186 432h12M314 432h12" stroke="#164e63" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="256" cy="416" r="20" fill="#0f766e" stroke="#ffffff" stroke-width="6"/>
+  <path d="M256 396v-36" stroke="#164e63" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="256" cy="78" r="24" fill="#be123c"/>
+  <circle cx="82" cy="284" r="24" fill="#b45309"/>
+  <circle cx="430" cy="284" r="24" fill="#2563eb"/>
+  <path d="M256 102v36M106 284h44M406 284h-44" stroke="#164e63" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+</svg>
