@@ -124,6 +124,11 @@
       overflow-x: auto;
     }
 
+    .influence-shell {
+      padding: 18px;
+      overflow-x: auto;
+    }
+
     svg {
       display: block;
       min-width: 1080px;
@@ -174,6 +179,67 @@
 
     .gate rect {
       stroke: var(--gate);
+    }
+
+    .source-node rect {
+      stroke: #475569;
+      fill: #f8fafc;
+    }
+
+    .feature-node rect {
+      stroke: #2563eb;
+      fill: #ffffff;
+    }
+
+    .center-node circle {
+      fill: #17202a;
+      stroke: #17202a;
+      stroke-width: 2;
+    }
+
+    .center-node text {
+      fill: #ffffff;
+      font-weight: 750;
+    }
+
+    .influence-line {
+      stroke: #9aa7b5;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .influence-graph.dim [data-source],
+    .influence-graph.dim .influence-line {
+      opacity: 0.2;
+    }
+
+    .influence-graph.dim [data-active="true"],
+    .influence-graph.dim .center-node {
+      opacity: 1;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .controls button {
+      min-height: 34px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .controls button[aria-pressed="true"] {
+      border-color: #2563eb;
+      background: #eff6ff;
+      color: #1d4ed8;
     }
 
     .actor rect {
@@ -315,6 +381,7 @@
       <h1>Cutiepie Session Lifecycle</h1>
       <p class="lede">Cutiepie helps an agent write code by keeping the development loop explicit: load durable context, choose the right skill, create or update project artifacts, implement through gates, persist state, and hand off cleanly to the next session.</p>
       <nav class="nav" aria-label="Page sections">
+        <a href="#influences">Influence graph</a>
         <a href="#diagram">Lifecycle diagram</a>
         <a href="#hooks">Hooks</a>
         <a href="#skills">Skills</a>
@@ -327,6 +394,184 @@
   </header>
 
   <main>
+    <section id="influences" aria-labelledby="influences-title">
+      <h2 id="influences-title">Influence Graph</h2>
+      <p>Cutiepie combines a few recurring ideas from agent-harness writing: make boundaries legible, make fresh starts cheap, keep memory durable, run an improvement loop, and use adversarial review when the plan needs another lens. Click article nodes to open the source. Click feature nodes to jump to the related Cutiepie mechanism.</p>
+
+      <div class="controls" aria-label="Influence filters">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="harness">Boundaries</button>
+        <button type="button" data-filter="bootstrap">Fresh start</button>
+        <button type="button" data-filter="memory">Memory</button>
+        <button type="button" data-filter="loop">Improvement loop</button>
+        <button type="button" data-filter="council">Review council</button>
+      </div>
+
+      <div class="diagram-shell influence-shell">
+        <svg class="influence-graph" viewBox="0 0 1120 720" role="img" aria-labelledby="influence-title influence-desc">
+          <title id="influence-title">Cutiepie inspiration graph</title>
+          <desc id="influence-desc">Cutiepie is the central node. Around it are article sources and the Cutiepie features those sources influenced.</desc>
+
+          <line class="influence-line" data-source="harness" x1="560" y1="360" x2="235" y2="112"></line>
+          <line class="influence-line" data-source="bootstrap" x1="560" y1="360" x2="560" y2="92"></line>
+          <line class="influence-line" data-source="memory" x1="560" y1="360" x2="885" y2="112"></line>
+          <line class="influence-line" data-source="loop" x1="560" y1="360" x2="885" y2="594"></line>
+          <line class="influence-line" data-source="council" x1="560" y1="360" x2="235" y2="594"></line>
+
+          <line class="influence-line" data-source="harness" x1="235" y1="160" x2="118" y2="270"></line>
+          <line class="influence-line" data-source="harness" x1="235" y1="160" x2="305" y2="272"></line>
+          <line class="influence-line" data-source="harness" x1="235" y1="160" x2="430" y2="246"></line>
+
+          <line class="influence-line" data-source="bootstrap" x1="560" y1="140" x2="530" y2="220"></line>
+          <line class="influence-line" data-source="bootstrap" x1="560" y1="140" x2="690" y2="236"></line>
+          <line class="influence-line" data-source="bootstrap" x1="560" y1="140" x2="785" y2="274"></line>
+
+          <line class="influence-line" data-source="memory" x1="885" y1="160" x2="812" y2="270"></line>
+          <line class="influence-line" data-source="memory" x1="885" y1="160" x2="930" y2="284"></line>
+          <line class="influence-line" data-source="memory" x1="885" y1="160" x2="1005" y2="292"></line>
+
+          <line class="influence-line" data-source="loop" x1="885" y1="546" x2="765" y2="474"></line>
+          <line class="influence-line" data-source="loop" x1="885" y1="546" x2="922" y2="452"></line>
+          <line class="influence-line" data-source="loop" x1="885" y1="546" x2="1010" y2="440"></line>
+
+          <line class="influence-line" data-source="council" x1="235" y1="546" x2="116" y2="430"></line>
+          <line class="influence-line" data-source="council" x1="235" y1="546" x2="286" y2="448"></line>
+          <line class="influence-line" data-source="council" x1="235" y1="546" x2="430" y2="472"></line>
+
+          <g class="center-node">
+            <circle cx="560" cy="360" r="76"></circle>
+            <text x="560" y="352" text-anchor="middle">Cutiepie</text>
+            <text x="560" y="378" text-anchor="middle" style="font-size: 13px; font-weight: 550;">SWE harness</text>
+          </g>
+
+          <a href="https://openai.com/index/harness-engineering/" target="_blank" rel="noopener" class="node source-node" data-source="harness" aria-label="OpenAI harness engineering article">
+            <rect x="92" y="52" width="286" height="108"></rect>
+            <text x="235" y="84" text-anchor="middle">Harness engineering</text>
+            <text class="sub" x="235" y="110" text-anchor="middle">OpenAI</text>
+            <text class="sub" x="235" y="134" text-anchor="middle">agent legibility and boundaries</text>
+          </a>
+
+          <a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents" target="_blank" rel="noopener" class="node source-node" data-source="bootstrap" aria-label="Anthropic effective harnesses article">
+            <rect x="414" y="36" width="292" height="108"></rect>
+            <text x="560" y="68" text-anchor="middle">Long-running harnesses</text>
+            <text class="sub" x="560" y="94" text-anchor="middle">Anthropic</text>
+            <text class="sub" x="560" y="118" text-anchor="middle">bootstrap and fresh starts</text>
+          </a>
+
+          <a href="https://x.com/affaanmustafa/status/2014040193557471352" target="_blank" rel="noopener" class="node source-node" data-source="memory" aria-label="Affaan Mustafa context and memory thread">
+            <rect x="742" y="52" width="286" height="108"></rect>
+            <text x="885" y="84" text-anchor="middle">Context and memory</text>
+            <text class="sub" x="885" y="110" text-anchor="middle">Affaan Mustafa thread</text>
+            <text class="sub" x="885" y="134" text-anchor="middle">durable state outside context</text>
+          </a>
+
+          <a href="https://x.com/affaanmustafa/status/2014040193557471352" target="_blank" rel="noopener" class="node source-node" data-source="loop" aria-label="Affaan Mustafa improvement loop thread">
+            <rect x="742" y="546" width="286" height="108"></rect>
+            <text x="885" y="578" text-anchor="middle">Improvement loop</text>
+            <text class="sub" x="885" y="604" text-anchor="middle">Affaan Mustafa thread</text>
+            <text class="sub" x="885" y="628" text-anchor="middle">capture failures and update behavior</text>
+          </a>
+
+          <a href="https://github.com/tenfoldmarc/llm-council-skill" target="_blank" rel="noopener" class="node source-node" data-source="council" aria-label="LLM council skill repository">
+            <rect x="92" y="546" width="286" height="108"></rect>
+            <text x="235" y="578" text-anchor="middle">LLM council skill</text>
+            <text class="sub" x="235" y="604" text-anchor="middle">tenfoldmarc</text>
+            <text class="sub" x="235" y="628" text-anchor="middle">adversarial multi-agent review</text>
+          </a>
+
+          <a href="#gates" class="node feature-node" data-source="harness" aria-label="DTO and boundary gates">
+            <rect x="30" y="270" width="176" height="78"></rect>
+            <text x="118" y="300" text-anchor="middle">DTO boundaries</text>
+            <text class="sub" x="118" y="324" text-anchor="middle">component gates</text>
+          </a>
+
+          <a href="#state" class="node feature-node" data-source="harness" aria-label="Required artifact set">
+            <rect x="220" y="272" width="170" height="78"></rect>
+            <text x="305" y="302" text-anchor="middle">Required docs</text>
+            <text class="sub" x="305" y="326" text-anchor="middle">PRD, FRD, ARD, PLAN</text>
+          </a>
+
+          <a href="#tools" class="node feature-node" data-source="harness" aria-label="Agent legible tools">
+            <rect x="394" y="228" width="160" height="78"></rect>
+            <text x="474" y="258" text-anchor="middle">Legible tools</text>
+            <text class="sub" x="474" y="282" text-anchor="middle">scripts and checks</text>
+          </a>
+
+          <a href="#hooks" class="node feature-node" data-source="bootstrap" aria-label="Session start hook">
+            <rect x="468" y="206" width="160" height="78"></rect>
+            <text x="548" y="236" text-anchor="middle">SessionStart</text>
+            <text class="sub" x="548" y="260" text-anchor="middle">bootstrap context</text>
+          </a>
+
+          <a href="#handoff" class="node feature-node" data-source="bootstrap" aria-label="Preamble handoff">
+            <rect x="630" y="222" width="160" height="78"></rect>
+            <text x="710" y="252" text-anchor="middle">Preamble</text>
+            <text class="sub" x="710" y="276" text-anchor="middle">fresh session packet</text>
+          </a>
+
+          <a href="#state" class="node feature-node" data-source="bootstrap" aria-label="Scaffold baseline">
+            <rect x="760" y="280" width="160" height="78"></rect>
+            <text x="840" y="310" text-anchor="middle">Scaffold</text>
+            <text class="sub" x="840" y="334" text-anchor="middle">consistent foundation</text>
+          </a>
+
+          <a href="#state" class="node feature-node" data-source="memory" aria-label="Memory files">
+            <rect x="738" y="270" width="160" height="78"></rect>
+            <text x="818" y="300" text-anchor="middle">Memory files</text>
+            <text class="sub" x="818" y="324" text-anchor="middle">out-of-tree state</text>
+          </a>
+
+          <a href="#hooks" class="node feature-node" data-source="memory" aria-label="Update state hook">
+            <rect x="866" y="296" width="160" height="78"></rect>
+            <text x="946" y="326" text-anchor="middle">update-state</text>
+            <text class="sub" x="946" y="350" text-anchor="middle">audit and preamble</text>
+          </a>
+
+          <a href="#state" class="node feature-node" data-source="memory" aria-label="Progress tracking">
+            <rect x="940" y="382" width="160" height="78"></rect>
+            <text x="1020" y="412" text-anchor="middle">Progress</text>
+            <text class="sub" x="1020" y="436" text-anchor="middle">FRD and commits</text>
+          </a>
+
+          <a href="#gates" class="node feature-node" data-source="loop" aria-label="Closed verification loop">
+            <rect x="688" y="430" width="160" height="78"></rect>
+            <text x="768" y="460" text-anchor="middle">Closed loop</text>
+            <text class="sub" x="768" y="484" text-anchor="middle">verify before done</text>
+          </a>
+
+          <a href="#skills" class="node feature-node" data-source="loop" aria-label="Failure mode capture">
+            <rect x="852" y="410" width="160" height="78"></rect>
+            <text x="932" y="440" text-anchor="middle">Failure modes</text>
+            <text class="sub" x="932" y="464" text-anchor="middle">durable lessons</text>
+          </a>
+
+          <a href="#handoff" class="node feature-node" data-source="loop" aria-label="State refresh before handoff">
+            <rect x="930" y="332" width="160" height="78"></rect>
+            <text x="1010" y="362" text-anchor="middle">Refresh before</text>
+            <text class="sub" x="1010" y="386" text-anchor="middle">clear or handoff</text>
+          </a>
+
+          <a href="#skills" class="node feature-node" data-source="council" aria-label="Devils advocate skill">
+            <rect x="30" y="396" width="172" height="78"></rect>
+            <text x="116" y="426" text-anchor="middle">devils-advocate</text>
+            <text class="sub" x="116" y="450" text-anchor="middle">one skeptical lens</text>
+          </a>
+
+          <a href="#skills" class="node feature-node" data-source="council" aria-label="Summon council skill">
+            <rect x="202" y="424" width="168" height="78"></rect>
+            <text x="286" y="454" text-anchor="middle">summon-council</text>
+            <text class="sub" x="286" y="478" text-anchor="middle">five reviewers</text>
+          </a>
+
+          <a href="#skills" class="node feature-node" data-source="council" aria-label="Chair synthesis">
+            <rect x="378" y="430" width="170" height="78"></rect>
+            <text x="463" y="460" text-anchor="middle">Chair decision</text>
+            <text class="sub" x="463" y="484" text-anchor="middle">evaluate, do not vote</text>
+          </a>
+        </svg>
+      </div>
+    </section>
+
     <section id="diagram" aria-labelledby="diagram-title">
       <h2 id="diagram-title">Clickable Lifecycle Map</h2>
       <p>Click a node to jump to the section that explains that part of the session. The same flow works across Claude Code and Codex, with host-specific hook adapters and shared skills.</p>
@@ -645,5 +890,23 @@
       <p>Related docs: <a href="./SESSION_TRACE.md">SESSION_TRACE.md</a>, <a href="./AGENTIC_ENGINEERING_GUIDELINES.md">AGENTIC_ENGINEERING_GUIDELINES.md</a>, and the repository <a href="../../README.md">README.md</a>.</p>
     </footer>
   </main>
+  <script>
+    const graph = document.querySelector('.influence-graph');
+    const buttons = document.querySelectorAll('[data-filter]');
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.filter;
+        buttons.forEach((item) => {
+          item.setAttribute('aria-pressed', String(item === button));
+        });
+
+        graph.classList.toggle('dim', filter !== 'all');
+        graph.querySelectorAll('[data-source], .influence-line').forEach((node) => {
+          node.dataset.active = String(filter === 'all' || node.dataset.source === filter);
+        });
+      });
+    });
+  </script>
 </body>
 </html>
