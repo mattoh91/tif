@@ -1,6 +1,6 @@
 {
-  "name": "sweet",
+  "name": "cutiepie",
   "version": "5.0.7",
   "type": "module",
-  "main": ".opencode/plugins/sweet.js"
+  "main": ".opencode/plugins/cutiepie.js"
 }

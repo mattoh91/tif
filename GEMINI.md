@@ -1,2 +1,2 @@
-@./skills/using-sweet/SKILL.md
-@./skills/using-sweet/references/gemini-tools.md
+@./skills/using-cutiepie/SKILL.md
+@./skills/using-cutiepie/references/gemini-tools.md

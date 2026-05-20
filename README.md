@@ -1,31 +1,31 @@
-# Sweet
+# Cutiepie
 
-Sweet is an opinionated SWE harness for Claude Code and Codex. It packages reusable skills, project artifacts, feature acceptance gates, component contract gates, and memory conventions so agents can move from idea to implementation with less context loss and less unit-test micromanagement.
+Cutiepie is an opinionated SWE harness for Claude Code and Codex. It packages reusable skills, project artifacts, feature acceptance gates, component contract gates, and memory conventions so agents can move from idea to implementation with less context loss and less unit-test micromanagement.
 
-Sweet is built around two host surfaces:
+Cutiepie is built around two host surfaces:
 
 - **Claude Code:** plugin manifest, skills, agents, slash commands, and lifecycle hooks.
 - **Codex:** plugin manifest, local marketplace metadata, shared skills, and Codex lifecycle hooks when `codex_hooks` is enabled.
 
 ## Core Contract
 
-Sweet projects use these committed artifacts by default:
+Cutiepie projects use these committed artifacts by default:
 
-- `.sweet/PRD.md` — product and business requirements.
-- `.sweet/FRD.md` — features, component/capability mapping, functional requirements, gates, and progress.
-- `.sweet/ARD.md` — architecture decisions, options, and consequences.
-- `.sweet/CAVEATS.md` — assumptions, dependencies, constraints, risks, and known unknowns.
-- `.sweet/ARCHI.md` — C4 L1/L2 and sequence diagrams in Mermaid.
-- `.sweet/CONFIG.md` — settings/config owner plus documented hyperparameters and tunables.
-- `.sweet/PLAN.md` — component-by-component implementation plan.
-- `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` — shared engineering contract for feature progress, component contracts, verification loops, commits, memory, and subagent handoffs.
+- `.cutiepie/PRD.md` — product and business requirements.
+- `.cutiepie/FRD.md` — features, component/capability mapping, functional requirements, gates, and progress.
+- `.cutiepie/ARD.md` — architecture decisions, options, and consequences.
+- `.cutiepie/CAVEATS.md` — assumptions, dependencies, constraints, risks, and known unknowns.
+- `.cutiepie/ARCHI.md` — C4 L1/L2 and sequence diagrams in Mermaid.
+- `.cutiepie/CONFIG.md` — settings/config owner plus documented hyperparameters and tunables.
+- `.cutiepie/PLAN.md` — component-by-component implementation plan.
+- `docs/cutiepie/AGENTIC_ENGINEERING_GUIDELINES.md` — shared engineering contract for feature progress, component contracts, verification loops, commits, memory, and subagent handoffs.
 
-`docs/sweet/` is also acceptable for repos that already keep planning docs under `docs/`. Root-level planning files are opt-in.
+`docs/cutiepie/` is also acceptable for repos that already keep planning docs under `docs/`. Root-level planning files are opt-in.
 
 Runtime memory is per-user and out of tree:
 
 ```text
-~/.sweet/memory/<project-slug>/
+~/.cutiepie/memory/<project-slug>/
 ├── MEMORY.md
 ├── FAILURES.md
 └── SESSIONS/
@@ -39,8 +39,8 @@ flowchart TD
     B -->|Claude Code| C[Plugin loads skills, agents, commands, hooks]
     B -->|Codex| D[Plugin loads bundled skills]
 
-    C --> E[SessionStart hook injects Sweet bootstrap + project context]
-    D --> F[Codex discovers Sweet skills from plugin]
+    C --> E[SessionStart hook injects Cutiepie bootstrap + project context]
+    D --> F[Codex discovers Cutiepie skills from plugin]
     E --> G[User prompt]
     F --> G
 
@@ -79,22 +79,22 @@ flowchart TD
 
 ## Hook Lifecycle
 
-Sweet has host-specific hook adapters. Claude Code and Codex both support lifecycle hooks, but the event names and configuration locations differ.
+Cutiepie has host-specific hook adapters. Claude Code and Codex both support lifecycle hooks, but the event names and configuration locations differ.
 
 ```mermaid
 sequenceDiagram
     participant User
     participant Claude as Claude Code
-    participant Hooks as Sweet Hooks
-    participant Memory as ~/.sweet/memory
+    participant Hooks as Cutiepie Hooks
+    participant Memory as ~/.cutiepie/memory
     participant Agent
 
     User->>Claude: Start / resume / clear / compact
     Claude->>Hooks: SessionStart
     Hooks->>Memory: Read MEMORY, FAILURES, recent SESSIONS
-    Hooks->>Hooks: Read .sweet/FRD.md, .sweet/PLAN.md, git status/log
+    Hooks->>Hooks: Read .cutiepie/FRD.md, .cutiepie/PLAN.md, git status/log
     Hooks-->>Claude: additionalContext
-    Claude->>Agent: Prompt + Sweet context
+    Claude->>Agent: Prompt + Cutiepie context
 
     Agent->>Agent: Use skills and implement components
     Agent->>Memory: Update MEMORY/FAILURES through skills when appropriate
@@ -110,11 +110,11 @@ sequenceDiagram
 
 Current hook files:
 
-- `hooks/session-start` — injects Sweet bootstrap, memory, recent sessions, FRD/PLAN/CAVEATS snippets, and git state.
+- `hooks/session-start` — injects Cutiepie bootstrap, memory, recent sessions, FRD/PLAN/CAVEATS snippets, and git state.
 - `hooks/pre-compact` — records compaction marker, raw hook payload, branch, and git status.
 - `hooks/session-end` — records session-end marker, raw hook payload, branch, and git status.
 - `hooks/codex-stop` — records Codex turn-stop markers, raw hook payload, branch, and git status.
-- `hooks/update-state` — writes a static Sweet state audit and mechanical next-session preamble under `~/.sweet/memory/<project-slug>/`.
+- `hooks/update-state` — writes a static Cutiepie state audit and mechanical next-session preamble under `~/.cutiepie/memory/<project-slug>/`.
 
 Host configuration:
 
@@ -128,25 +128,25 @@ Codex hooks are behind a feature flag:
 codex_hooks = true
 ```
 
-Sweet currently wires Codex `SessionStart` to `hooks/session-start` and Codex `Stop` to `hooks/codex-stop`. Use the `preamble` and `capturing-failure-modes` skills explicitly when you want a curated handoff summary rather than raw hook persistence.
+Cutiepie currently wires Codex `SessionStart` to `hooks/session-start` and Codex `Stop` to `hooks/codex-stop`. Use the `preamble` and `capturing-failure-modes` skills explicitly when you want a curated handoff summary rather than raw hook persistence.
 
 ## Feature and Component Gates
 
-Sweet tracks work at two levels:
+Cutiepie tracks work at two levels:
 
 - Features are the user-visible progress unit and should have an automated feature acceptance gate.
 - Components are the implementation ownership unit and should have automated contract gates for the boundaries other agents or systems depend on.
 
 Feature gates usually take the form of API/CLI scenarios, e2e/user-flow automation through Playwright/browser/computer-use tooling, or equivalent project harnesses. Component gates usually verify DTO/data-contract shape, schema behavior, adapter payloads, public API behavior, and error cases across system/domain boundaries.
 
-Unit TDD remains internal to implementation. Completion is proven by the relevant feature/component gate plus review, followed by FRD progress, memory, and commit updates. See `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` for the full contract.
+Unit TDD remains internal to implementation. Completion is proven by the relevant feature/component gate plus review, followed by FRD progress, memory, and commit updates. See `docs/cutiepie/AGENTIC_ENGINEERING_GUIDELINES.md` for the full contract.
 
 ## Claude Code Setup
 
 For local plugin development:
 
 ```bash
-claude --plugin-dir /Users/OHM02/Repos/sweet
+claude --plugin-dir /Users/OHM02/Repos/cutiepie
 ```
 
 After edits:
@@ -158,18 +158,18 @@ After edits:
 For local marketplace installation:
 
 ```text
-/plugin marketplace add /Users/OHM02/Repos/sweet
-/plugin install sweet@sweet-dev
+/plugin marketplace add /Users/OHM02/Repos/cutiepie
+/plugin install cutiepie@cutiepie-dev
 ```
 
 Restart Claude Code after installation.
 
 ## Codex Setup
 
-Codex supports plugins. Sweet includes `.codex-plugin/plugin.json` and a local marketplace at `.agents/plugins/marketplace.json`.
+Codex supports plugins. Cutiepie includes `.codex-plugin/plugin.json` and a local marketplace at `.agents/plugins/marketplace.json`.
 
 ```bash
-codex plugin marketplace add /Users/OHM02/Repos/sweet
+codex plugin marketplace add /Users/OHM02/Repos/cutiepie
 ```
 
 Restart Codex, open:
@@ -178,13 +178,13 @@ Restart Codex, open:
 /plugins
 ```
 
-Choose `Sweet Local`, install `Sweet`, then start a new thread. You can invoke skills explicitly with `@sweet` or by asking for the workflow by name.
+Choose `Cutiepie Local`, install `Cutiepie`, then start a new thread. You can invoke skills explicitly with `@cutiepie` or by asking for the workflow by name.
 
 For direct skill development without plugin installation:
 
 ```bash
 mkdir -p ~/.agents/skills
-ln -sfn /Users/OHM02/Repos/sweet/skills ~/.agents/skills/sweet
+ln -sfn /Users/OHM02/Repos/cutiepie/skills ~/.agents/skills/cutiepie
 ```
 
 For subagent workflows in Codex, enable multi-agent support in `~/.codex/config.toml`:
@@ -200,13 +200,13 @@ codex_hooks = true
 New repo:
 
 ```text
-Use Sweet to scaffold this repo.
+Use Cutiepie to scaffold this repo.
 ```
 
 New feature:
 
 ```text
-Use Sweet to brainstorm and plan this feature.
+Use Cutiepie to brainstorm and plan this feature.
 ```
 
 Resume after a cleared or compacted session:
@@ -234,7 +234,7 @@ Useful checks:
 ```bash
 node -e "for (const f of ['.agents/plugins/marketplace.json','package.json','.claude-plugin/plugin.json','.claude-plugin/marketplace.json','.codex-plugin/plugin.json','gemini-extension.json','.version-bump.json','hooks/hooks.json']) JSON.parse(require('fs').readFileSync(f,'utf8'))"
 bash -n hooks/session-start hooks/pre-compact hooks/session-end scripts/sync-to-codex-plugin.sh
-tmpdir="$(mktemp -d)" && mkdir -p "$tmpdir/.sweet" && touch "$tmpdir/.sweet"/{PRD,FRD,ARD,CAVEATS,ARCHI,CONFIG,PLAN}.md && scripts/check-sweet-spec-set.sh "$tmpdir"
+tmpdir="$(mktemp -d)" && mkdir -p "$tmpdir/.cutiepie" && touch "$tmpdir/.cutiepie"/{PRD,FRD,ARD,CAVEATS,ARCHI,CONFIG,PLAN}.md && scripts/check-cutiepie-spec-set.sh "$tmpdir"
 tests/skill-triggering/run-all.sh
 tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 ```

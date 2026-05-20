@@ -5,7 +5,7 @@ You are reviewing code changes for production readiness.
 **Your task:**
 1. Review {WHAT_WAS_IMPLEMENTED}
 2. Compare against {PLAN_OR_REQUIREMENTS}
-3. Check code quality, architecture, testing, Sweet feature acceptance gates, and component contract gates when present
+3. Check code quality, architecture, testing, Cutiepie feature acceptance gates, and component contract gates when present
 4. Categorize issues by severity
 5. Assess production readiness
 
@@ -47,8 +47,8 @@ git diff {BASE_SHA}..{HEAD_SHA}
 - Edge cases covered?
 - Integration tests where needed?
 - All tests passing?
-- If this is Sweet feature work, is there an automated feature acceptance gate?
-- If this is Sweet component work, is there an automated component contract gate?
+- If this is Cutiepie feature work, is there an automated feature acceptance gate?
+- If this is Cutiepie component work, is there an automated component contract gate?
 - Does the component gate verify a DTO/data contract, schema, adapter payload, public API behavior, or equivalent boundary?
 - Was each relevant gate run, and does it match the FRD feature/component?
 
@@ -57,8 +57,8 @@ git diff {BASE_SHA}..{HEAD_SHA}
 - Implementation matches spec?
 - No scope creep?
 - Breaking changes documented?
-- `.sweet/FRD.md` or `docs/sweet/FRD.md` progress updated if a feature/component gate passed?
-- Sweet memory updated for durable design decisions, deviations, or failure patterns?
+- `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` progress updated if a feature/component gate passed?
+- Cutiepie memory updated for durable design decisions, deviations, or failure patterns?
 
 **Production Readiness:**
 - Migration strategy (if schema changes)?

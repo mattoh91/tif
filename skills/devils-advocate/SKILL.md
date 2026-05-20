@@ -15,11 +15,11 @@ Send the subagent only the context needed to critique the decision:
 
 - user goal and stated constraints
 - current plan, spec, architecture note, diff, or completion claim
-- active Sweet docs from top-level `.sweet/` or `docs/sweet/`
+- active Cutiepie docs from top-level `.cutiepie/` or `docs/cutiepie/`
 - relevant component boundaries, DTO/data contracts, settings owner, and verification gates
 - recent failures, caveats, and unresolved questions
 
-Do not treat dated archives under `docs/sweet/specs/`, `docs/sweet/plans/`, or `docs/plans/` as active requirements unless the user explicitly promoted them.
+Do not treat dated archives under `docs/cutiepie/specs/`, `docs/cutiepie/plans/`, or `docs/plans/` as active requirements unless the user explicitly promoted them.
 
 ## Workflow
 
@@ -28,7 +28,7 @@ Do not treat dated archives under `docs/sweet/specs/`, `docs/sweet/plans/`, or `
 3. Ask for the strongest plausible objections, not cosmetic nitpicks.
 4. Compare the critique against the user goal, active docs, implementation cost, and verification surface.
 5. Decide whether to revise the plan, ask the user, proceed unchanged, or reject the critique.
-6. If direction changes, update the affected Sweet docs, memory, progress tracking, and gates.
+6. If direction changes, update the affected Cutiepie docs, memory, progress tracking, and gates.
 
 ## Subagent Prompt
 

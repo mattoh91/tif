@@ -1,8 +1,8 @@
 # OpenCode Support Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use sweet:executing-plans to implement this plan task-by-task.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use cutiepie:executing-plans to implement this plan task-by-task.
 
-**Goal:** Add full sweet support for OpenCode.ai with a native JavaScript plugin that shares core functionality with the existing Codex implementation.
+**Goal:** Add full cutiepie support for OpenCode.ai with a native JavaScript plugin that shares core functionality with the existing Codex implementation.
 
 **Architecture:** Extract common skill discovery/parsing logic into `lib/skills-core.js`, refactor Codex to use it, then build OpenCode plugin using their native plugin API with custom tools and session hooks.
 
@@ -16,7 +16,7 @@
 
 **Files:**
 - Create: `lib/skills-core.js`
-- Reference: `.codex/sweet-codex` (lines 40-74)
+- Reference: `.codex/cutiepie-codex` (lines 40-74)
 
 **Step 1: Create lib/skills-core.js with extractFrontmatter function**
 
@@ -98,7 +98,7 @@ git commit -m "feat: create shared skills core module with frontmatter parser"
 
 **Files:**
 - Modify: `lib/skills-core.js`
-- Reference: `.codex/sweet-codex` (lines 97-136)
+- Reference: `.codex/cutiepie-codex` (lines 97-136)
 
 **Step 1: Add findSkillsInDir function to skills-core.js**
 
@@ -109,7 +109,7 @@ Add before `module.exports`:
  * Find all SKILL.md files in a directory recursively.
  *
  * @param {string} dir - Directory to search
- * @param {string} sourceType - 'personal' or 'sweet' for namespacing
+ * @param {string} sourceType - 'personal' or 'cutiepie' for namespacing
  * @param {number} maxDepth - Maximum recursion depth (default: 3)
  * @returns {Array<{path: string, name: string, description: string, sourceType: string}>}
  */
@@ -180,7 +180,7 @@ git commit -m "feat: add skill discovery function to core module"
 
 **Files:**
 - Modify: `lib/skills-core.js`
-- Reference: `.codex/sweet-codex` (lines 212-280)
+- Reference: `.codex/cutiepie-codex` (lines 212-280)
 
 **Step 1: Add resolveSkillPath function**
 
@@ -189,20 +189,20 @@ Add before `module.exports`:
 ```javascript
 /**
  * Resolve a skill name to its file path, handling shadowing
- * (personal skills override sweet skills).
+ * (personal skills override cutiepie skills).
  *
- * @param {string} skillName - Name like "sweet:brainstorming" or "my-skill"
- * @param {string} sweetDir - Path to sweet skills directory
+ * @param {string} skillName - Name like "cutiepie:brainstorming" or "my-skill"
+ * @param {string} cutiepieDir - Path to cutiepie skills directory
  * @param {string} personalDir - Path to personal skills directory
  * @returns {{skillFile: string, sourceType: string, skillPath: string} | null}
  */
-function resolveSkillPath(skillName, sweetDir, personalDir) {
-    // Strip sweet: prefix if present
-    const forceSweet = skillName.startsWith('sweet:');
-    const actualSkillName = forceSweet ? skillName.replace(/^sweet:/, '') : skillName;
+function resolveSkillPath(skillName, cutiepieDir, personalDir) {
+    // Strip cutiepie: prefix if present
+    const forceCutiepie = skillName.startsWith('cutiepie:');
+    const actualSkillName = forceCutiepie ? skillName.replace(/^cutiepie:/, '') : skillName;
 
-    // Try personal skills first (unless explicitly sweet:)
-    if (!forceSweet && personalDir) {
+    // Try personal skills first (unless explicitly cutiepie:)
+    if (!forceCutiepie && personalDir) {
         const personalPath = path.join(personalDir, actualSkillName);
         const personalSkillFile = path.join(personalPath, 'SKILL.md');
         if (fs.existsSync(personalSkillFile)) {
@@ -214,14 +214,14 @@ function resolveSkillPath(skillName, sweetDir, personalDir) {
         }
     }
 
-    // Try sweet skills
-    if (sweetDir) {
-        const sweetPath = path.join(sweetDir, actualSkillName);
-        const sweetSkillFile = path.join(sweetPath, 'SKILL.md');
-        if (fs.existsSync(sweetSkillFile)) {
+    // Try cutiepie skills
+    if (cutiepieDir) {
+        const cutiepiePath = path.join(cutiepieDir, actualSkillName);
+        const cutiepieSkillFile = path.join(cutiepiePath, 'SKILL.md');
+        if (fs.existsSync(cutiepieSkillFile)) {
             return {
-                skillFile: sweetSkillFile,
-                sourceType: 'sweet',
+                skillFile: cutiepieSkillFile,
+                sourceType: 'cutiepie',
                 skillPath: actualSkillName
             };
         }
@@ -259,7 +259,7 @@ git commit -m "feat: add skill path resolution with shadowing support"
 
 **Files:**
 - Modify: `lib/skills-core.js`
-- Reference: `.codex/sweet-codex` (lines 16-38)
+- Reference: `.codex/cutiepie-codex` (lines 16-38)
 
 **Step 1: Add checkForUpdates function**
 
@@ -333,7 +333,7 @@ git commit -m "feat: add git update checking to core module"
 ### Task 5: Update Codex to Import Shared Core
 
 **Files:**
-- Modify: `.codex/sweet-codex` (add import at top)
+- Modify: `.codex/cutiepie-codex` (add import at top)
 
 **Step 1: Add import statement**
 
@@ -345,13 +345,13 @@ const skillsCore = require('../lib/skills-core');
 
 **Step 2: Verify syntax**
 
-Run: `node -c .codex/sweet-codex`
+Run: `node -c .codex/cutiepie-codex`
 Expected: No output
 
 **Step 3: Commit**
 
 ```bash
-git add .codex/sweet-codex
+git add .codex/cutiepie-codex
 git commit -m "refactor: import shared skills core in codex"
 ```
 
@@ -360,7 +360,7 @@ git commit -m "refactor: import shared skills core in codex"
 ### Task 6: Replace extractFrontmatter with Core Version
 
 **Files:**
-- Modify: `.codex/sweet-codex` (lines 40-74)
+- Modify: `.codex/cutiepie-codex` (lines 40-74)
 
 **Step 1: Remove local extractFrontmatter function**
 
@@ -374,13 +374,13 @@ Affected lines approximately: 90, 310
 
 **Step 3: Verify script still works**
 
-Run: `.codex/sweet-codex find-skills | head -20`
+Run: `.codex/cutiepie-codex find-skills | head -20`
 Expected: Shows list of skills
 
 **Step 4: Commit**
 
 ```bash
-git add .codex/sweet-codex
+git add .codex/cutiepie-codex
 git commit -m "refactor: use shared extractFrontmatter in codex"
 ```
 
@@ -389,7 +389,7 @@ git commit -m "refactor: use shared extractFrontmatter in codex"
 ### Task 7: Replace findSkillsInDir with Core Version
 
 **Files:**
-- Modify: `.codex/sweet-codex` (lines 97-136, approximately)
+- Modify: `.codex/cutiepie-codex` (lines 97-136, approximately)
 
 **Step 1: Remove local findSkillsInDir function**
 
@@ -401,13 +401,13 @@ Replace calls from `findSkillsInDir(` to `skillsCore.findSkillsInDir(`
 
 **Step 3: Verify script still works**
 
-Run: `.codex/sweet-codex find-skills | head -20`
+Run: `.codex/cutiepie-codex find-skills | head -20`
 Expected: Shows list of skills
 
 **Step 4: Commit**
 
 ```bash
-git add .codex/sweet-codex
+git add .codex/cutiepie-codex
 git commit -m "refactor: use shared findSkillsInDir in codex"
 ```
 
@@ -416,7 +416,7 @@ git commit -m "refactor: use shared findSkillsInDir in codex"
 ### Task 8: Replace checkForUpdates with Core Version
 
 **Files:**
-- Modify: `.codex/sweet-codex` (lines 16-38, approximately)
+- Modify: `.codex/cutiepie-codex` (lines 16-38, approximately)
 
 **Step 1: Remove local checkForUpdates function**
 
@@ -428,13 +428,13 @@ Replace calls from `checkForUpdates(` to `skillsCore.checkForUpdates(`
 
 **Step 3: Verify script still works**
 
-Run: `.codex/sweet-codex bootstrap | head -50`
+Run: `.codex/cutiepie-codex bootstrap | head -50`
 Expected: Shows bootstrap content
 
 **Step 4: Commit**
 
 ```bash
-git add .codex/sweet-codex
+git add .codex/cutiepie-codex
 git commit -m "refactor: use shared checkForUpdates in codex"
 ```
 
@@ -445,7 +445,7 @@ git commit -m "refactor: use shared checkForUpdates in codex"
 ### Task 9: Create OpenCode Plugin Directory Structure
 
 **Files:**
-- Create: `.opencode/plugin/sweet.js`
+- Create: `.opencode/plugin/cutiepie.js`
 
 **Step 1: Create directory**
 
@@ -457,7 +457,7 @@ Run: `mkdir -p .opencode/plugin`
 #!/usr/bin/env node
 
 /**
- * Sweet plugin for OpenCode.ai
+ * Cutiepie plugin for OpenCode.ai
  *
  * Provides custom tools for loading and discovering skills,
  * with automatic bootstrap on session start.
@@ -469,13 +469,13 @@ const fs = require('fs');
 const os = require('os');
 
 const homeDir = os.homedir();
-const sweetSkillsDir = path.join(homeDir, '.config/opencode/sweet/skills');
+const cutiepieSkillsDir = path.join(homeDir, '.config/opencode/cutiepie/skills');
 const personalSkillsDir = path.join(homeDir, '.config/opencode/skills');
 
 /**
  * OpenCode plugin entry point
  */
-export const SweetPlugin = async ({ project, client, $, directory, worktree }) => {
+export const CutiepiePlugin = async ({ project, client, $, directory, worktree }) => {
   return {
     // Custom tools and hooks will go here
   };
@@ -484,13 +484,13 @@ export const SweetPlugin = async ({ project, client, $, directory, worktree }) =
 
 **Step 3: Verify file was created**
 
-Run: `ls -l .opencode/plugin/sweet.js`
+Run: `ls -l .opencode/plugin/cutiepie.js`
 Expected: File exists
 
 **Step 4: Commit**
 
 ```bash
-git add .opencode/plugin/sweet.js
+git add .opencode/plugin/cutiepie.js
 git commit -m "feat: create opencode plugin scaffold"
 ```
 
@@ -499,14 +499,14 @@ git commit -m "feat: create opencode plugin scaffold"
 ### Task 10: Implement use_skill Tool
 
 **Files:**
-- Modify: `.opencode/plugin/sweet.js`
+- Modify: `.opencode/plugin/cutiepie.js`
 
 **Step 1: Add use_skill tool implementation**
 
 Replace the plugin return statement with:
 
 ```javascript
-export const SweetPlugin = async ({ project, client, $, directory, worktree }) => {
+export const CutiepiePlugin = async ({ project, client, $, directory, worktree }) => {
   // Import zod for schema validation
   const { z } = await import('zod');
 
@@ -516,13 +516,13 @@ export const SweetPlugin = async ({ project, client, $, directory, worktree }) =
         name: 'use_skill',
         description: 'Load and read a specific skill to guide your work. Skills contain proven workflows, mandatory processes, and expert techniques.',
         schema: z.object({
-          skill_name: z.string().describe('Name of the skill to load (e.g., "sweet:brainstorming" or "my-custom-skill")')
+          skill_name: z.string().describe('Name of the skill to load (e.g., "cutiepie:brainstorming" or "my-custom-skill")')
         }),
         execute: async ({ skill_name }) => {
-          // Resolve skill path (handles shadowing: personal > sweet)
+          // Resolve skill path (handles shadowing: personal > cutiepie)
           const resolved = skillsCore.resolveSkillPath(
             skill_name,
-            sweetSkillsDir,
+            cutiepieSkillsDir,
             personalSkillsDir
           );
 
@@ -574,13 +574,13 @@ ${content}`;
 
 **Step 2: Verify syntax**
 
-Run: `node -c .opencode/plugin/sweet.js`
+Run: `node -c .opencode/plugin/cutiepie.js`
 Expected: No output
 
 **Step 3: Commit**
 
 ```bash
-git add .opencode/plugin/sweet.js
+git add .opencode/plugin/cutiepie.js
 git commit -m "feat: implement use_skill tool for opencode"
 ```
 
@@ -589,7 +589,7 @@ git commit -m "feat: implement use_skill tool for opencode"
 ### Task 11: Implement find_skills Tool
 
 **Files:**
-- Modify: `.opencode/plugin/sweet.js`
+- Modify: `.opencode/plugin/cutiepie.js`
 
 **Step 1: Add find_skills tool to tools array**
 
@@ -598,13 +598,13 @@ Add after the use_skill tool definition, before closing the tools array:
 ```javascript
       {
         name: 'find_skills',
-        description: 'List all available skills in the sweet and personal skill libraries.',
+        description: 'List all available skills in the cutiepie and personal skill libraries.',
         schema: z.object({}),
         execute: async () => {
           // Find skills in both directories
-          const sweetSkills = skillsCore.findSkillsInDir(
-            sweetSkillsDir,
-            'sweet',
+          const cutiepieSkills = skillsCore.findSkillsInDir(
+            cutiepieSkillsDir,
+            'cutiepie',
             3
           );
           const personalSkills = skillsCore.findSkillsInDir(
@@ -614,16 +614,16 @@ Add after the use_skill tool definition, before closing the tools array:
           );
 
           // Combine and format skills list
-          const allSkills = [...personalSkills, ...sweetSkills];
+          const allSkills = [...personalSkills, ...cutiepieSkills];
 
           if (allSkills.length === 0) {
-            return 'No skills found. Install sweet skills to ~/.config/opencode/sweet/skills/';
+            return 'No skills found. Install cutiepie skills to ~/.config/opencode/cutiepie/skills/';
           }
 
           let output = 'Available skills:\n\n';
 
           for (const skill of allSkills) {
-            const namespace = skill.sourceType === 'personal' ? '' : 'sweet:';
+            const namespace = skill.sourceType === 'personal' ? '' : 'cutiepie:';
             const skillName = skill.name || path.basename(skill.path);
 
             output += `${namespace}${skillName}\n`;
@@ -640,13 +640,13 @@ Add after the use_skill tool definition, before closing the tools array:
 
 **Step 2: Verify syntax**
 
-Run: `node -c .opencode/plugin/sweet.js`
+Run: `node -c .opencode/plugin/cutiepie.js`
 Expected: No output
 
 **Step 3: Commit**
 
 ```bash
-git add .opencode/plugin/sweet.js
+git add .opencode/plugin/cutiepie.js
 git commit -m "feat: implement find_skills tool for opencode"
 ```
 
@@ -655,7 +655,7 @@ git commit -m "feat: implement find_skills tool for opencode"
 ### Task 12: Implement Session Start Hook
 
 **Files:**
-- Modify: `.opencode/plugin/sweet.js`
+- Modify: `.opencode/plugin/cutiepie.js`
 
 **Step 1: Add session.started hook**
 
@@ -663,16 +663,16 @@ After the tools array, add:
 
 ```javascript
     'session.started': async () => {
-      // Read using-sweet skill content
-      const usingSweetPath = skillsCore.resolveSkillPath(
-        'using-sweet',
-        sweetSkillsDir,
+      // Read using-cutiepie skill content
+      const usingCutiepiePath = skillsCore.resolveSkillPath(
+        'using-cutiepie',
+        cutiepieSkillsDir,
         personalSkillsDir
       );
 
-      let usingSweetContent = '';
-      if (usingSweetPath) {
-        const fullContent = fs.readFileSync(usingSweetPath.skillFile, 'utf8');
+      let usingCutiepieContent = '';
+      if (usingCutiepiePath) {
+        const fullContent = fs.readFileSync(usingCutiepiePath.skillFile, 'utf8');
         // Strip frontmatter
         const lines = fullContent.split('\n');
         let inFrontmatter = false;
@@ -694,7 +694,7 @@ After the tools array, add:
           }
         }
 
-        usingSweetContent = contentLines.join('\n').trim();
+        usingCutiepieContent = contentLines.join('\n').trim();
       }
 
       // Tool mapping instructions
@@ -712,28 +712,28 @@ When skills reference tools you don't have, substitute OpenCode equivalents:
 - Utilities and helpers specific to that skill
 
 **Skills naming:**
-- Sweet skills: \`sweet:skill-name\` (from ~/.config/opencode/sweet/skills/)
+- Cutiepie skills: \`cutiepie:skill-name\` (from ~/.config/opencode/cutiepie/skills/)
 - Personal skills: \`skill-name\` (from ~/.config/opencode/skills/)
-- Personal skills override sweet skills when names match
+- Personal skills override cutiepie skills when names match
 `;
 
       // Check for updates (non-blocking)
       const hasUpdates = skillsCore.checkForUpdates(
-        path.join(homeDir, '.config/opencode/sweet')
+        path.join(homeDir, '.config/opencode/cutiepie')
       );
 
       const updateNotice = hasUpdates ?
-        '\n\n⚠️ **Updates available!** Run `cd ~/.config/opencode/sweet && git pull` to update sweet.' :
+        '\n\n⚠️ **Updates available!** Run `cd ~/.config/opencode/cutiepie && git pull` to update cutiepie.' :
         '';
 
       // Return context to inject into session
       return {
         context: `<EXTREMELY_IMPORTANT>
-You have sweet.
+You have cutiepie.
 
-**Below is the full content of your 'sweet:using-sweet' skill - your introduction to using skills. For all other skills, use the 'use_skill' tool:**
+**Below is the full content of your 'cutiepie:using-cutiepie' skill - your introduction to using skills. For all other skills, use the 'use_skill' tool:**
 
-${usingSweetContent}
+${usingCutiepieContent}
 
 ${toolMapping}${updateNotice}
 </EXTREMELY_IMPORTANT>`
@@ -743,13 +743,13 @@ ${toolMapping}${updateNotice}
 
 **Step 2: Verify syntax**
 
-Run: `node -c .opencode/plugin/sweet.js`
+Run: `node -c .opencode/plugin/cutiepie.js`
 Expected: No output
 
 **Step 3: Commit**
 
 ```bash
-git add .opencode/plugin/sweet.js
+git add .opencode/plugin/cutiepie.js
 git commit -m "feat: implement session.started hook for opencode"
 ```
 
@@ -765,7 +765,7 @@ git commit -m "feat: implement session.started hook for opencode"
 **Step 1: Create installation guide**
 
 ```markdown
-# Installing Sweet for OpenCode
+# Installing Cutiepie for OpenCode
 
 ## Prerequisites
 
@@ -775,27 +775,27 @@ git commit -m "feat: implement session.started hook for opencode"
 
 ## Installation Steps
 
-### 1. Install Sweet Skills
+### 1. Install Cutiepie Skills
 
 ```bash
-# Clone sweet skills to OpenCode config directory
-mkdir -p ~/.config/opencode/sweet
-git clone https://github.com/mattoh91/sweet.git ~/.config/opencode/sweet
+# Clone cutiepie skills to OpenCode config directory
+mkdir -p ~/.config/opencode/cutiepie
+git clone https://github.com/mattoh91/cutiepie.git ~/.config/opencode/cutiepie
 ```
 
 ### 2. Install the Plugin
 
-The plugin is included in the sweet repository you just cloned.
+The plugin is included in the cutiepie repository you just cloned.
 
 OpenCode will automatically discover it from:
-- `~/.config/opencode/sweet/.opencode/plugin/sweet.js`
+- `~/.config/opencode/cutiepie/.opencode/plugin/cutiepie.js`
 
 Or you can link it to the project-local plugin directory:
 
 ```bash
 # In your OpenCode project
 mkdir -p .opencode/plugin
-ln -s ~/.config/opencode/sweet/.opencode/plugin/sweet.js .opencode/plugin/sweet.js
+ln -s ~/.config/opencode/cutiepie/.opencode/plugin/cutiepie.js .opencode/plugin/cutiepie.js
 ```
 
 ### 3. Restart OpenCode
@@ -803,7 +803,7 @@ ln -s ~/.config/opencode/sweet/.opencode/plugin/sweet.js .opencode/plugin/sweet.
 Restart OpenCode to load the plugin. On the next session, you should see:
 
 ```
-You have sweet.
+You have cutiepie.
 ```
 
 ## Usage
@@ -821,7 +821,7 @@ use find_skills tool
 Use the `use_skill` tool to load a specific skill:
 
 ```
-use use_skill tool with skill_name: "sweet:brainstorming"
+use use_skill tool with skill_name: "cutiepie:brainstorming"
 ```
 
 ### Personal Skills
@@ -845,12 +845,12 @@ description: Use when [condition] - [what it does]
 [Your skill content here]
 ```
 
-Personal skills override sweet skills with the same name.
+Personal skills override cutiepie skills with the same name.
 
 ## Updating
 
 ```bash
-cd ~/.config/opencode/sweet
+cd ~/.config/opencode/cutiepie
 git pull
 ```
 
@@ -858,13 +858,13 @@ git pull
 
 ### Plugin not loading
 
-1. Check plugin file exists: `ls ~/.config/opencode/sweet/.opencode/plugin/sweet.js`
+1. Check plugin file exists: `ls ~/.config/opencode/cutiepie/.opencode/plugin/cutiepie.js`
 2. Check OpenCode logs for errors
 3. Verify Node.js is installed: `node --version`
 
 ### Skills not found
 
-1. Verify skills directory exists: `ls ~/.config/opencode/sweet/skills`
+1. Verify skills directory exists: `ls ~/.config/opencode/cutiepie/skills`
 2. Use `find_skills` tool to see what's discovered
 3. Check file structure: each skill should have a `SKILL.md` file
 
@@ -878,8 +878,8 @@ When a skill references a Claude Code tool you don't have:
 
 ## Getting Help
 
-- Report issues: https://github.com/mattoh91/sweet/issues
-- Documentation: https://github.com/mattoh91/sweet
+- Report issues: https://github.com/mattoh91/cutiepie/issues
+- Documentation: https://github.com/mattoh91/cutiepie
 ```
 
 **Step 2: Verify file created**
@@ -908,7 +908,7 @@ Find the section about supported platforms (search for "Codex" in the file), and
 ```markdown
 ### OpenCode
 
-Sweet works with [OpenCode.ai](https://opencode.ai) through a native JavaScript plugin.
+Cutiepie works with [OpenCode.ai](https://opencode.ai) through a native JavaScript plugin.
 
 **Installation:** See [.opencode/INSTALL.md](.opencode/INSTALL.md)
 
@@ -982,21 +982,21 @@ git commit -m "docs: add opencode support to release notes"
 ### Task 16: Test Codex Still Works
 
 **Files:**
-- Test: `.codex/sweet-codex`
+- Test: `.codex/cutiepie-codex`
 
 **Step 1: Test find-skills command**
 
-Run: `.codex/sweet-codex find-skills | head -20`
+Run: `.codex/cutiepie-codex find-skills | head -20`
 Expected: Shows list of skills with names and descriptions
 
 **Step 2: Test use-skill command**
 
-Run: `.codex/sweet-codex use-skill sweet:brainstorming | head -20`
+Run: `.codex/cutiepie-codex use-skill cutiepie:brainstorming | head -20`
 Expected: Shows brainstorming skill content
 
 **Step 3: Test bootstrap command**
 
-Run: `.codex/sweet-codex bootstrap | head -30`
+Run: `.codex/cutiepie-codex bootstrap | head -30`
 Expected: Shows bootstrap content with instructions
 
 **Step 4: If all tests pass, record success**
@@ -1015,7 +1015,7 @@ No commit needed - this is verification only.
 Run:
 ```bash
 ls -l lib/skills-core.js
-ls -l .opencode/plugin/sweet.js
+ls -l .opencode/plugin/cutiepie.js
 ls -l .opencode/INSTALL.md
 ```
 
@@ -1029,7 +1029,7 @@ Expected:
 .opencode/
 ├── INSTALL.md
 └── plugin/
-    └── sweet.js
+    └── cutiepie.js
 ```
 
 **Step 3: If structure correct, proceed**
@@ -1057,8 +1057,8 @@ Expected: Shows all commits from this implementation
 
 Create a completion summary showing:
 - Total commits made
-- Files created: `lib/skills-core.js`, `.opencode/plugin/sweet.js`, `.opencode/INSTALL.md`
-- Files modified: `.codex/sweet-codex`, `README.md`, `RELEASE-NOTES.md`
+- Files created: `lib/skills-core.js`, `.opencode/plugin/cutiepie.js`, `.opencode/INSTALL.md`
+- Files modified: `.codex/cutiepie-codex`, `README.md`, `RELEASE-NOTES.md`
 - Testing performed: Codex commands verified
 - Ready for: Testing with actual OpenCode installation
 
@@ -1086,9 +1086,9 @@ These steps require OpenCode to be installed and are not part of the automated i
 ## Success Criteria
 
 - [ ] `lib/skills-core.js` created with all core functions
-- [ ] `.codex/sweet-codex` refactored to use shared core
+- [ ] `.codex/cutiepie-codex` refactored to use shared core
 - [ ] Codex commands still work (find-skills, use-skill, bootstrap)
-- [ ] `.opencode/plugin/sweet.js` created with tools and hooks
+- [ ] `.opencode/plugin/cutiepie.js` created with tools and hooks
 - [ ] Installation guide created
 - [ ] README and RELEASE-NOTES updated
 - [ ] All changes committed

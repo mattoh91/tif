@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SessionStart hook for Sweet plugin
+# SessionStart hook for Cutiepie plugin
 
 set -euo pipefail
 
@@ -9,13 +9,13 @@ PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 # Check if legacy skills directory exists and build warning
 warning_message=""
-legacy_skills_dir="${HOME}/.config/sweet/skills"
+legacy_skills_dir="${HOME}/.config/cutiepie/skills"
 if [ -d "$legacy_skills_dir" ]; then
-    warning_message="\n\n<important-reminder>IN YOUR FIRST REPLY AFTER SEEING THIS MESSAGE YOU MUST TELL THE USER:⚠️ **WARNING:** Sweet now uses Claude Code's skills system. Custom skills in ~/.config/sweet/skills will not be read. Move custom skills to ~/.claude/skills instead. To make this message go away, remove ~/.config/sweet/skills</important-reminder>"
+    warning_message="\n\n<important-reminder>IN YOUR FIRST REPLY AFTER SEEING THIS MESSAGE YOU MUST TELL THE USER:⚠️ **WARNING:** Cutiepie now uses Claude Code's skills system. Custom skills in ~/.config/cutiepie/skills will not be read. Move custom skills to ~/.claude/skills instead. To make this message go away, remove ~/.config/cutiepie/skills</important-reminder>"
 fi
 
-# Read using-sweet content
-using_sweet_content=$(cat "${PLUGIN_ROOT}/skills/using-sweet/SKILL.md" 2>&1 || echo "Error reading using-sweet skill")
+# Read using-cutiepie content
+using_cutiepie_content=$(cat "${PLUGIN_ROOT}/skills/using-cutiepie/SKILL.md" 2>&1 || echo "Error reading using-cutiepie skill")
 
 project_slug() {
     local remote
@@ -44,14 +44,14 @@ append_if_exists() {
     fi
 }
 
-build_sweet_context() {
+build_cutiepie_context() {
     local slug memory_dir session_dir latest_session
     slug="$(project_slug)"
-    memory_dir="${HOME}/.sweet/memory/${slug}"
+    memory_dir="${HOME}/.cutiepie/memory/${slug}"
     session_dir="${memory_dir}/SESSIONS"
 
     {
-        printf '<SWEET_PROJECT_CONTEXT>\n'
+        printf '<CUTIEPIE_PROJECT_CONTEXT>\n'
         printf 'Project slug: %s\n' "$slug"
         printf 'Working directory: %s\n' "$(pwd)"
 
@@ -62,26 +62,26 @@ build_sweet_context() {
             git log --oneline -10 2>/dev/null || true
         fi
 
-        append_if_exists "Sweet Memory" "${memory_dir}/MEMORY.md" 120
-        append_if_exists "Sweet Failure Modes" "${memory_dir}/FAILURES.md" 120
+        append_if_exists "Cutiepie Memory" "${memory_dir}/MEMORY.md" 120
+        append_if_exists "Cutiepie Failure Modes" "${memory_dir}/FAILURES.md" 120
 
         if [ -d "$session_dir" ]; then
             latest_session="$(find "$session_dir" -type f -name '*.md' -mtime -7 2>/dev/null | sort | tail -1 || true)"
             if [ -n "$latest_session" ]; then
-                append_if_exists "Latest Sweet Session" "$latest_session" 80
+                append_if_exists "Latest Cutiepie Session" "$latest_session" 80
             fi
         fi
 
-        append_if_exists "Sweet FRD" ".sweet/FRD.md" 160
-        append_if_exists "Sweet FRD" "docs/sweet/FRD.md" 160
-        append_if_exists "Sweet PLAN" ".sweet/PLAN.md" 160
-        append_if_exists "Sweet PLAN" "docs/sweet/PLAN.md" 160
-        append_if_exists "Sweet CONFIG" ".sweet/CONFIG.md" 120
-        append_if_exists "Sweet CONFIG" "docs/sweet/CONFIG.md" 120
-        append_if_exists "Sweet Caveats" ".sweet/CAVEATS.md" 100
-        append_if_exists "Sweet Caveats" "docs/sweet/CAVEATS.md" 100
+        append_if_exists "Cutiepie FRD" ".cutiepie/FRD.md" 160
+        append_if_exists "Cutiepie FRD" "docs/cutiepie/FRD.md" 160
+        append_if_exists "Cutiepie PLAN" ".cutiepie/PLAN.md" 160
+        append_if_exists "Cutiepie PLAN" "docs/cutiepie/PLAN.md" 160
+        append_if_exists "Cutiepie CONFIG" ".cutiepie/CONFIG.md" 120
+        append_if_exists "Cutiepie CONFIG" "docs/cutiepie/CONFIG.md" 120
+        append_if_exists "Cutiepie Caveats" ".cutiepie/CAVEATS.md" 100
+        append_if_exists "Cutiepie Caveats" "docs/cutiepie/CAVEATS.md" 100
 
-        printf '\n</SWEET_PROJECT_CONTEXT>'
+        printf '\n</CUTIEPIE_PROJECT_CONTEXT>'
     }
 }
 
@@ -98,11 +98,11 @@ escape_for_json() {
     printf '%s' "$s"
 }
 
-using_sweet_escaped=$(escape_for_json "$using_sweet_content")
+using_cutiepie_escaped=$(escape_for_json "$using_cutiepie_content")
 warning_escaped=$(escape_for_json "$warning_message")
-sweet_context_content="$(build_sweet_context 2>/dev/null || true)"
-sweet_context_escaped=$(escape_for_json "$sweet_context_content")
-session_context="<EXTREMELY_IMPORTANT>\nYou have Sweet, a cross-harness SWE workflow.\n\n**Below is the full content of your 'using-sweet' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_sweet_escaped}\n\n${warning_escaped}\n\n${sweet_context_escaped}\n</EXTREMELY_IMPORTANT>"
+cutiepie_context_content="$(build_cutiepie_context 2>/dev/null || true)"
+cutiepie_context_escaped=$(escape_for_json "$cutiepie_context_content")
+session_context="<EXTREMELY_IMPORTANT>\nYou have Cutiepie, a cross-harness SWE workflow.\n\n**Below is the full content of your 'using-cutiepie' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_cutiepie_escaped}\n\n${warning_escaped}\n\n${cutiepie_context_escaped}\n</EXTREMELY_IMPORTANT>"
 
 # Output context injection as JSON. Claude Code and Codex both accept
 # hookSpecificOutput.additionalContext for SessionStart.

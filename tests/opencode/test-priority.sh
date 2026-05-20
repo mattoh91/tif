@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Test: Skill Priority Resolution
-# Verifies that skills are resolved with correct priority: project > personal > sweet
+# Verifies that skills are resolved with correct priority: project > personal > cutiepie
 # NOTE: These tests require OpenCode to be installed and configured
 set -euo pipefail
 
@@ -17,18 +17,18 @@ trap cleanup_test_env EXIT
 # Create same skill "priority-test" in all three locations with different markers
 echo "Setting up priority test fixtures..."
 
-# 1. Create in sweet location (lowest priority)
-mkdir -p "$SUPERPOWERS_SKILLS_DIR/priority-test"
-cat > "$SUPERPOWERS_SKILLS_DIR/priority-test/SKILL.md" <<'EOF'
+# 1. Create in cutiepie location (lowest priority)
+mkdir -p "$CUTIEPIE_SKILLS_DIR/priority-test"
+cat > "$CUTIEPIE_SKILLS_DIR/priority-test/SKILL.md" <<'EOF'
 ---
 name: priority-test
-description: Sweet version of priority test skill
+description: Cutiepie version of priority test skill
 ---
-# Priority Test Skill (Sweet Version)
+# Priority Test Skill (Cutiepie Version)
 
-This is the SUPERPOWERS version of the priority test skill.
+This is the CUTIEPIE version of the priority test skill.
 
-PRIORITY_MARKER_SUPERPOWERS_VERSION
+PRIORITY_MARKER_CUTIEPIE_VERSION
 EOF
 
 # 2. Create in personal location (medium priority)
@@ -65,10 +65,10 @@ echo "  Created priority-test skill in all three locations"
 echo ""
 echo "Test 1: Verifying test fixtures..."
 
-if [ -f "$SUPERPOWERS_SKILLS_DIR/priority-test/SKILL.md" ]; then
-    echo "  [PASS] Sweet version exists"
+if [ -f "$CUTIEPIE_SKILLS_DIR/priority-test/SKILL.md" ]; then
+    echo "  [PASS] Cutiepie version exists"
 else
-    echo "  [FAIL] Sweet version missing"
+    echo "  [FAIL] Cutiepie version missing"
     exit 1
 fi
 
@@ -96,9 +96,9 @@ if ! command -v opencode &> /dev/null; then
     exit 0
 fi
 
-# Test 2: Test that personal overrides sweet
+# Test 2: Test that personal overrides cutiepie
 echo ""
-echo "Test 2: Testing personal > sweet priority..."
+echo "Test 2: Testing personal > cutiepie priority..."
 echo "  Running from outside project directory..."
 
 # Run from HOME (not in project) - should get personal version
@@ -112,19 +112,19 @@ output=$(timeout 60s opencode run --print-logs "Use the use_skill tool to load t
 }
 
 if echo "$output" | grep -qi "PRIORITY_MARKER_PERSONAL_VERSION"; then
-    echo "  [PASS] Personal version loaded (overrides sweet)"
-elif echo "$output" | grep -qi "PRIORITY_MARKER_SUPERPOWERS_VERSION"; then
-    echo "  [FAIL] Sweet version loaded instead of personal"
+    echo "  [PASS] Personal version loaded (overrides cutiepie)"
+elif echo "$output" | grep -qi "PRIORITY_MARKER_CUTIEPIE_VERSION"; then
+    echo "  [FAIL] Cutiepie version loaded instead of personal"
     exit 1
 else
     echo "  [WARN] Could not verify priority marker in output"
     echo "  Output snippet:"
-    echo "$output" | grep -i "priority\|personal\|sweet" | head -10
+    echo "$output" | grep -i "priority\|personal\|cutiepie" | head -10
 fi
 
-# Test 3: Test that project overrides both personal and sweet
+# Test 3: Test that project overrides both personal and cutiepie
 echo ""
-echo "Test 3: Testing project > personal > sweet priority..."
+echo "Test 3: Testing project > personal > cutiepie priority..."
 echo "  Running from project directory..."
 
 # Run from project directory - should get project version
@@ -142,8 +142,8 @@ if echo "$output" | grep -qi "PRIORITY_MARKER_PROJECT_VERSION"; then
 elif echo "$output" | grep -qi "PRIORITY_MARKER_PERSONAL_VERSION"; then
     echo "  [FAIL] Personal version loaded instead of project"
     exit 1
-elif echo "$output" | grep -qi "PRIORITY_MARKER_SUPERPOWERS_VERSION"; then
-    echo "  [FAIL] Sweet version loaded instead of project"
+elif echo "$output" | grep -qi "PRIORITY_MARKER_CUTIEPIE_VERSION"; then
+    echo "  [FAIL] Cutiepie version loaded instead of project"
     exit 1
 else
     echo "  [WARN] Could not verify priority marker in output"
@@ -151,12 +151,12 @@ else
     echo "$output" | grep -i "priority\|project\|personal" | head -10
 fi
 
-# Test 4: Test explicit sweet: prefix bypasses priority
+# Test 4: Test explicit cutiepie: prefix bypasses priority
 echo ""
-echo "Test 4: Testing sweet: prefix forces sweet version..."
+echo "Test 4: Testing cutiepie: prefix forces cutiepie version..."
 
 cd "$TEST_HOME/test-project"
-output=$(timeout 60s opencode run --print-logs "Use the use_skill tool to load sweet:priority-test specifically. Show me the exact content including any PRIORITY_MARKER text." 2>&1) || {
+output=$(timeout 60s opencode run --print-logs "Use the use_skill tool to load cutiepie:priority-test specifically. Show me the exact content including any PRIORITY_MARKER text." 2>&1) || {
     exit_code=$?
     if [ $exit_code -eq 124 ]; then
         echo "  [FAIL] OpenCode timed out after 60s"
@@ -164,10 +164,10 @@ output=$(timeout 60s opencode run --print-logs "Use the use_skill tool to load s
     fi
 }
 
-if echo "$output" | grep -qi "PRIORITY_MARKER_SUPERPOWERS_VERSION"; then
-    echo "  [PASS] sweet: prefix correctly forces sweet version"
+if echo "$output" | grep -qi "PRIORITY_MARKER_CUTIEPIE_VERSION"; then
+    echo "  [PASS] cutiepie: prefix correctly forces cutiepie version"
 elif echo "$output" | grep -qi "PRIORITY_MARKER_PROJECT_VERSION\|PRIORITY_MARKER_PERSONAL_VERSION"; then
-    echo "  [FAIL] sweet: prefix did not force sweet version"
+    echo "  [FAIL] cutiepie: prefix did not force cutiepie version"
     exit 1
 else
     echo "  [WARN] Could not verify priority marker in output"

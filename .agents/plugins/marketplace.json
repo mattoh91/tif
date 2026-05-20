@@ -1,11 +1,11 @@
 {
-  "name": "sweet-local",
+  "name": "cutiepie-local",
   "interface": {
-    "displayName": "Sweet Local"
+    "displayName": "Cutiepie Local"
   },
   "plugins": [
     {
-      "name": "sweet",
+      "name": "cutiepie",
       "source": {
         "source": "local",
         "path": "./"

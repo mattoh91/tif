@@ -9,7 +9,7 @@ Execute plan by dispatching fresh subagent per task, with two-stage review after
 
 **Why subagents:** You delegate tasks to specialized agents with isolated context. By precisely crafting their instructions and context, you ensure they stay focused and succeed at their task. They should never inherit your session's context or history — you construct exactly what they need. This also preserves your own context for coordination work.
 
-**Context contract:** Subagents rely on the current plan, recent commits, FRD progress, Sweet memory, and explicit feature/component gates. Keep those artifacts current so each subagent can load the latest recoverable context in addition to its assigned task.
+**Context contract:** Subagents rely on the current plan, recent commits, FRD progress, Cutiepie memory, and explicit feature/component gates. Keep those artifacts current so each subagent can load the latest recoverable context in addition to its assigned task.
 
 **Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration
 
@@ -43,7 +43,7 @@ digraph when_to_use {
 
 ## Required Spec Set Gate
 
-Before dispatching any implementer subagent in a Sweet-managed project, verify the full spec set exists as top-level files in either `.sweet/` or `docs/sweet/`:
+Before dispatching any implementer subagent in a Cutiepie-managed project, verify the full spec set exists as top-level files in either `.cutiepie/` or `docs/cutiepie/`:
 
 - `PRD.md`
 - `FRD.md`
@@ -55,7 +55,7 @@ Before dispatching any implementer subagent in a Sweet-managed project, verify t
 
 If any file is missing, stop. Do not dispatch implementation work. Use `brainstorming`, `scaffolding-repo`, or `writing-plans` to create the missing artifact first.
 
-Dated archives such as `docs/sweet/specs/*.md`, `docs/sweet/plans/*.md`, or `docs/plans/*.md` are historical reference only. They do not satisfy this gate unless the user explicitly promotes one into the active `.sweet/` or `docs/sweet/` spec set.
+Dated archives such as `docs/cutiepie/specs/*.md`, `docs/cutiepie/plans/*.md`, or `docs/plans/*.md` are historical reference only. They do not satisfy this gate unless the user explicitly promotes one into the active `.cutiepie/` or `docs/cutiepie/` spec set.
 
 ## Subagent Task Contract
 
@@ -90,12 +90,12 @@ digraph process {
         "Mark task complete in TodoWrite" [shape=box];
     }
 
-    "Read plan, extract tasks, feature gates, component contracts, recent commits, and Sweet memory; create TodoWrite" [shape=box];
+    "Read plan, extract tasks, feature gates, component contracts, recent commits, and Cutiepie memory; create TodoWrite" [shape=box];
     "More tasks remain?" [shape=diamond];
     "Dispatch final code reviewer subagent for entire implementation" [shape=box];
-    "Use sweet:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
+    "Use cutiepie:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
 
-    "Read plan, extract tasks, feature gates, component contracts, recent commits, and Sweet memory; create TodoWrite" -> "Dispatch implementer subagent (./implementer-prompt.md)";
+    "Read plan, extract tasks, feature gates, component contracts, recent commits, and Cutiepie memory; create TodoWrite" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer subagent asks questions?";
     "Implementer subagent asks questions?" -> "Answer questions, provide context" [label="yes"];
     "Answer questions, provide context" -> "Dispatch implementer subagent (./implementer-prompt.md)";
@@ -112,7 +112,7 @@ digraph process {
     "Mark task complete in TodoWrite" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
     "More tasks remain?" -> "Dispatch final code reviewer subagent for entire implementation" [label="no"];
-    "Dispatch final code reviewer subagent for entire implementation" -> "Use sweet:finishing-a-development-branch";
+    "Dispatch final code reviewer subagent for entire implementation" -> "Use cutiepie:finishing-a-development-branch";
 }
 ```
 
@@ -160,8 +160,8 @@ Implementer subagents report one of four statuses. Handle each appropriately:
 ```
 You: I'm using Subagent-Driven Development to execute this plan.
 
-[Read plan file once: .sweet/PLAN.md or docs/sweet/PLAN.md]
-[Read FRD progress, relevant Sweet memory, and recent commits]
+[Read plan file once: .cutiepie/PLAN.md or docs/cutiepie/PLAN.md]
+[Read FRD progress, relevant Cutiepie memory, and recent commits]
 [Extract all feature/component tasks with gates, boundary contracts, full text, and context]
 [Create TodoWrite with all tasks]
 
@@ -172,7 +172,7 @@ Task 1: Hook installation script
 
 Implementer: "Before I begin - should the hook be installed at user or system level?"
 
-You: "User level (~/.config/sweet/hooks/)"
+You: "User level (~/.config/cutiepie/hooks/)"
 
 Implementer: "Got it. Implementing now..."
 [Later] Implementer:
@@ -249,7 +249,7 @@ Done!
 - No file reading overhead (controller provides full text)
 - Controller curates exactly what context is needed
 - Subagent gets complete information upfront
-- Recent commits, Sweet memory, FRD status, and gate commands give each subagent a current foundation
+- Recent commits, Cutiepie memory, FRD status, and gate commands give each subagent a current foundation
 - Questions surfaced before work begins (not after)
 
 **Quality gates:**
@@ -299,13 +299,13 @@ Done!
 ## Integration
 
 **Required workflow skills:**
-- **sweet:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
-- **sweet:writing-plans** - Creates the plan this skill executes
-- **sweet:requesting-code-review** - Code review template for reviewer subagents
-- **sweet:finishing-a-development-branch** - Complete development after all tasks
+- **cutiepie:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
+- **cutiepie:writing-plans** - Creates the plan this skill executes
+- **cutiepie:requesting-code-review** - Code review template for reviewer subagents
+- **cutiepie:finishing-a-development-branch** - Complete development after all tasks
 
 **Subagents should use:**
-- **sweet:test-driven-development** - Subagents follow TDD for each task
+- **cutiepie:test-driven-development** - Subagents follow TDD for each task
 
 **Alternative workflow:**
-- **sweet:executing-plans** - Use for parallel session instead of same-session execution
+- **cutiepie:executing-plans** - Use for parallel session instead of same-session execution

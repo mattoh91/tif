@@ -13,7 +13,7 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 **Violating the letter of the rules is violating the spirit of the rules.**
 
-**Sweet layering:** TDD is the implementer-internal loop. For component completion, also use `component-functional-testing` to define and run the automated component contract gate: DTO/data-contract checks, schema checks, adapter payload checks, public API behavior, or equivalent boundary automation. For feature completion, run the automated feature acceptance gate: API/CLI scenarios, Playwright/browser/computer-use flows, or equivalent harness automation.
+**Cutiepie layering:** TDD is the implementer-internal loop. For component completion, also use `component-functional-testing` to define and run the automated component contract gate: DTO/data-contract checks, schema checks, adapter payload checks, public API behavior, or equivalent boundary automation. For feature completion, run the automated feature acceptance gate: API/CLI scenarios, Playwright/browser/computer-use flows, or equivalent harness automation.
 
 ## When to Use
 
@@ -197,7 +197,7 @@ Keep tests green. Don't add behavior.
 
 Next failing test for next feature.
 
-## Sweet Gates
+## Cutiepie Gates
 
 After the focused TDD loop for a component is green, run the component contract gate from the FRD/plan before marking the component complete. If the component completes an integrated feature slice, run the feature acceptance gate before marking the feature complete.
 

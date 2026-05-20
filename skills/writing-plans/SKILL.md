@@ -15,7 +15,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Context:** This should be run in a dedicated worktree (created by brainstorming skill).
 
-**Save plans to:** `.sweet/PLAN.md` by default, or `docs/sweet/PLAN.md` if the project uses docs-based Sweet artifacts.
+**Save plans to:** `.cutiepie/PLAN.md` by default, or `docs/cutiepie/PLAN.md` if the project uses docs-based Cutiepie artifacts.
 - Root-level `PLAN.md` is allowed only when the user explicitly requests root-level planning files.
 - User preferences for plan location override this default.
 
@@ -23,11 +23,11 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
 
-Follow `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` when available. Feature progress, component contracts, git commits, FRD updates, and Sweet memory are the context substrate for subagents and future sessions.
+Follow `docs/cutiepie/AGENTIC_ENGINEERING_GUIDELINES.md` when available. Feature progress, component contracts, git commits, FRD updates, and Cutiepie memory are the context substrate for subagents and future sessions.
 
 ## Required Spec Set Gate
 
-Before writing or updating an implementation plan, verify the full Sweet spec set exists as top-level files in either `.sweet/` or `docs/sweet/`:
+Before writing or updating an implementation plan, verify the full Cutiepie spec set exists as top-level files in either `.cutiepie/` or `docs/cutiepie/`:
 
 - `PRD.md`
 - `FRD.md`
@@ -38,7 +38,7 @@ Before writing or updating an implementation plan, verify the full Sweet spec se
 
 `PLAN.md` may be missing only when this skill is creating it for the first time. If any required spec file is missing, stop and use `brainstorming` or `scaffolding-repo` to create the missing file before planning. Do not proceed with a partial spec set.
 
-Dated archives such as `docs/sweet/specs/*.md`, `docs/sweet/plans/*.md`, or `docs/plans/*.md` are historical reference only. They do not satisfy this gate unless the user explicitly promotes one into the active `.sweet/` or `docs/sweet/` spec set.
+Dated archives such as `docs/cutiepie/specs/*.md`, `docs/cutiepie/plans/*.md`, or `docs/plans/*.md` are historical reference only. They do not satisfy this gate unless the user explicitly promotes one into the active `.cutiepie/` or `docs/cutiepie/` spec set.
 
 ## File Structure
 
@@ -72,7 +72,7 @@ The visible progress unit is the feature acceptance gate. The implementation own
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use sweet:subagent-driven-development (recommended) or sweet:executing-plans to implement this plan feature-by-feature and component-by-component. On hosts that expose unnamespaced skills, use subagent-driven-development or executing-plans. TDD steps are implementer-internal. Component completion requires the automated component contract gate to pass; feature completion requires the feature acceptance gate to pass.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use cutiepie:subagent-driven-development (recommended) or cutiepie:executing-plans to implement this plan feature-by-feature and component-by-component. On hosts that expose unnamespaced skills, use subagent-driven-development or executing-plans. TDD steps are implementer-internal. Component completion requires the automated component contract gate to pass; feature completion requires the feature acceptance gate to pass.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -80,7 +80,7 @@ The visible progress unit is the feature acceptance gate. The implementation own
 
 **Tech Stack:** [Key technologies/libraries]
 
-**Spec Set:** [.sweet/PRD.md, .sweet/FRD.md, .sweet/ARD.md, .sweet/CAVEATS.md, .sweet/ARCHI.md, .sweet/CONFIG.md or docs/sweet equivalents]
+**Spec Set:** [.cutiepie/PRD.md, .cutiepie/FRD.md, .cutiepie/ARD.md, .cutiepie/CAVEATS.md, .cutiepie/ARCHI.md, .cutiepie/CONFIG.md or docs/cutiepie equivalents]
 
 ---
 ```
@@ -110,7 +110,7 @@ The visible progress unit is the feature acceptance gate. The implementation own
 
 **Settings / Hyperparameters:**
 - Settings owner: [class/module/function path, e.g. `src/config.py::Settings`]
-- CONFIG.md entries: [setting names documented in `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md`]
+- CONFIG.md entries: [setting names documented in `.cutiepie/CONFIG.md` or `docs/cutiepie/CONFIG.md`]
 - Tunables used: [timeouts, thresholds, retry counts, model names, token limits, temperatures, feature flags, batch sizes, or "none"]
 
 **Files:**
@@ -155,7 +155,7 @@ Expected: PASS with [observable result]
 
 - [ ] **Documentation Step 7: Update FRD progress and notes**
 
-Update `.sweet/FRD.md` or `docs/sweet/FRD.md` for this feature and its components. Record meaningful deviations in `.sweet/CAVEATS.md` or memory if applicable.
+Update `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` for this feature and its components. Record meaningful deviations in `.cutiepie/CAVEATS.md` or memory if applicable.
 
 - [ ] **Commit Step 8: Commit**
 
@@ -185,14 +185,14 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - DRY, YAGNI, TDD, frequent commits
 - Feature acceptance gates for user/system outcomes
 - Component contract gates for DTO/data-contract and boundary clarity
-- FRD progress and Sweet memory updates after coherent completed slices
+- FRD progress and Cutiepie memory updates after coherent completed slices
 - Settings/config owner and CONFIG.md entries for all hyperparameters and tunables
 
 ## Self-Review
 
 After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
 
-**1. Spec coverage:** Skim each section/requirement in the Sweet spec set. Can you point to a component task that implements it? List any gaps.
+**1. Spec coverage:** Skim each section/requirement in the Cutiepie spec set. Can you point to a component task that implements it? List any gaps.
 
 **2. Gate coverage:** Does every feature have a runnable feature acceptance gate? Does every touched component have a runnable contract gate matching the FRD and boundary design?
 
@@ -217,9 +217,9 @@ After saving the plan, offer execution choice:
 **Which approach?"**
 
 **If Subagent-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use sweet:subagent-driven-development, or subagent-driven-development on hosts that expose unnamespaced skills
+- **REQUIRED SUB-SKILL:** Use cutiepie:subagent-driven-development, or subagent-driven-development on hosts that expose unnamespaced skills
 - Fresh subagent per task + two-stage review
 
 **If Inline Execution chosen:**
-- **REQUIRED SUB-SKILL:** Use sweet:executing-plans, or executing-plans on hosts that expose unnamespaced skills
+- **REQUIRED SUB-SKILL:** Use cutiepie:executing-plans, or executing-plans on hosts that expose unnamespaced skills
 - Batch execution with checkpoints for review

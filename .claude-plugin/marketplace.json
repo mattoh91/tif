@@ -1,12 +1,12 @@
 {
-  "name": "sweet-dev",
-  "description": "Development marketplace for the Sweet cross-harness SWE workflow plugin",
+  "name": "cutiepie-dev",
+  "description": "Development marketplace for the Cutiepie cross-harness SWE workflow plugin",
   "owner": {
     "name": "mattoh91"
   },
   "plugins": [
     {
-      "name": "sweet",
+      "name": "cutiepie",
       "description": "Personal cross-harness SWE workflow plugin: structured specs, component acceptance gates, memory, and agentic delivery skills.",
       "version": "5.0.7",
       "source": "./",

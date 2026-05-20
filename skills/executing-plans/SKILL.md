@@ -11,13 +11,13 @@ Load plan, review critically, execute all tasks, report when complete.
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
-**Note:** Tell your human partner that Sweet works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use sweet:subagent-driven-development instead of this skill.
+**Note:** Tell your human partner that Cutiepie works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use cutiepie:subagent-driven-development instead of this skill.
 
 ## The Process
 
-### Step 0: Verify Sweet Spec Set
+### Step 0: Verify Cutiepie Spec Set
 
-Before executing any plan in a Sweet-managed project, verify the full spec set exists as top-level files in either `.sweet/` or `docs/sweet/`:
+Before executing any plan in a Cutiepie-managed project, verify the full spec set exists as top-level files in either `.cutiepie/` or `docs/cutiepie/`:
 
 - `PRD.md`
 - `FRD.md`
@@ -29,7 +29,7 @@ Before executing any plan in a Sweet-managed project, verify the full spec set e
 
 If any file is missing, stop. Do not implement. Use `brainstorming`, `scaffolding-repo`, or `writing-plans` to create the missing artifact first.
 
-Dated archives such as `docs/sweet/specs/*.md`, `docs/sweet/plans/*.md`, or `docs/plans/*.md` are historical reference only. They do not satisfy this gate unless the user explicitly promotes one into the active `.sweet/` or `docs/sweet/` spec set.
+Dated archives such as `docs/cutiepie/specs/*.md`, `docs/cutiepie/plans/*.md`, or `docs/plans/*.md` are historical reference only. They do not satisfy this gate unless the user explicitly promotes one into the active `.cutiepie/` or `docs/cutiepie/` spec set.
 
 ### Step 1: Load and Review Plan
 1. Read plan file
@@ -49,7 +49,7 @@ For each task:
 
 After all tasks complete and verified:
 - Announce: "I'm using the finishing-a-development-branch skill to complete this work."
-- **REQUIRED SUB-SKILL:** Use sweet:finishing-a-development-branch
+- **REQUIRED SUB-SKILL:** Use cutiepie:finishing-a-development-branch
 - Follow that skill to verify tests, present options, execute choice
 
 ## When to Stop and Ask for Help
@@ -81,6 +81,6 @@ After all tasks complete and verified:
 ## Integration
 
 **Required workflow skills:**
-- **sweet:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
-- **sweet:writing-plans** - Creates the plan this skill executes
-- **sweet:finishing-a-development-branch** - Complete development after all tasks
+- **cutiepie:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
+- **cutiepie:writing-plans** - Creates the plan this skill executes
+- **cutiepie:finishing-a-development-branch** - Complete development after all tasks

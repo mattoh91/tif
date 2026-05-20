@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/hooks/session-start\"",
-            "statusMessage": "Loading Sweet context"
+            "statusMessage": "Loading Cutiepie context"
           }
         ]
       }
@@ -18,7 +18,7 @@
           {
             "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/hooks/codex-stop\"",
-            "statusMessage": "Persisting Sweet turn state",
+            "statusMessage": "Persisting Cutiepie turn state",
             "timeout": 30
           }
         ]

@@ -19,11 +19,11 @@ fi
 
 # Get the directory where this script lives (should be tests/skill-triggering)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Get the sweet plugin root (two levels up from tests/skill-triggering)
+# Get the cutiepie plugin root (two levels up from tests/skill-triggering)
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 TIMESTAMP=$(date +%s)
-OUTPUT_DIR="/tmp/sweet-tests/${TIMESTAMP}/skill-triggering/${SKILL_NAME}"
+OUTPUT_DIR="/tmp/cutiepie-tests/${TIMESTAMP}/skill-triggering/${SKILL_NAME}"
 mkdir -p "$OUTPUT_DIR"
 
 # Read prompt from file

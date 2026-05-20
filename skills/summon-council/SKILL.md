@@ -15,7 +15,7 @@ Default to review-only. Council members must not edit files unless the user expl
 
 Use the five role prompts provided by the user or project. Preserve their intent and keep each role isolated in its own subagent.
 
-If the user wants Sweet defaults instead of supplied prompts, use these five roles:
+If the user wants Cutiepie defaults instead of supplied prompts, use these five roles:
 
 1. Product and requirements reviewer
 2. Architecture and component-boundary reviewer
@@ -31,12 +31,12 @@ Give each council member the same minimal packet, plus its role prompt:
 
 - user goal and decision to evaluate
 - current plan, spec, architecture note, diff, or completion claim
-- active Sweet docs from top-level `.sweet/` or `docs/sweet/`
+- active Cutiepie docs from top-level `.cutiepie/` or `docs/cutiepie/`
 - component/module boundaries and DTO/data contracts
 - settings/configuration owner and documented hyperparameters
 - relevant tests, gates, failures, caveats, and open questions
 
-Do not treat dated archives under `docs/sweet/specs/`, `docs/sweet/plans/`, or `docs/plans/` as active requirements unless the user explicitly promoted them.
+Do not treat dated archives under `docs/cutiepie/specs/`, `docs/cutiepie/plans/`, or `docs/plans/` as active requirements unless the user explicitly promoted them.
 
 ## Dispatch
 
@@ -81,4 +81,4 @@ Return the chair decision with:
 - required plan, doc, config, memory, or gate updates
 - final execution recommendation
 
-When the decision changes project direction, update the affected Sweet docs and memory before execution continues.
+When the decision changes project direction, update the affected Cutiepie docs and memory before execution continues.

@@ -40,4 +40,4 @@ TDD block:
 - [ ] Run the focused test and verify it passes.
 - [ ] Run the component contract gate.
 - [ ] Run the feature acceptance gate when all components in this feature are integrated.
-- [ ] Update `.sweet/FRD.md` status and memory notes.
+- [ ] Update `.cutiepie/FRD.md` status and memory notes.

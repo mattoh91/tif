@@ -1,12 +1,12 @@
 # Agentic Engineering Guidelines
 
-These guidelines define Sweet's default engineering contract for long-running, multi-agent SWE work. Merge them with project-specific instructions as needed.
+These guidelines define Cutiepie's default engineering contract for long-running, multi-agent SWE work. Merge them with project-specific instructions as needed.
 
 Tradeoff: these rules bias toward caution, clarity, and recoverability over raw speed. For trivial tasks, use judgment.
 
 ## Core Model
 
-Sweet tracks work at two levels:
+Cutiepie tracks work at two levels:
 
 - **Features** are the user-visible progress unit. A feature describes the capability that must work end to end.
 - **Components** are the implementation ownership unit. A component has clear boundaries, DTO/data-contract shapes, and a focused contract gate.
@@ -18,12 +18,12 @@ Every feature should have a feature acceptance gate. Every component touched by 
 Subagents and fresh sessions must be able to reconstruct the current state without inheriting hidden context. To make that possible:
 
 - Commit meaningful progress with descriptive messages after each coherent component or feature slice.
-- Update `.sweet/FRD.md` or `docs/sweet/FRD.md` when feature or component status changes.
-- Update `~/.sweet/memory/<project-slug>/MEMORY.md` with durable decisions, deviations, and integration notes.
-- Update `~/.sweet/memory/<project-slug>/FAILURES.md` when a repeated failure mode, root cause, or fix should affect future work.
+- Update `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` when feature or component status changes.
+- Update `~/.cutiepie/memory/<project-slug>/MEMORY.md` with durable decisions, deviations, and integration notes.
+- Update `~/.cutiepie/memory/<project-slug>/FAILURES.md` when a repeated failure mode, root cause, or fix should affect future work.
 - Keep DTOs, schemas, public interfaces, adapters, and boundary modules easy to find from the plan, preamble, and recent commits.
 
-Git history, Sweet memory, FRD progress, and explicit contract gates are the shared substrate that lets multiple agents work in parallel without relying on one session's context window.
+Git history, Cutiepie memory, FRD progress, and explicit contract gates are the shared substrate that lets multiple agents work in parallel without relying on one session's context window.
 
 ## Think Before Coding
 
@@ -112,7 +112,7 @@ Before ending a session, compacting, or dispatching follow-on agents:
 - Make sure the working tree state is intentional.
 - Run the relevant focused tests and feature/component gates.
 - Commit coherent completed slices when appropriate.
-- Update FRD progress and Sweet memory.
+- Update FRD progress and Cutiepie memory.
 - Record caveats, known gaps, and failed approaches where future agents will see them.
 - Ensure the next agent can identify the next unfinished feature and the contracts it must preserve.
 

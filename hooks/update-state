@@ -19,17 +19,17 @@ project_slug() {
   fi
 }
 
-has_sweet_file() {
+has_cutiepie_file() {
   local rel="$1"
-  [ -f ".sweet/${rel}" ] || [ -f "docs/sweet/${rel}" ]
+  [ -f ".cutiepie/${rel}" ] || [ -f "docs/cutiepie/${rel}" ]
 }
 
-first_sweet_file() {
+first_cutiepie_file() {
   local rel="$1"
-  if [ -f ".sweet/${rel}" ]; then
-    printf '.sweet/%s' "$rel"
-  elif [ -f "docs/sweet/${rel}" ]; then
-    printf 'docs/sweet/%s' "$rel"
+  if [ -f ".cutiepie/${rel}" ]; then
+    printf '.cutiepie/%s' "$rel"
+  elif [ -f "docs/cutiepie/${rel}" ]; then
+    printf 'docs/cutiepie/%s' "$rel"
   fi
 }
 
@@ -42,7 +42,7 @@ append_issue() {
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 slug="$(project_slug)"
-memory_dir="${HOME}/.sweet/memory/${slug}"
+memory_dir="${HOME}/.cutiepie/memory/${slug}"
 session_dir="${memory_dir}/SESSIONS"
 mkdir -p "$session_dir"
 
@@ -63,11 +63,11 @@ changed_files="$({
 recent_commits="$(git log --oneline -8 2>/dev/null || true)"
 
 if [ ! -f "${memory_dir}/MEMORY.md" ]; then
-  printf '# Sweet Memory\n' > "${memory_dir}/MEMORY.md"
+  printf '# Cutiepie Memory\n' > "${memory_dir}/MEMORY.md"
 fi
 
 if [ ! -f "${memory_dir}/FAILURES.md" ]; then
-  printf '# Sweet Failure Modes\n' > "${memory_dir}/FAILURES.md"
+  printf '# Cutiepie Failure Modes\n' > "${memory_dir}/FAILURES.md"
 fi
 
 if [ -n "$git_status" ]; then
@@ -75,42 +75,42 @@ if [ -n "$git_status" ]; then
 fi
 
 for doc in PRD.md FRD.md ARD.md CAVEATS.md ARCHI.md CONFIG.md PLAN.md; do
-  if ! has_sweet_file "$doc"; then
-    append_issue "missing" "Sweet planning artifact is missing: .sweet/${doc} or docs/sweet/${doc}."
+  if ! has_cutiepie_file "$doc"; then
+    append_issue "missing" "Cutiepie planning artifact is missing: .cutiepie/${doc} or docs/cutiepie/${doc}."
   fi
 done
 
 if [ -n "$changed_files" ]; then
   if printf '%s\n' "$changed_files" | grep -Eq '(^|/)(src|app|lib|packages|cmd|internal|components|pages|routes|api|server|client|tests?)/|\.([cm]?[jt]sx?|py|go|rs|java|kt|rb|php|swift|cs|cpp|h|hpp)$'; then
-    if ! printf '%s\n' "$changed_files" | grep -Eq '(^|/)(\.sweet|docs/sweet)/'; then
-      append_issue "possible-stale" "Code/test files changed without Sweet planning docs in the current diff; check FRD/PLAN/ARD/ARCHI/CAVEATS/CONFIG."
+    if ! printf '%s\n' "$changed_files" | grep -Eq '(^|/)(\.cutiepie|docs/cutiepie)/'; then
+      append_issue "possible-stale" "Code/test files changed without Cutiepie planning docs in the current diff; check FRD/PLAN/ARD/ARCHI/CAVEATS/CONFIG."
     fi
   fi
 fi
 
-if has_sweet_file "CONFIG.md"; then
-  config_file="$(first_sweet_file "CONFIG.md")"
+if has_cutiepie_file "CONFIG.md"; then
+  config_file="$(first_cutiepie_file "CONFIG.md")"
   if ! grep -Eiq 'settings|config|hyperparameter|tunable|default|allowed|owner' "$config_file" 2>/dev/null; then
     append_issue "possible-stale" "${config_file} does not appear to document settings owners, defaults, or tunables."
   fi
 fi
 
-if has_sweet_file "ARCHI.md"; then
-  archi_file="$(first_sweet_file "ARCHI.md")"
+if has_cutiepie_file "ARCHI.md"; then
+  archi_file="$(first_cutiepie_file "ARCHI.md")"
   if ! grep -Eq '```mermaid|graph |flowchart |sequenceDiagram|C4Context|C4Container' "$archi_file" 2>/dev/null; then
     append_issue "possible-stale" "${archi_file} does not appear to contain Mermaid/C4/sequence diagrams."
   fi
 fi
 
-if has_sweet_file "ARD.md"; then
-  ard_file="$(first_sweet_file "ARD.md")"
+if has_cutiepie_file "ARD.md"; then
+  ard_file="$(first_cutiepie_file "ARD.md")"
   if ! grep -Eiq 'decision|options|consequence|status' "$ard_file" 2>/dev/null; then
     append_issue "possible-stale" "${ard_file} does not appear to record decisions/options/consequences."
   fi
 fi
 
 {
-  printf '# Sweet State Audit\n\n'
+  printf '# Cutiepie State Audit\n\n'
   printf 'Generated: %s\n' "$now"
   printf 'Project: %s\n' "$slug"
   printf 'Working directory: %s\n\n' "$(pwd)"
@@ -141,7 +141,7 @@ fi
 } > "$audit_file"
 
 {
-  printf '<sweet-preamble>\n'
+  printf '<cutiepie-preamble>\n'
   printf 'Project: %s\n' "$slug"
   printf 'Generated: %s\n' "$now"
   printf 'Current state: See %s\n' "$audit_file"
@@ -164,24 +164,24 @@ fi
     printf -- '- Unavailable.\n'
   fi
   printf 'Next session checklist:\n'
-  printf -- '- Read .sweet/FRD.md or docs/sweet/FRD.md for current feature/component status.\n'
-  printf -- '- Read .sweet/PLAN.md or docs/sweet/PLAN.md for next task and gates.\n'
-  printf -- '- Read .sweet/CONFIG.md or docs/sweet/CONFIG.md for settings owners and tunables.\n'
+  printf -- '- Read .cutiepie/FRD.md or docs/cutiepie/FRD.md for current feature/component status.\n'
+  printf -- '- Read .cutiepie/PLAN.md or docs/cutiepie/PLAN.md for next task and gates.\n'
+  printf -- '- Read .cutiepie/CONFIG.md or docs/cutiepie/CONFIG.md for settings owners and tunables.\n'
   printf -- '- Read %s and update stale docs or memory before implementation.\n' "$audit_file"
   printf -- '- Run the relevant feature acceptance gate and component contract gate before claiming completion.\n'
-  printf '</sweet-preamble>\n'
+  printf '</cutiepie-preamble>\n'
 } > "$preamble_file"
 
 {
-  printf '\n## Sweet Update State — %s\n\n' "$now"
-  printf -- '- Event: %s\n' "${SWEET_HOOK_EVENT:-manual}"
+  printf '\n## Cutiepie Update State — %s\n\n' "$now"
+  printf -- '- Event: %s\n' "${CUTIEPIE_HOOK_EVENT:-manual}"
   printf -- '- Audit: %s\n' "$audit_file"
   printf -- '- Preamble: %s\n' "$preamble_file"
   printf -- '- Issues: %s\n' "$issue_count"
 } >> "$session_file"
 
 if [ "$silent" -eq 0 ]; then
-  printf 'Sweet state refreshed.\n'
+  printf 'Cutiepie state refreshed.\n'
   printf 'Audit: %s\n' "$audit_file"
   printf 'Preamble: %s\n' "$preamble_file"
   printf 'Issues: %s\n' "$issue_count"

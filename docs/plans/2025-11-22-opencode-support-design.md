@@ -6,11 +6,11 @@
 
 ## Overview
 
-Add full sweet support for OpenCode.ai using a native OpenCode plugin architecture that shares core functionality with the existing Codex implementation.
+Add full cutiepie support for OpenCode.ai using a native OpenCode plugin architecture that shares core functionality with the existing Codex implementation.
 
 ## Background
 
-OpenCode.ai is a coding agent similar to Claude Code and Codex. Previous attempts to port sweet to OpenCode (PR #93, PR #116) used file-copying approaches. This design takes a different approach: building a native OpenCode plugin using their JavaScript/TypeScript plugin system while sharing code with the Codex implementation.
+OpenCode.ai is a coding agent similar to Claude Code and Codex. Previous attempts to port cutiepie to OpenCode (PR #93, PR #116) used file-copying approaches. This design takes a different approach: building a native OpenCode plugin using their JavaScript/TypeScript plugin system while sharing code with the Codex implementation.
 
 ### Key Differences Between Platforms
 
@@ -34,16 +34,16 @@ OpenCode.ai is a coding agent similar to Claude Code and Codex. Previous attempt
    - Used by both Codex and OpenCode implementations
 
 2. **Platform-Specific Wrappers**
-   - Codex: CLI script (`.codex/sweet-codex`)
-   - OpenCode: Plugin module (`.opencode/plugin/sweet.js`)
+   - Codex: CLI script (`.codex/cutiepie-codex`)
+   - OpenCode: Plugin module (`.opencode/plugin/cutiepie.js`)
 
 3. **Skill Directories**
-   - Core: `~/.config/opencode/sweet/skills/` (or installed location)
+   - Core: `~/.config/opencode/cutiepie/skills/` (or installed location)
    - Personal: `~/.config/opencode/skills/` (shadows core skills)
 
 ### Code Reuse Strategy
 
-Extract common functionality from `.codex/sweet-codex` into shared module:
+Extract common functionality from `.codex/cutiepie-codex` into shared module:
 
 ```javascript
 // lib/skills-core.js
@@ -80,7 +80,7 @@ Loads a specific skill's content into the conversation (equivalent to Claude's S
   name: 'use_skill',
   description: 'Load and read a specific skill to guide your work',
   schema: z.object({
-    skill_name: z.string().describe('Name of skill (e.g., "sweet:brainstorming")')
+    skill_name: z.string().describe('Name of skill (e.g., "cutiepie:brainstorming")')
   }),
   execute: async ({ skill_name }) => {
     const { skillPath, content, frontmatter } = resolveAndReadSkill(skill_name);
@@ -120,8 +120,8 @@ Lists all available skills with metadata.
 
 When a new session starts (`session.started` event):
 
-1. **Inject using-sweet content**
-   - Full content of the using-sweet skill
+1. **Inject using-cutiepie content**
+   - Full content of the using-cutiepie skill
    - Establishes mandatory workflows
 
 2. **Run find_skills automatically**
@@ -150,24 +150,24 @@ When a new session starts (`session.started` event):
 ### Plugin Structure
 
 ```javascript
-// .opencode/plugin/sweet.js
+// .opencode/plugin/cutiepie.js
 const skillsCore = require('../../lib/skills-core');
 const path = require('path');
 const fs = require('fs');
 const { z } = require('zod');
 
-export const SweetPlugin = async ({ client, directory, $ }) => {
-  const sweetDir = path.join(process.env.HOME, '.config/opencode/sweet');
+export const CutiepiePlugin = async ({ client, directory, $ }) => {
+  const cutiepieDir = path.join(process.env.HOME, '.config/opencode/cutiepie');
   const personalDir = path.join(process.env.HOME, '.config/opencode/skills');
 
   return {
     'session.started': async () => {
-      const usingSweet = await readSkill('using-sweet');
+      const usingCutiepie = await readSkill('using-cutiepie');
       const skillsList = await findAllSkills();
       const toolMapping = getToolMappingInstructions();
 
       return {
-        context: `${usingSweet}\n\n${skillsList}\n\n${toolMapping}`
+        context: `${usingCutiepie}\n\n${skillsList}\n\n${toolMapping}`
       };
     },
 
@@ -198,16 +198,16 @@ export const SweetPlugin = async ({ client, directory, $ }) => {
 ## File Structure
 
 ```
-sweet/
+cutiepie/
 ├── lib/
 │   └── skills-core.js           # NEW: Shared skill logic
 ├── .codex/
-│   ├── sweet-codex        # UPDATED: Use skills-core
-│   ├── sweet-bootstrap.md
+│   ├── cutiepie-codex        # UPDATED: Use skills-core
+│   ├── cutiepie-bootstrap.md
 │   └── INSTALL.md
 ├── .opencode/
 │   ├── plugin/
-│   │   └── sweet.js       # NEW: OpenCode plugin
+│   │   └── cutiepie.js       # NEW: OpenCode plugin
 │   └── INSTALL.md               # NEW: Installation guide
 └── skills/                       # Unchanged
 ```
@@ -217,12 +217,12 @@ sweet/
 ### Phase 1: Refactor Shared Core
 
 1. Create `lib/skills-core.js`
-   - Extract frontmatter parsing from `.codex/sweet-codex`
+   - Extract frontmatter parsing from `.codex/cutiepie-codex`
    - Extract skill discovery logic
    - Extract path resolution (with shadowing)
    - Update to use only `name` and `description` (no `when_to_use`)
 
-2. Update `.codex/sweet-codex` to use shared core
+2. Update `.codex/cutiepie-codex` to use shared core
    - Import from `../lib/skills-core.js`
    - Remove duplicated code
    - Keep CLI wrapper logic
@@ -234,7 +234,7 @@ sweet/
 
 ### Phase 2: Build OpenCode Plugin
 
-1. Create `.opencode/plugin/sweet.js`
+1. Create `.opencode/plugin/cutiepie.js`
    - Import shared core from `../../lib/skills-core.js`
    - Implement plugin function
    - Define custom tools (use_skill, find_skills)

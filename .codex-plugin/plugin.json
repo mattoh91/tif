@@ -1,13 +1,13 @@
 {
-  "name": "sweet",
+  "name": "cutiepie",
   "version": "5.0.7",
   "description": "A personal cross-harness SWE workflow plugin for Codex and Claude Code: structured specs, component acceptance gates, memory, and agentic delivery skills.",
   "author": {
     "name": "mattoh91",
     "url": "https://github.com/mattoh91"
   },
-  "homepage": "https://github.com/mattoh91/sweet",
-  "repository": "https://github.com/mattoh91/sweet",
+  "homepage": "https://github.com/mattoh91/cutiepie",
+  "repository": "https://github.com/mattoh91/cutiepie",
   "license": "MIT",
   "keywords": [
     "swe-harness",
@@ -22,9 +22,9 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Sweet",
+    "displayName": "Cutiepie",
     "shortDescription": "Structured SWE harness workflows for Codex and Claude Code",
-    "longDescription": "Use Sweet to guide agent work through structured requirements, architecture artifacts, implementation planning, component-level automated acceptance gates, test-driven development, memory, debugging, parallel execution, code review, and finish-the-branch workflows.",
+    "longDescription": "Use Cutiepie to guide agent work through structured requirements, architecture artifacts, implementation planning, component-level automated acceptance gates, test-driven development, memory, debugging, parallel execution, code review, and finish-the-branch workflows.",
     "developerName": "mattoh91",
     "category": "Coding",
     "capabilities": [
@@ -34,10 +34,10 @@
     ],
     "defaultPrompt": [
       "I've got an idea for something I'd like to build.",
-      "Let's scaffold a Sweet project workflow."
+      "Let's scaffold a Cutiepie project workflow."
     ],
     "brandColor": "#F59E0B",
-    "composerIcon": "./assets/sweet-small.svg",
+    "composerIcon": "./assets/cutiepie-small.svg",
     "logo": "./assets/app-icon.png",
     "screenshots": []
   }

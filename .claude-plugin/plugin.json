@@ -1,12 +1,12 @@
 {
-  "name": "sweet",
+  "name": "cutiepie",
   "description": "Personal cross-harness SWE workflow plugin for Claude Code and Codex: structured specs, component acceptance gates, memory, and agentic delivery skills.",
   "version": "5.0.7",
   "author": {
     "name": "mattoh91"
   },
-  "homepage": "https://github.com/mattoh91/sweet",
-  "repository": "https://github.com/mattoh91/sweet",
+  "homepage": "https://github.com/mattoh91/cutiepie",
+  "repository": "https://github.com/mattoh91/cutiepie",
   "license": "MIT",
   "keywords": [
     "skills",

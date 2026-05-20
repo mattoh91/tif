@@ -5,7 +5,7 @@ description: Use when completing tasks, implementing major features, or before m
 
 # Requesting Code Review
 
-Dispatch sweet:code-reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history. This keeps the reviewer focused on the work product, not your thought process, and preserves your own context for continued work.
+Dispatch cutiepie:code-reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history. This keeps the reviewer focused on the work product, not your thought process, and preserves your own context for continued work.
 
 **Core principle:** Review early, review often.
 
@@ -13,9 +13,9 @@ Dispatch sweet:code-reviewer subagent to catch issues before they cascade. The r
 
 **Mandatory:**
 - After each task in subagent-driven development
-- After each Sweet component contract gate passes
+- After each Cutiepie component contract gate passes
 - After completing major feature
-- After each Sweet feature acceptance gate passes
+- After each Cutiepie feature acceptance gate passes
 - Before merge to main
 
 **Optional but valuable:**
@@ -33,7 +33,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 **2. Dispatch code-reviewer subagent:**
 
-Use Task tool with sweet:code-reviewer type, fill template at `code-reviewer.md`
+Use Task tool with cutiepie:code-reviewer type, fill template at `code-reviewer.md`
 
 **Placeholders:**
 - `{WHAT_WAS_IMPLEMENTED}` - What you just built
@@ -58,9 +58,9 @@ You: Let me request code review before proceeding.
 BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | awk '{print $1}')
 HEAD_SHA=$(git rev-parse HEAD)
 
-[Dispatch sweet:code-reviewer subagent]
+[Dispatch cutiepie:code-reviewer subagent]
   WHAT_WAS_IMPLEMENTED: Verification and repair functions for conversation index
-  PLAN_OR_REQUIREMENTS: Task 2 from docs/sweet/plans/deployment-plan.md
+  PLAN_OR_REQUIREMENTS: Task 2 from docs/cutiepie/plans/deployment-plan.md
   BASE_SHA: a7981ec
   HEAD_SHA: 3df7661
   DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
@@ -91,18 +91,18 @@ You: [Fix progress indicators]
 - Review before merge
 - Review when stuck
 
-**Sweet Component Work:**
+**Cutiepie Component Work:**
 - Verify the component contract gate exists and is automated
 - Confirm the gate matches the FRD feature/component boundary
 - Confirm the gate was run and passed
-- Confirm `.sweet/FRD.md` or `docs/sweet/FRD.md` progress was updated when appropriate
+- Confirm `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` progress was updated when appropriate
 - Treat missing or non-runnable component gates as Important unless the component is genuinely not testable through an automated boundary
 
-**Sweet Feature Work:**
+**Cutiepie Feature Work:**
 - Verify the feature acceptance gate exists and is automated
 - Confirm the gate proves the user-visible or system-visible outcome
 - Confirm all touched component contract gates passed
-- Confirm feature status, component status, commits, and Sweet memory are current enough for a fresh agent to resume
+- Confirm feature status, component status, commits, and Cutiepie memory are current enough for a fresh agent to resume
 
 ## Red Flags
 

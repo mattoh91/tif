@@ -25,5 +25,5 @@ else
   echo "No known dependency manifest found. Add project setup commands to init.sh."
 fi
 
-mkdir -p .sweet
+mkdir -p .cutiepie
 echo "Done."

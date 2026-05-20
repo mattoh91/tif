@@ -27,7 +27,7 @@ You MUST create a task for each of these items and complete them in order:
 4. **Probe requirements for missed features/data** — request sample data or user scenarios; audit analogous tools when web/docs access is available; use user-provided/local materials when not
 5. **Propose 2-3 approaches** — with trade-offs and your recommendation
 6. **Present design** — in sections scaled to their complexity, get user approval after each section
-7. **Write Sweet spec set** — save `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `CONFIG.md` under `.sweet/` or `docs/sweet/`, then commit
+7. **Write Cutiepie spec set** — save `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `CONFIG.md` under `.cutiepie/` or `docs/cutiepie/`, then commit
 8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 9. **User reviews written spec** — ask user to review the spec files before proceeding
 10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
@@ -44,7 +44,7 @@ digraph brainstorming {
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
-    "Write Sweet spec set" [shape=box];
+    "Write Cutiepie spec set" [shape=box];
     "Spec self-review\n(fix inline)" [shape=box];
     "User reviews spec?" [shape=diamond];
     "Invoke writing-plans skill" [shape=doublecircle];
@@ -58,10 +58,10 @@ digraph brainstorming {
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Write Sweet spec set" [label="yes"];
-    "Write Sweet spec set" -> "Spec self-review\n(fix inline)";
+    "User approves design?" -> "Write Cutiepie spec set" [label="yes"];
+    "Write Cutiepie spec set" -> "Spec self-review\n(fix inline)";
     "Spec self-review\n(fix inline)" -> "User reviews spec?";
-    "User reviews spec?" -> "Write Sweet spec set" [label="changes requested"];
+    "User reviews spec?" -> "Write Cutiepie spec set" [label="changes requested"];
     "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
 }
 ```
@@ -119,14 +119,14 @@ digraph brainstorming {
 
 **Documentation:**
 
-- Write the validated design as a Sweet spec set:
-  - `.sweet/PRD.md` or `docs/sweet/PRD.md` — product/business requirements, users, epics, non-goals
-  - `.sweet/FRD.md` or `docs/sweet/FRD.md` — functional requirements, feature-to-component map, automated feature acceptance gates, component contract gates, progress
-  - `.sweet/ARD.md` or `docs/sweet/ARD.md` — architecture decisions, options, consequences
-  - `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md` — assumptions, dependencies, constraints, known unknowns
-  - `.sweet/ARCHI.md` or `docs/sweet/ARCHI.md` — Mermaid C4 L1/L2 and sequence diagrams
-  - `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md` — settings/config owner plus hyperparameters and tunables
-- Use `.sweet/` by default. Use `docs/sweet/` when the repo already organizes project docs under `docs/`.
+- Write the validated design as a Cutiepie spec set:
+  - `.cutiepie/PRD.md` or `docs/cutiepie/PRD.md` — product/business requirements, users, epics, non-goals
+  - `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` — functional requirements, feature-to-component map, automated feature acceptance gates, component contract gates, progress
+  - `.cutiepie/ARD.md` or `docs/cutiepie/ARD.md` — architecture decisions, options, consequences
+  - `.cutiepie/CAVEATS.md` or `docs/cutiepie/CAVEATS.md` — assumptions, dependencies, constraints, known unknowns
+  - `.cutiepie/ARCHI.md` or `docs/cutiepie/ARCHI.md` — Mermaid C4 L1/L2 and sequence diagrams
+  - `.cutiepie/CONFIG.md` or `docs/cutiepie/CONFIG.md` — settings/config owner plus hyperparameters and tunables
+- Use `.cutiepie/` by default. Use `docs/cutiepie/` when the repo already organizes project docs under `docs/`.
 - Root-level `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md` are allowed only when the user explicitly requests root-level planning files.
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the spec set to git

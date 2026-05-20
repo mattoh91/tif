@@ -14,7 +14,7 @@ project_slug() {
 }
 
 slug="$(project_slug)"
-memory_dir="${HOME}/.sweet/memory/${slug}"
+memory_dir="${HOME}/.cutiepie/memory/${slug}"
 session_dir="${memory_dir}/SESSIONS"
 mkdir -p "$session_dir"
 
@@ -37,6 +37,6 @@ cat > "$payload_file" || true
   echo "- Raw hook payload: ${payload_file}"
 } >> "$session_file"
 
-SWEET_HOOK_EVENT=CodexStop "${BASH_SOURCE%/*}/update-state" --hook || true
+CUTIEPIE_HOOK_EVENT=CodexStop "${BASH_SOURCE%/*}/update-state" --hook || true
 
 printf '{\n  "continue": true\n}\n'

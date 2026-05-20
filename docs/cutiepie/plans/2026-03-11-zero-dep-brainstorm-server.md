@@ -1,6 +1,6 @@
 # Zero-Dependency Brainstorm Server Implementation Plan
 
-> **For agentic workers:** REQUIRED: Use sweet:subagent-driven-development (if subagents available) or sweet:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED: Use cutiepie:subagent-driven-development (if subagents available) or cutiepie:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Replace the brainstorm server's vendored node_modules with a single zero-dependency `server.js` using Node built-ins.
 
@@ -8,7 +8,7 @@
 
 **Tech Stack:** Node.js built-ins only: `http`, `crypto`, `fs`, `path`
 
-**Spec:** `docs/sweet/specs/2026-03-11-zero-dep-brainstorm-server-design.md`
+**Spec:** `docs/cutiepie/specs/2026-03-11-zero-dep-brainstorm-server-design.md`
 
 **Existing tests:** `tests/brainstorm-server/ws-protocol.test.js` (unit), `tests/brainstorm-server/server.test.js` (integration)
 

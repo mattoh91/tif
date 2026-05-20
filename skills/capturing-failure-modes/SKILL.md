@@ -1,6 +1,6 @@
 ---
 name: capturing-failure-modes
-description: Use before compacting, clearing, ending a session, or after repeated mistakes to summarize failure patterns, root causes, fixes, and durable lessons into ~/.sweet/memory.
+description: Use before compacting, clearing, ending a session, or after repeated mistakes to summarize failure patterns, root causes, fixes, and durable lessons into ~/.cutiepie/memory.
 ---
 
 # Capturing Failure Modes
@@ -14,18 +14,18 @@ Use this skill to turn session problems into reusable memory.
 - After debugging reveals a misleading assumption
 - After a feature acceptance gate or component contract gate failed for a non-obvious reason
 
-Claude-compatible hooks persist raw session markers under `~/.sweet/memory/<project>/SESSIONS/`. Hooks do not load this skill. The agent uses this skill to summarize and update durable memory.
+Claude-compatible hooks persist raw session markers under `~/.cutiepie/memory/<project>/SESSIONS/`. Hooks do not load this skill. The agent uses this skill to summarize and update durable memory.
 
 ## Output Files
 
-- `~/.sweet/memory/<project-slug>/FAILURES.md`
-- `~/.sweet/memory/<project-slug>/MEMORY.md` when the lesson affects future implementation
-- `~/.sweet/memory/<project-slug>/SESSIONS/<YYYY-MM-DD>.md` for session notes
+- `~/.cutiepie/memory/<project-slug>/FAILURES.md`
+- `~/.cutiepie/memory/<project-slug>/MEMORY.md` when the lesson affects future implementation
+- `~/.cutiepie/memory/<project-slug>/SESSIONS/<YYYY-MM-DD>.md` for session notes
 
 ## Workflow
 
 1. Identify the project slug from git remote or directory name.
-2. Read recent session notes, current git diff, recent commits, `.sweet/PLAN.md` or `docs/sweet/PLAN.md`, and `.sweet/FRD.md` or `docs/sweet/FRD.md` if present.
+2. Read recent session notes, current git diff, recent commits, `.cutiepie/PLAN.md` or `docs/cutiepie/PLAN.md`, and `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` if present.
 3. Extract repeated or high-cost failure modes. Ignore one-off trivia.
 4. Append concise entries to `FAILURES.md` using the format below.
 5. If the lesson changes how future agents should work in this repo, append a short entry to `MEMORY.md`.

@@ -1,5 +1,5 @@
 ---
-description: "Scaffold Sweet project structure"
+description: "Scaffold Cutiepie project structure"
 ---
 
-Use the `sweet:scaffolding-repo` skill to scaffold or repair the repository baseline. Do not overwrite existing meaningful files without confirming with the user.
+Use the `cutiepie:scaffolding-repo` skill to scaffold or repair the repository baseline. Do not overwrite existing meaningful files without confirming with the user.

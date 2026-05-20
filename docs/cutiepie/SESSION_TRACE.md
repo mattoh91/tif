@@ -1,6 +1,6 @@
-# Sweet Session Trace
+# Cutiepie Session Trace
 
-This trace defines the expected lifecycle for a typical Sweet-managed coding session and how to verify each trigger.
+This trace defines the expected lifecycle for a typical Cutiepie-managed coding session and how to verify each trigger.
 
 ## 1. Start or Resume Session
 
@@ -15,9 +15,9 @@ Expected script:
 
 Expected effect:
 
-- Injects `using-sweet`
+- Injects `using-cutiepie`
 - Injects recent git status/log
-- Injects Sweet memory, failures, latest session, FRD, PLAN, and CAVEATS snippets when present
+- Injects Cutiepie memory, failures, latest session, FRD, PLAN, and CAVEATS snippets when present
 
 Verify locally:
 
@@ -29,7 +29,7 @@ CLAUDE_PLUGIN_ROOT="$PWD" hooks/run-hook.cmd session-start | node -e "let s=''; 
 
 Expected skill:
 
-- `using-sweet`
+- `using-cutiepie`
 
 Expected behavior:
 
@@ -38,7 +38,7 @@ Expected behavior:
 
 Manual verification:
 
-- Start a new host session and ask for a Sweet workflow.
+- Start a new host session and ask for a Cutiepie workflow.
 - Confirm the first response states which skill is being used when applicable.
 
 ## 3. Scaffolding or New Feature
@@ -51,22 +51,22 @@ Expected skills:
 
 Expected artifacts:
 
-- `.sweet/PRD.md`
-- `.sweet/FRD.md`
-- `.sweet/ARD.md`
-- `.sweet/CAVEATS.md`
-- `.sweet/ARCHI.md`
-- `.sweet/CONFIG.md`
-- `.sweet/PLAN.md`
-- or `docs/sweet/` equivalents
+- `.cutiepie/PRD.md`
+- `.cutiepie/FRD.md`
+- `.cutiepie/ARD.md`
+- `.cutiepie/CAVEATS.md`
+- `.cutiepie/ARCHI.md`
+- `.cutiepie/CONFIG.md`
+- `.cutiepie/PLAN.md`
+- or `docs/cutiepie/` equivalents
 
 `CONFIG.md` must name the settings/config owner and document all hyperparameters and tunables.
 
 Manual verification:
 
 ```text
-Use Sweet to scaffold this repo.
-Use Sweet to brainstorm and plan this feature.
+Use Cutiepie to scaffold this repo.
+Use Cutiepie to brainstorm and plan this feature.
 ```
 
 ## 4. Implementation
@@ -84,7 +84,7 @@ Expected state updates:
 - Feature progress updated in FRD
 - Component contract gates recorded
 - Feature acceptance gate recorded
-- Meaningful decisions/deviations written to Sweet memory or caveats
+- Meaningful decisions/deviations written to Cutiepie memory or caveats
 - Coherent commits after completed slices
 
 Manual verification:
@@ -112,8 +112,8 @@ Expected script:
 
 Expected artifacts:
 
-- `~/.sweet/memory/<project-slug>/STATE_AUDIT.md`
-- `~/.sweet/memory/<project-slug>/PREAMBLE.md`
+- `~/.cutiepie/memory/<project-slug>/STATE_AUDIT.md`
+- `~/.cutiepie/memory/<project-slug>/PREAMBLE.md`
 
 Verify locally:
 
@@ -134,7 +134,7 @@ Expected scripts:
 
 Expected artifacts:
 
-- raw hook payload under `~/.sweet/memory/<project-slug>/SESSIONS/`
+- raw hook payload under `~/.cutiepie/memory/<project-slug>/SESSIONS/`
 - daily session note
 - refreshed `STATE_AUDIT.md`
 - refreshed `PREAMBLE.md`
@@ -159,7 +159,7 @@ Expected scripts:
 
 Expected artifacts:
 
-- session note under `~/.sweet/memory/<project-slug>/SESSIONS/`
+- session note under `~/.cutiepie/memory/<project-slug>/SESSIONS/`
 - refreshed `STATE_AUDIT.md`
 - refreshed `PREAMBLE.md`
 
@@ -178,7 +178,7 @@ Expected skill:
 
 Expected source file:
 
-- `~/.sweet/memory/<project-slug>/PREAMBLE.md`
+- `~/.cutiepie/memory/<project-slug>/PREAMBLE.md`
 
 Manual verification:
 

@@ -60,7 +60,7 @@ Task tool (general-purpose):
     **Gate and state checks:**
     - Confirm the component contract gate exists, is automated, and matches the boundary.
     - Confirm the feature acceptance gate exists when this task completes or changes an integrated feature.
-    - Confirm FRD progress and Sweet memory were updated when status or durable decisions changed.
+    - Confirm FRD progress and Cutiepie memory were updated when status or durable decisions changed.
 
     Report:
     - ✅ Spec compliant (if everything matches after code inspection)

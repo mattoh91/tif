@@ -1,27 +1,27 @@
 ---
 name: update-state
-description: Use before clearing, compacting, ending a session, dispatching follow-on agents, or when asked to refresh/check Sweet state; audits planning docs, memory, failure modes, git state, and next-session preamble readiness.
+description: Use before clearing, compacting, ending a session, dispatching follow-on agents, or when asked to refresh/check Cutiepie state; audits planning docs, memory, failure modes, git state, and next-session preamble readiness.
 ---
 
-# Sweet Update State
+# Cutiepie Update State
 
 Use this skill to turn the hook-generated static audit into a curated state refresh. The shell hook can detect obvious stale state and write a mechanical preamble; this skill decides what actually needs updating.
 
 ## Inputs to Read
 
-- `~/.sweet/memory/<project-slug>/STATE_AUDIT.md`
-- `~/.sweet/memory/<project-slug>/PREAMBLE.md`
-- `~/.sweet/memory/<project-slug>/MEMORY.md`
-- `~/.sweet/memory/<project-slug>/FAILURES.md`
-- recent files under `~/.sweet/memory/<project-slug>/SESSIONS/`
+- `~/.cutiepie/memory/<project-slug>/STATE_AUDIT.md`
+- `~/.cutiepie/memory/<project-slug>/PREAMBLE.md`
+- `~/.cutiepie/memory/<project-slug>/MEMORY.md`
+- `~/.cutiepie/memory/<project-slug>/FAILURES.md`
+- recent files under `~/.cutiepie/memory/<project-slug>/SESSIONS/`
 - recent git commits, `git status`, `git diff --stat`, and changed files
-- `.sweet/PRD.md` or `docs/sweet/PRD.md`
-- `.sweet/FRD.md` or `docs/sweet/FRD.md`
-- `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
-- `.sweet/ARD.md` or `docs/sweet/ARD.md`
-- `.sweet/ARCHI.md` or `docs/sweet/ARCHI.md`
-- `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md`
-- `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md`
+- `.cutiepie/PRD.md` or `docs/cutiepie/PRD.md`
+- `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md`
+- `.cutiepie/PLAN.md` or `docs/cutiepie/PLAN.md`
+- `.cutiepie/ARD.md` or `docs/cutiepie/ARD.md`
+- `.cutiepie/ARCHI.md` or `docs/cutiepie/ARCHI.md`
+- `.cutiepie/CONFIG.md` or `docs/cutiepie/CONFIG.md`
+- `.cutiepie/CAVEATS.md` or `docs/cutiepie/CAVEATS.md`
 
 ## Workflow
 
@@ -50,7 +50,7 @@ State is refreshed when:
 - PLAN, ARD, ARCHI, and CAVEATS are not obviously stale relative to recent commits/diff
 - CONFIG documents settings owners, defaults, allowed values, and hyperparameters/tunables touched by recent work
 - MEMORY and FAILURES contain durable lessons worth carrying forward
-- `~/.sweet/memory/<project-slug>/PREAMBLE.md` names the next task, relevant gates, and key files for the next session
+- `~/.cutiepie/memory/<project-slug>/PREAMBLE.md` names the next task, relevant gates, and key files for the next session
 
 ## Do Not
 

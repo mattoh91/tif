@@ -5,9 +5,9 @@ description: Use when defining or verifying feature acceptance gates, component 
 
 # Component Functional Testing
 
-Use this skill to define the visible acceptance gate for a feature and the contract gates for components touched by that feature. Unit TDD remains the implementer-internal loop; Sweet gates prove the user/system outcome and the boundaries neighboring systems or agents depend on.
+Use this skill to define the visible acceptance gate for a feature and the contract gates for components touched by that feature. Unit TDD remains the implementer-internal loop; Cutiepie gates prove the user/system outcome and the boundaries neighboring systems or agents depend on.
 
-Follow `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` when available. In short: track progress by feature, partition implementation by component, and make DTO/data-contract shapes explicit enough for subagents to work independently.
+Follow `docs/cutiepie/AGENTIC_ENGINEERING_GUIDELINES.md` when available. In short: track progress by feature, partition implementation by component, and make DTO/data-contract shapes explicit enough for subagents to work independently.
 
 ## Tracking Model
 
@@ -68,7 +68,7 @@ A component is not complete until:
 - focused tests pass
 - the component contract gate runs successfully
 - the gate matches the FRD feature/component boundary
-- `.sweet/FRD.md` or `docs/sweet/FRD.md` progress is updated
+- `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` progress is updated
 - meaningful deviations are recorded in memory or caveats
 
 A feature is not complete until:
@@ -76,4 +76,4 @@ A feature is not complete until:
 - all touched component contract gates pass
 - the feature acceptance gate passes
 - the FRD feature status is updated
-- durable implementation notes are committed or recorded in Sweet memory
+- durable implementation notes are committed or recorded in Cutiepie memory

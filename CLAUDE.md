@@ -1,10 +1,10 @@
-# Sweet — Contributor Guidelines
+# Cutiepie — Contributor Guidelines
 
-This repository contains Sweet, an opinionated SWE harness that works across Claude Code and Codex.
+This repository contains Cutiepie, an opinionated SWE harness that works across Claude Code and Codex.
 
 ## Local Priority
 
-Treat Sweet as the active product. External upstream contribution rules are not the default operating policy here unless the user explicitly says they are preparing an upstream contribution.
+Treat Cutiepie as the active product. External upstream contribution rules are not the default operating policy here unless the user explicitly says they are preparing an upstream contribution.
 
 When working in this repo:
 
@@ -13,25 +13,25 @@ When working in this repo:
 3. Prefer small phases with clear verification over broad rewrites.
 4. Do not add third-party runtime dependencies unless the user explicitly approves them.
 5. When modifying skills, treat them as behavior-shaping code: keep wording deliberate, test triggering, and avoid casual prose churn.
-6. Follow `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` for Sweet's shared engineering contract: feature-level progress, component-level contracts, closed verification loops, memory updates, and commit hygiene.
+6. Follow `docs/cutiepie/AGENTIC_ENGINEERING_GUIDELINES.md` for Cutiepie's shared engineering contract: feature-level progress, component-level contracts, closed verification loops, memory updates, and commit hygiene.
 
 ## Harness Goals
 
-Sweet provides:
+Cutiepie provides:
 
-- structured project artifacts under `.sweet/` or `docs/sweet/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md`
+- structured project artifacts under `.cutiepie/` or `docs/cutiepie/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md`
 - feature acceptance gates backed by automated e2e/user-flow, API scenario, CLI, or equivalent project-specific checks
 - component contract gates backed by DTO/data-contract checks, schema checks, adapter payload checks, public API behavior, or equivalent boundary verification
 - context-aware requirements probing with no-network fallbacks
-- out-of-tree memory under `~/.sweet/memory/<project-slug>/`
+- out-of-tree memory under `~/.cutiepie/memory/<project-slug>/`
 - failure-mode capture and session bootstrap via `/preamble`
 - repo scaffolding for common init scripts, Make targets, CI checks, and planning skeletons
 
 ## Artifact Rules
 
-Root-level `PLAN.md` and `USERSTORIES.md` describe work on this harness itself. Generated artifacts for downstream projects should default to `.sweet/` or `docs/sweet/` to avoid colliding with harness-maintenance docs.
+Root-level `PLAN.md` and `USERSTORIES.md` describe work on this harness itself. Generated artifacts for downstream projects should default to `.cutiepie/` or `docs/cutiepie/` to avoid colliding with harness-maintenance docs.
 
-Active Sweet project artifacts are only the top-level files under `.sweet/` or `docs/sweet/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md`. Dated files under `docs/sweet/specs/`, `docs/sweet/plans/`, or `docs/plans/` are historical archives unless the user explicitly says to use them. Do not treat archived dated plans/specs as satisfying the active Sweet spec-set gate.
+Active Cutiepie project artifacts are only the top-level files under `.cutiepie/` or `docs/cutiepie/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md`. Dated files under `docs/cutiepie/specs/`, `docs/cutiepie/plans/`, or `docs/plans/` are historical archives unless the user explicitly says to use them. Do not treat archived dated plans/specs as satisfying the active Cutiepie spec-set gate.
 
 All hyperparameters and tunable settings belong in a proper settings/config owner in the project code and must be documented in active `CONFIG.md`: model names, temperatures, token limits, thresholds, retry counts, timeouts, polling intervals, batch sizes, feature flags, and similar values. Do not scatter magic numbers or configuration literals through implementation code without documenting why they are intentionally local constants.
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Add two new review stages to the sweet workflow:
+Add two new review stages to the cutiepie workflow:
 
 1. **Spec Document Review** - After brainstorming, before writing-plans
 2. **Plan Document Review** - After writing-plans, before implementation

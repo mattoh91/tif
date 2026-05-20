@@ -9,7 +9,7 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 Guide completion of development work by presenting clear options and handling chosen workflow.
 
-**Core principle:** Verify tests, component contract gates, and feature gates → update Sweet state → present options → execute choice → clean up.
+**Core principle:** Verify tests, component contract gates, and feature gates → update Cutiepie state → present options → execute choice → clean up.
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
@@ -37,18 +37,18 @@ Stop. Don't proceed to Step 2.
 
 **If tests pass:** Continue to Step 2.
 
-### Step 2: Update Sweet State
+### Step 2: Update Cutiepie State
 
-If this is a Sweet-managed project, update durable project state before presenting merge/PR options.
+If this is a Cutiepie-managed project, update durable project state before presenting merge/PR options.
 
 Check for:
 
-- `.sweet/FRD.md` or `docs/sweet/FRD.md`
-- `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
-- `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md`
-- `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md`
-- `~/.sweet/memory/<project-slug>/MEMORY.md`
-- `~/.sweet/memory/<project-slug>/FAILURES.md`
+- `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md`
+- `.cutiepie/PLAN.md` or `docs/cutiepie/PLAN.md`
+- `.cutiepie/CAVEATS.md` or `docs/cutiepie/CAVEATS.md`
+- `.cutiepie/CONFIG.md` or `docs/cutiepie/CONFIG.md`
+- `~/.cutiepie/memory/<project-slug>/MEMORY.md`
+- `~/.cutiepie/memory/<project-slug>/FAILURES.md`
 
 For each completed feature/component slice:
 
@@ -57,17 +57,17 @@ For each completed feature/component slice:
 3. Update FRD progress/status for the feature and touched components.
 4. Record meaningful deviations from the plan in the plan, caveats, or memory.
 5. Update CONFIG.md and the settings/config owner for any hyperparameters or tunables added, removed, renamed, or changed.
-6. Append durable implementation notes to `~/.sweet/memory/<project-slug>/MEMORY.md`:
+6. Append durable implementation notes to `~/.cutiepie/memory/<project-slug>/MEMORY.md`:
    - feature/component completed
    - feature acceptance gate command/result
    - component contract gate command/result
    - settings/config changes
    - design decisions made during implementation
-   - deviations from `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
+   - deviations from `.cutiepie/PLAN.md` or `docs/cutiepie/PLAN.md`
    - follow-ups
 7. If repeated failure patterns occurred, use `capturing-failure-modes` before ending the session.
 
-After a coherent feature/component slice is completed and state is updated, suggest clearing or compacting before starting another large slice so the next session can restart from `.sweet/` artifacts, recent commits, and `~/.sweet/memory`.
+After a coherent feature/component slice is completed and state is updated, suggest clearing or compacting before starting another large slice so the next session can restart from `.cutiepie/` artifacts, recent commits, and `~/.cutiepie/memory`.
 
 Derive `<project-slug>` from git remote when available, otherwise use the directory name.
 
@@ -198,9 +198,9 @@ git worktree remove <worktree-path>
 - **Problem:** Merge broken code, create failing PR
 - **Fix:** Always verify tests before offering options
 
-**Skipping Sweet state updates**
+**Skipping Cutiepie state updates**
 - **Problem:** Next session starts from stale FRD/PLAN/memory
-- **Fix:** Update FRD progress and `~/.sweet/memory/<project-slug>/MEMORY.md` before presenting completion options
+- **Fix:** Update FRD progress and `~/.cutiepie/memory/<project-slug>/MEMORY.md` before presenting completion options
 
 **Open-ended questions**
 - **Problem:** "What should I do next?" → ambiguous
@@ -218,15 +218,15 @@ git worktree remove <worktree-path>
 
 **Never:**
 - Proceed with failing tests
-- Mark Sweet components complete without passing automated component contract gates
-- Mark Sweet features complete without a passing automated feature acceptance gate
+- Mark Cutiepie components complete without passing automated component contract gates
+- Mark Cutiepie features complete without a passing automated feature acceptance gate
 - Merge without verifying tests on result
 - Delete work without confirmation
 - Force-push without explicit request
 
 **Always:**
 - Verify tests before offering options
-- Update Sweet FRD progress and memory when applicable
+- Update Cutiepie FRD progress and memory when applicable
 - Present exactly 4 options
 - Get typed confirmation for Option 4
 - Clean up worktree for Options 1 & 4 only

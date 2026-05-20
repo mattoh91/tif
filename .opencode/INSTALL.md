@@ -1,4 +1,4 @@
-# Installing Sweet for OpenCode
+# Installing Cutiepie for OpenCode
 
 ## Prerequisites
 
@@ -6,31 +6,31 @@
 
 ## Installation
 
-Add sweet to the `plugin` array in your `opencode.json` (global or project-level):
+Add cutiepie to the `plugin` array in your `opencode.json` (global or project-level):
 
 ```json
 {
-  "plugin": ["sweet@git+https://github.com/mattoh91/sweet.git"]
+  "plugin": ["cutiepie@git+https://github.com/mattoh91/cutiepie.git"]
 }
 ```
 
 Restart OpenCode. That's it — the plugin auto-installs and registers all skills.
 
-Verify by asking: "Tell me about your sweet"
+Verify by asking: "Tell me about your cutiepie"
 
 ## Migrating from the old symlink-based install
 
-If you previously installed sweet using `git clone` and symlinks, remove the old setup:
+If you previously installed cutiepie using `git clone` and symlinks, remove the old setup:
 
 ```bash
 # Remove old symlinks
-rm -f ~/.config/opencode/plugins/sweet.js
-rm -rf ~/.config/opencode/skills/sweet
+rm -f ~/.config/opencode/plugins/cutiepie.js
+rm -rf ~/.config/opencode/skills/cutiepie
 
 # Optionally remove the cloned repo
-rm -rf ~/.config/opencode/sweet
+rm -rf ~/.config/opencode/cutiepie
 
-# Remove skills.paths from opencode.json if you added one for sweet
+# Remove skills.paths from opencode.json if you added one for cutiepie
 ```
 
 Then follow the installation steps above.
@@ -41,18 +41,18 @@ Use OpenCode's native `skill` tool:
 
 ```
 use skill tool to list skills
-use skill tool to load sweet/brainstorming
+use skill tool to load cutiepie/brainstorming
 ```
 
 ## Updating
 
-Sweet updates automatically when you restart OpenCode.
+Cutiepie updates automatically when you restart OpenCode.
 
 To pin a specific version:
 
 ```json
 {
-  "plugin": ["sweet@git+https://github.com/mattoh91/sweet.git#v5.0.3"]
+  "plugin": ["cutiepie@git+https://github.com/mattoh91/cutiepie.git#v5.0.3"]
 }
 ```
 
@@ -60,7 +60,7 @@ To pin a specific version:
 
 ### Plugin not loading
 
-1. Check logs: `opencode run --print-logs "hello" 2>&1 | grep -i sweet`
+1. Check logs: `opencode run --print-logs "hello" 2>&1 | grep -i cutiepie`
 2. Verify the plugin line in your `opencode.json`
 3. Make sure you're running a recent version of OpenCode
 
@@ -79,5 +79,5 @@ When skills reference Claude Code tools:
 
 ## Getting Help
 
-- Report issues: https://github.com/mattoh91/sweet/issues
-- Full documentation: https://github.com/mattoh91/sweet/blob/main/docs/README.opencode.md
+- Report issues: https://github.com/mattoh91/cutiepie/issues
+- Full documentation: https://github.com/mattoh91/cutiepie/blob/main/docs/README.opencode.md

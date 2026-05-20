@@ -2,7 +2,7 @@
 #
 # sync-to-codex-plugin.sh
 #
-# Sync this Sweet checkout → a Codex plugin repository.
+# Sync this Cutiepie checkout → a Codex plugin repository.
 # Clones the fork fresh into a temp dir, rsyncs tracked upstream plugin content
 # (including committed Codex files under .codex-plugin/ and assets/), commits,
 # pushes a sync branch, and opens a PR.
@@ -20,7 +20,7 @@
 #   ./scripts/sync-to-codex-plugin.sh --bootstrap                  # create plugin dir if missing
 #
 # Bootstrap mode: skips the "plugin must exist on base" requirement and creates
-# plugins/sweet/ when absent, then copies the tracked plugin files from
+# plugins/cutiepie/ when absent, then copies the tracked plugin files from
 # this checkout just like a normal sync.
 #
 # Requires: bash, rsync, git, gh (authenticated), python3.
@@ -31,9 +31,9 @@ set -euo pipefail
 # Config — edit as upstream or canonical plugin shape evolves
 # =============================================================================
 
-FORK="${SWEET_CODEX_PLUGIN_FORK:-mattoh91/openai-codex-plugins}"
+FORK="${CUTIEPIE_CODEX_PLUGIN_FORK:-mattoh91/openai-codex-plugins}"
 DEFAULT_BASE="main"
-DEST_REL="${SWEET_CODEX_PLUGIN_DEST:-plugins/sweet}"
+DEST_REL="${CUTIEPIE_CODEX_PLUGIN_DEST:-plugins/cutiepie}"
 
 # Paths in upstream that should NOT land in the embedded plugin.
 # All patterns use a leading "/" to anchor them to the source root.
@@ -301,9 +301,9 @@ prepare_preview_checkout
 
 TIMESTAMP="$(date -u +%Y%m%d-%H%M%S)"
 if [[ $BOOTSTRAP -eq 1 ]]; then
-  SYNC_BRANCH="bootstrap/sweet-${UPSTREAM_SHORT}-${TIMESTAMP}"
+  SYNC_BRANCH="bootstrap/cutiepie-${UPSTREAM_SHORT}-${TIMESTAMP}"
 else
-  SYNC_BRANCH="sync/sweet-${UPSTREAM_SHORT}-${TIMESTAMP}"
+  SYNC_BRANCH="sync/cutiepie-${UPSTREAM_SHORT}-${TIMESTAMP}"
 fi
 
 # =============================================================================
@@ -383,23 +383,23 @@ fi
 git add "$DEST_REL"
 
 if [[ $BOOTSTRAP -eq 1 ]]; then
-  COMMIT_TITLE="bootstrap sweet v$UPSTREAM_VERSION from source main @ $UPSTREAM_SHORT"
-  PR_BODY="Initial bootstrap of the Sweet plugin from source \`main\` @ \`$UPSTREAM_SHORT\` (v$UPSTREAM_VERSION).
+  COMMIT_TITLE="bootstrap cutiepie v$UPSTREAM_VERSION from source main @ $UPSTREAM_SHORT"
+  PR_BODY="Initial bootstrap of the Cutiepie plugin from source \`main\` @ \`$UPSTREAM_SHORT\` (v$UPSTREAM_VERSION).
 
 Creates \`$DEST_REL\` by copying the tracked plugin files from this checkout, including \`.codex-plugin/plugin.json\` and \`assets/\`.
 
 Run via: \`scripts/sync-to-codex-plugin.sh --bootstrap\`
-Source commit: https://github.com/mattoh91/sweet/commit/$UPSTREAM_SHA
+Source commit: https://github.com/mattoh91/cutiepie/commit/$UPSTREAM_SHA
 
 This is a one-time bootstrap. Subsequent syncs will be normal (non-bootstrap) runs using the same tracked source plugin files."
 else
-  COMMIT_TITLE="sync sweet v$UPSTREAM_VERSION from source main @ $UPSTREAM_SHORT"
-  PR_BODY="Automated sync from Sweet source \`main\` @ \`$UPSTREAM_SHORT\` (v$UPSTREAM_VERSION).
+  COMMIT_TITLE="sync cutiepie v$UPSTREAM_VERSION from source main @ $UPSTREAM_SHORT"
+  PR_BODY="Automated sync from Cutiepie source \`main\` @ \`$UPSTREAM_SHORT\` (v$UPSTREAM_VERSION).
 
 Copies the tracked plugin files from this checkout, including the committed Codex manifest and assets.
 
 Run via: \`scripts/sync-to-codex-plugin.sh\`
-Source commit: https://github.com/mattoh91/sweet/commit/$UPSTREAM_SHA
+Source commit: https://github.com/mattoh91/cutiepie/commit/$UPSTREAM_SHA
 
 Running the sync tool again against the same source SHA should produce a PR with an identical diff — use that to verify the tool is behaving."
 fi
@@ -407,7 +407,7 @@ fi
 git commit --quiet -m "$COMMIT_TITLE
 
 Automated sync via scripts/sync-to-codex-plugin.sh
-Source:   https://github.com/mattoh91/sweet/commit/$UPSTREAM_SHA
+Source:   https://github.com/mattoh91/cutiepie/commit/$UPSTREAM_SHA
 Branch:   $SYNC_BRANCH"
 
 echo "Pushing $SYNC_BRANCH to $FORK..."

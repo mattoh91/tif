@@ -18,7 +18,7 @@ Task tool (general-purpose):
     [Relevant FRD feature/component status]
     [Feature acceptance gate and component contract gate commands]
     [Relevant DTOs, schemas, public interfaces, adapters, and boundary modules]
-    [Recent commits and Sweet memory notes needed for this task]
+    [Recent commits and Cutiepie memory notes needed for this task]
 
     ## Boundary and Data Contract
 
@@ -57,7 +57,7 @@ Task tool (general-purpose):
     2. Write tests (following TDD if task says to)
     3. Run focused tests and the component contract gate
     4. Run the feature acceptance gate if this task completes the integrated feature
-    5. Update FRD progress and Sweet memory if the task completed a coherent slice
+    5. Update FRD progress and Cutiepie memory if the task completed a coherent slice
     6. Commit your work
     7. Self-review (see below)
     8. Report back
@@ -126,7 +126,7 @@ Task tool (general-purpose):
     **Handoff State:**
     - Did I update FRD progress when a feature/component status changed?
     - Did I update CONFIG.md and the settings/config owner for any hyperparameters or tunables I touched?
-    - Did I update Sweet memory with durable decisions or deviations?
+    - Did I update Cutiepie memory with durable decisions or deviations?
     - Is the commit message descriptive enough for the next agent to understand the slice?
 
     If you find issues during self-review, fix them now before reporting.

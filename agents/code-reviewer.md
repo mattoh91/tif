@@ -20,7 +20,7 @@ When reviewing completed work, you will:
    - Check for proper error handling, type safety, and defensive programming
    - Evaluate code organization, naming conventions, and maintainability
    - Assess test coverage and quality of test implementations
-   - For Sweet component work, verify there is an automated component acceptance gate and that it passed
+   - For Cutiepie component work, verify there is an automated component acceptance gate and that it passed
    - Confirm the gate matches the FRD epic/component and exercises a real boundary: DTO/data contract, API scenario, e2e/user-flow automation, or equivalent harness check
    - Look for potential security vulnerabilities or performance issues
 
@@ -34,7 +34,7 @@ When reviewing completed work, you will:
    - Verify that code includes appropriate comments and documentation
    - Check that file headers, function documentation, and inline comments are present and accurate
    - Ensure adherence to project-specific coding standards and conventions
-   - For Sweet projects, check that `.sweet/FRD.md` or `docs/sweet/FRD.md` progress and relevant caveats/memory notes are updated when a component is completed
+   - For Cutiepie projects, check that `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` progress and relevant caveats/memory notes are updated when a component is completed
 
 5. **Issue Identification and Recommendations**:
    - Clearly categorize issues as: Critical (must fix), Important (should fix), or Suggestions (nice to have)

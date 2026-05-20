@@ -1,6 +1,6 @@
 ---
 name: preamble
-description: Use when starting or resuming work after a clear/compact/new session to generate a copy-paste context block from ~/.sweet memory, git logs, FRD progress, and PLAN status.
+description: Use when starting or resuming work after a clear/compact/new session to generate a copy-paste context block from ~/.cutiepie memory, git logs, FRD progress, and PLAN status.
 ---
 
 # Preamble
@@ -11,16 +11,16 @@ Generate a concise context block for a fresh session. This skill reads project s
 
 Use what exists:
 
-- `~/.sweet/memory/<project-slug>/MEMORY.md`
-- `~/.sweet/memory/<project-slug>/FAILURES.md`
-- `~/.sweet/memory/<project-slug>/SESSIONS/` recent files
+- `~/.cutiepie/memory/<project-slug>/MEMORY.md`
+- `~/.cutiepie/memory/<project-slug>/FAILURES.md`
+- `~/.cutiepie/memory/<project-slug>/SESSIONS/` recent files
 - recent git commits
 - current git status
 - recent git diff/stat
-- `.sweet/FRD.md` or `docs/sweet/FRD.md`
-- `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
-- `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md`
-- `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md`
+- `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md`
+- `.cutiepie/PLAN.md` or `docs/cutiepie/PLAN.md`
+- `.cutiepie/CAVEATS.md` or `docs/cutiepie/CAVEATS.md`
+- `.cutiepie/CONFIG.md` or `docs/cutiepie/CONFIG.md`
 - feature/component source, test, DTO, schema, adapter, and gate files referenced by the current FRD/PLAN task
 
 ## Workflow
@@ -55,7 +55,7 @@ Use what exists:
 ```markdown
 Use this as the first message in a fresh agent session:
 
-<sweet-preamble>
+<cutiepie-preamble>
 Project: ...
 Current goal: ...
 Current state: ...
@@ -77,7 +77,7 @@ Recent commits:
 - ...
 Working tree:
 - ...
-</sweet-preamble>
+</cutiepie-preamble>
 ```
 
 Keep it under 1200 words unless the user asks for a full handoff.
