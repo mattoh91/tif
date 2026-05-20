@@ -33,6 +33,8 @@ Runtime memory is per-user and out of tree:
 
 ## Agentic Loop
 
+For a browser-friendly explanation with a clickable SVG map, open `docs/cutiepie/session-lifecycle.html`.
+
 ```mermaid
 flowchart TD
     A[User starts or resumes work] --> B{Host}

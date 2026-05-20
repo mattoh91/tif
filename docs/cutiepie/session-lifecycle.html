@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cutiepie Session Lifecycle</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #53616f;
+      --line: #c7d0d9;
+      --paper: #fbfcfd;
+      --panel: #ffffff;
+      --hook: #0f766e;
+      --skill: #7c3aed;
+      --tool: #b45309;
+      --state: #2563eb;
+      --gate: #be123c;
+      --shadow: 0 10px 24px rgba(23, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    header {
+      padding: 40px 24px 26px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 24px 56px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      max-width: 840px;
+    }
+
+    h2 {
+      margin-top: 44px;
+      font-size: 1.35rem;
+    }
+
+    h3 {
+      margin-top: 22px;
+      font-size: 1rem;
+    }
+
+    p {
+      max-width: 860px;
+      color: var(--muted);
+    }
+
+    a {
+      color: #1d4ed8;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    code {
+      padding: 1px 5px;
+      border: 1px solid #d8e0e8;
+      border-radius: 4px;
+      background: #f3f6f9;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .lede {
+      font-size: 1.05rem;
+      max-width: 900px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: #fff;
+      text-decoration: none;
+    }
+
+    .diagram-shell {
+      margin-top: 28px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+    }
+
+    svg {
+      display: block;
+      min-width: 1080px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .node rect {
+      fill: #fff;
+      stroke-width: 2;
+      rx: 8;
+    }
+
+    .node text {
+      fill: var(--ink);
+      font-size: 15px;
+      font-weight: 650;
+      pointer-events: none;
+    }
+
+    .node .sub {
+      fill: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .node:hover rect,
+    .node:focus rect {
+      filter: drop-shadow(0 7px 9px rgba(23, 32, 42, 0.16));
+      stroke-width: 3;
+    }
+
+    .hook rect {
+      stroke: var(--hook);
+    }
+
+    .skill rect {
+      stroke: var(--skill);
+    }
+
+    .tool rect {
+      stroke: var(--tool);
+    }
+
+    .state rect {
+      stroke: var(--state);
+    }
+
+    .gate rect {
+      stroke: var(--gate);
+    }
+
+    .actor rect {
+      stroke: #334155;
+      fill: #f8fafc;
+    }
+
+    .arrow {
+      stroke: #7a8794;
+      stroke-width: 2;
+      fill: none;
+      marker-end: url(#arrow);
+    }
+
+    .label {
+      fill: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .legend span,
+    .summary-card,
+    section {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .legend span {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 9px 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .swatch {
+      width: 13px;
+      height: 13px;
+      border-radius: 3px;
+      border: 2px solid currentColor;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .summary-card {
+      padding: 16px;
+    }
+
+    .summary-card h3 {
+      margin-top: 0;
+    }
+
+    section {
+      margin-top: 18px;
+      padding: 20px;
+    }
+
+    section:target {
+      outline: 3px solid #93c5fd;
+      outline-offset: 3px;
+    }
+
+    ul,
+    ol {
+      padding-left: 22px;
+    }
+
+    li {
+      margin: 7px 0;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .compact-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.95rem;
+    }
+
+    .compact-table th,
+    .compact-table td {
+      padding: 10px;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .compact-table th {
+      background: #f6f8fa;
+    }
+
+    footer {
+      margin-top: 40px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 760px) {
+      header {
+        padding-top: 28px;
+      }
+
+      main {
+        padding-inline: 16px;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <main>
+      <h1>Cutiepie Session Lifecycle</h1>
+      <p class="lede">Cutiepie helps an agent write code by keeping the development loop explicit: load durable context, choose the right skill, create or update project artifacts, implement through gates, persist state, and hand off cleanly to the next session.</p>
+      <nav class="nav" aria-label="Page sections">
+        <a href="#diagram">Lifecycle diagram</a>
+        <a href="#hooks">Hooks</a>
+        <a href="#skills">Skills</a>
+        <a href="#tools">Tools</a>
+        <a href="#state">State and memory</a>
+        <a href="#gates">Gates</a>
+        <a href="#handoff">Handoff</a>
+      </nav>
+    </main>
+  </header>
+
+  <main>
+    <section id="diagram" aria-labelledby="diagram-title">
+      <h2 id="diagram-title">Clickable Lifecycle Map</h2>
+      <p>Click a node to jump to the section that explains that part of the session. The same flow works across Claude Code and Codex, with host-specific hook adapters and shared skills.</p>
+
+      <div class="diagram-shell">
+        <svg viewBox="0 0 1120 780" role="img" aria-labelledby="svg-title svg-desc">
+          <title id="svg-title">Cutiepie agentic coding lifecycle</title>
+          <desc id="svg-desc">A clickable SVG showing how a user prompt flows through hooks, skills, tools, state, gates, and handoff.</desc>
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L9,3 z" fill="#7a8794"></path>
+            </marker>
+          </defs>
+
+          <path class="arrow" d="M170 92 H278"></path>
+          <path class="arrow" d="M442 92 H558"></path>
+          <path class="arrow" d="M722 92 H838"></path>
+          <path class="arrow" d="M930 142 V203"></path>
+          <path class="arrow" d="M838 250 H722"></path>
+          <path class="arrow" d="M558 250 H442"></path>
+          <path class="arrow" d="M360 300 V368"></path>
+          <path class="arrow" d="M442 420 H558"></path>
+          <path class="arrow" d="M722 420 H838"></path>
+          <path class="arrow" d="M930 470 V538"></path>
+          <path class="arrow" d="M838 592 H722"></path>
+          <path class="arrow" d="M558 592 H442"></path>
+          <path class="arrow" d="M360 642 V704 H838 V646"></path>
+
+          <text class="label" x="192" y="80">start / resume / clear</text>
+          <text class="label" x="462" y="80">context injection</text>
+          <text class="label" x="740" y="80">user intent</text>
+          <text class="label" x="940" y="183">skill routing</text>
+          <text class="label" x="734" y="238">artifact planning</text>
+          <text class="label" x="466" y="238">implementation packet</text>
+          <text class="label" x="370" y="348">execution</text>
+          <text class="label" x="458" y="408">verify</text>
+          <text class="label" x="746" y="408">review</text>
+          <text class="label" x="940" y="516">persist</text>
+          <text class="label" x="742" y="580">commit</text>
+          <text class="label" x="454" y="580">next context</text>
+
+          <a href="#hosts" class="node actor" aria-label="Hosts">
+            <rect x="30" y="48" width="140" height="88"></rect>
+            <text x="100" y="85" text-anchor="middle">Host starts</text>
+            <text class="sub" x="100" y="108" text-anchor="middle">Claude Code or Codex</text>
+          </a>
+
+          <a href="#hooks" class="node hook" aria-label="Session start hook">
+            <rect x="278" y="48" width="164" height="88"></rect>
+            <text x="360" y="82" text-anchor="middle">SessionStart</text>
+            <text class="sub" x="360" y="106" text-anchor="middle">hooks/session-start</text>
+          </a>
+
+          <a href="#state" class="node state" aria-label="Memory and artifacts">
+            <rect x="558" y="48" width="164" height="88"></rect>
+            <text x="640" y="82" text-anchor="middle">Load state</text>
+            <text class="sub" x="640" y="106" text-anchor="middle">memory, git, docs</text>
+          </a>
+
+          <a href="#skills" class="node skill" aria-label="Using Cutiepie skill">
+            <rect x="838" y="48" width="184" height="88"></rect>
+            <text x="930" y="82" text-anchor="middle">using-cutiepie</text>
+            <text class="sub" x="930" y="106" text-anchor="middle">choose relevant skill</text>
+          </a>
+
+          <a href="#skills" class="node skill" aria-label="Planning skills">
+            <rect x="838" y="204" width="184" height="92"></rect>
+            <text x="930" y="236" text-anchor="middle">Plan the work</text>
+            <text class="sub" x="930" y="260" text-anchor="middle">brainstorming, writing-plans</text>
+          </a>
+
+          <a href="#state" class="node state" aria-label="Required docs">
+            <rect x="558" y="204" width="164" height="92"></rect>
+            <text x="640" y="236" text-anchor="middle">Required docs</text>
+            <text class="sub" x="640" y="260" text-anchor="middle">PRD, FRD, ARD, PLAN</text>
+          </a>
+
+          <a href="#skills" class="node skill" aria-label="Execution skills">
+            <rect x="278" y="204" width="164" height="92"></rect>
+            <text x="360" y="236" text-anchor="middle">Execute slice</text>
+            <text class="sub" x="360" y="260" text-anchor="middle">subagents or inline</text>
+          </a>
+
+          <a href="#tools" class="node tool" aria-label="Tools">
+            <rect x="278" y="372" width="164" height="96"></rect>
+            <text x="360" y="406" text-anchor="middle">Tools act</text>
+            <text class="sub" x="360" y="430" text-anchor="middle">shell, edit, browser, git</text>
+          </a>
+
+          <a href="#gates" class="node gate" aria-label="Verification gates">
+            <rect x="558" y="372" width="164" height="96"></rect>
+            <text x="640" y="406" text-anchor="middle">Run gates</text>
+            <text class="sub" x="640" y="430" text-anchor="middle">contract and feature checks</text>
+          </a>
+
+          <a href="#skills" class="node skill" aria-label="Review skills">
+            <rect x="838" y="372" width="184" height="96"></rect>
+            <text x="930" y="406" text-anchor="middle">Review decision</text>
+            <text class="sub" x="930" y="430" text-anchor="middle">code review, council, advocate</text>
+          </a>
+
+          <a href="#hooks" class="node hook" aria-label="Update state">
+            <rect x="838" y="542" width="184" height="100"></rect>
+            <text x="930" y="576" text-anchor="middle">Refresh state</text>
+            <text class="sub" x="930" y="600" text-anchor="middle">/update-state and hooks</text>
+          </a>
+
+          <a href="#state" class="node state" aria-label="Commit and memory">
+            <rect x="558" y="542" width="164" height="100"></rect>
+            <text x="640" y="576" text-anchor="middle">Persist progress</text>
+            <text class="sub" x="640" y="600" text-anchor="middle">FRD, memory, commit</text>
+          </a>
+
+          <a href="#handoff" class="node hook" aria-label="Preamble handoff">
+            <rect x="278" y="542" width="164" height="100"></rect>
+            <text x="360" y="576" text-anchor="middle">Next session</text>
+            <text class="sub" x="360" y="600" text-anchor="middle">preamble and audit</text>
+          </a>
+        </svg>
+      </div>
+
+      <div class="legend" aria-label="Diagram legend">
+        <span style="color: var(--hook)"><i class="swatch"></i> Hook or lifecycle event</span>
+        <span style="color: var(--skill)"><i class="swatch"></i> Skill-driven behavior</span>
+        <span style="color: var(--tool)"><i class="swatch"></i> Tool execution</span>
+        <span style="color: var(--state)"><i class="swatch"></i> State, docs, or memory</span>
+        <span style="color: var(--gate)"><i class="swatch"></i> Verification gate</span>
+      </div>
+    </section>
+
+    <div class="summary-grid">
+      <article class="summary-card">
+        <h3>What Cutiepie Adds</h3>
+        <p>It gives agents a repeatable operating system for coding sessions: required docs, explicit skill routing, lifecycle hooks, durable memory, and gates that prove feature and component behavior.</p>
+      </article>
+      <article class="summary-card">
+        <h3>Why It Helps</h3>
+        <p>Agents lose less context, plan against stable artifacts, coordinate subagents through clear boundaries, and leave the next session with a usable preamble instead of a vague transcript.</p>
+      </article>
+      <article class="summary-card">
+        <h3>Where It Runs</h3>
+        <p>Shared workflow rules live in <code>skills/</code>. Claude Code and Codex use host-specific plugin metadata and hooks to trigger the same core development loop.</p>
+      </article>
+    </div>
+
+    <section id="hosts">
+      <h2>Hosts</h2>
+      <p>Cutiepie targets Claude Code and Codex without splitting the development method into separate products.</p>
+      <div class="two-col">
+        <div>
+          <h3>Claude Code</h3>
+          <ul>
+            <li>Loads plugin metadata from <code>.claude-plugin/plugin.json</code>.</li>
+            <li>Uses <code>hooks/hooks.json</code> for <code>SessionStart</code>, <code>PreCompact</code>, and <code>SessionEnd</code>.</li>
+            <li>Uses slash commands from <code>commands/</code> as thin entry points into skills.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Codex</h3>
+          <ul>
+            <li>Loads plugin metadata from <code>.codex-plugin/plugin.json</code>.</li>
+            <li>Uses shared skills from <code>skills/</code>.</li>
+            <li>Uses Codex hooks from <code>.codex/hooks.json</code> when <code>codex_hooks = true</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="hooks">
+      <h2>Hooks</h2>
+      <p>Hooks are lifecycle scripts. They do not replace agent judgment. They persist and inject structured state so the agent begins with the right context and leaves usable state behind.</p>
+      <table class="compact-table">
+        <thead>
+          <tr>
+            <th>Hook</th>
+            <th>When it runs</th>
+            <th>What it does</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>hooks/session-start</code></td>
+            <td>New, resumed, cleared, or compacted session.</td>
+            <td>Injects <code>using-cutiepie</code>, recent git state, memory, failures, session notes, and active planning docs.</td>
+          </tr>
+          <tr>
+            <td><code>hooks/pre-compact</code></td>
+            <td>Before Claude Code compacts context.</td>
+            <td>Records a compaction marker, hook payload, branch, git status, and then refreshes state.</td>
+          </tr>
+          <tr>
+            <td><code>hooks/session-end</code></td>
+            <td>At Claude Code session end.</td>
+            <td>Records a session-end marker and refreshes audit and preamble files.</td>
+          </tr>
+          <tr>
+            <td><code>hooks/codex-stop</code></td>
+            <td>At Codex turn stop.</td>
+            <td>Records Codex stop payload and refreshes state while returning Codex-compatible hook JSON.</td>
+          </tr>
+          <tr>
+            <td><code>hooks/update-state</code></td>
+            <td>Manual <code>/update-state</code> or hook-side refresh.</td>
+            <td>Writes <code>STATE_AUDIT.md</code> and <code>PREAMBLE.md</code> under <code>~/.cutiepie/memory/&lt;project-slug&gt;/</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="skills">
+      <h2>Skills</h2>
+      <p>Skills are the behavioral layer. They tell the agent how to plan, implement, verify, review, and update state.</p>
+      <table class="compact-table">
+        <thead>
+          <tr>
+            <th>Session phase</th>
+            <th>Skills</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Bootstrap</td>
+            <td><code>using-cutiepie</code>, <code>preamble</code></td>
+            <td>Select relevant skills before acting and reconstruct context after clear or compact.</td>
+          </tr>
+          <tr>
+            <td>Discovery and planning</td>
+            <td><code>scaffolding-repo</code>, <code>brainstorming</code>, <code>writing-plans</code></td>
+            <td>Create required artifacts, probe requirements, map features to components, and define gates.</td>
+          </tr>
+          <tr>
+            <td>Implementation</td>
+            <td><code>subagent-driven-development</code>, <code>executing-plans</code>, <code>test-driven-development</code></td>
+            <td>Turn the plan into small implementation slices with internal TDD and clear subagent boundaries.</td>
+          </tr>
+          <tr>
+            <td>Verification and review</td>
+            <td><code>component-functional-testing</code>, <code>requesting-code-review</code>, <code>devils-advocate</code>, <code>summon-council</code></td>
+            <td>Prove component contracts, feature behavior, and plan quality before claiming completion.</td>
+          </tr>
+          <tr>
+            <td>Debugging and handoff</td>
+            <td><code>systematic-debugging</code>, <code>capturing-failure-modes</code>, <code>update-state</code>, <code>finishing-a-development-branch</code></td>
+            <td>Root-cause failures, preserve lessons, refresh state, update progress, and leave a clean branch.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="tools">
+      <h2>Tools</h2>
+      <p>Tools are how the agent changes reality. Cutiepie does not hide tool use; it gives the agent rules for when tools should be used and what evidence must come back.</p>
+      <ul>
+        <li><strong>Shell and scripts:</strong> run tests, hooks, static checks, package sync checks, and project-specific commands.</li>
+        <li><strong>File edits:</strong> update code, required artifacts, plans, and skill definitions while keeping changes scoped.</li>
+        <li><strong>Subagents:</strong> parallelize implementation or review when the task has clear boundaries and up-to-date context.</li>
+        <li><strong>Browser or UI automation:</strong> verify user flows through Playwright, browser tools, or computer-use style automation where applicable.</li>
+        <li><strong>Git:</strong> inspect diffs, commit coherent slices, and preserve a reliable history for the next session.</li>
+      </ul>
+    </section>
+
+    <section id="state">
+      <h2>State and Memory</h2>
+      <p>Cutiepie keeps project state in committed docs and user-specific memory. The docs are the source of truth for the project; memory captures session continuity and durable lessons.</p>
+      <div class="two-col">
+        <div>
+          <h3>Committed artifacts</h3>
+          <ul>
+            <li><code>.cutiepie/PRD.md</code> or <code>docs/cutiepie/PRD.md</code></li>
+            <li><code>FRD.md</code> for features, component map, gates, and progress</li>
+            <li><code>ARD.md</code> for architecture decisions</li>
+            <li><code>CAVEATS.md</code> for assumptions and risks</li>
+            <li><code>ARCHI.md</code> for diagrams</li>
+            <li><code>CONFIG.md</code> for settings owners and tunables</li>
+            <li><code>PLAN.md</code> for implementation sequence</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Out-of-tree memory</h3>
+          <ul>
+            <li><code>~/.cutiepie/memory/&lt;project-slug&gt;/MEMORY.md</code></li>
+            <li><code>~/.cutiepie/memory/&lt;project-slug&gt;/FAILURES.md</code></li>
+            <li><code>~/.cutiepie/memory/&lt;project-slug&gt;/STATE_AUDIT.md</code></li>
+            <li><code>~/.cutiepie/memory/&lt;project-slug&gt;/PREAMBLE.md</code></li>
+            <li><code>~/.cutiepie/memory/&lt;project-slug&gt;/SESSIONS/</code></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="gates">
+      <h2>Gates</h2>
+      <p>Cutiepie separates feature acceptance from component contracts. This lets users track product progress while subagents get precise implementation boundaries.</p>
+      <ul>
+        <li><strong>Feature gates</strong> prove user-visible behavior with API scenarios, CLI scenarios, browser flows, or equivalent end-to-end checks.</li>
+        <li><strong>Component gates</strong> prove system boundaries with DTO/data-shape checks, schema checks, adapter payload checks, public API checks, or equivalent contract automation.</li>
+        <li><strong>Internal TDD</strong> remains a coding discipline inside a component, but passing unit tests alone is not enough to mark the feature done.</li>
+        <li><strong>Review gates</strong> use code review, adversarial review, or council review when the risk or design ambiguity warrants another lens.</li>
+      </ul>
+    </section>
+
+    <section id="handoff">
+      <h2>Handoff</h2>
+      <p>A good session ends with a clean runway for the next one. The agent should update progress, commit coherent work, refresh state, and write enough memory for a fresh session to continue without archaeology.</p>
+      <ol>
+        <li>Run the relevant feature and component gates.</li>
+        <li>Update <code>FRD.md</code>, <code>PLAN.md</code>, <code>CAVEATS.md</code>, <code>CONFIG.md</code>, or <code>ARD.md</code> when the implementation changed the plan or decision record.</li>
+        <li>Capture durable lessons in memory and failure-mode docs.</li>
+        <li>Commit a coherent slice with the docs and code that explain each other.</li>
+        <li>Run <code>/update-state</code> before clearing, compacting, or handing work to another agent.</li>
+      </ol>
+    </section>
+
+    <footer>
+      <p>Related docs: <a href="./SESSION_TRACE.md">SESSION_TRACE.md</a>, <a href="./AGENTIC_ENGINEERING_GUIDELINES.md">AGENTIC_ENGINEERING_GUIDELINES.md</a>, and the repository <a href="../../README.md">README.md</a>.</p>
+    </footer>
+  </main>
+</body>
+</html>
