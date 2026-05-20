@@ -95,6 +95,23 @@
       max-width: 900px;
     }
 
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-mascot {
+      width: 76px;
+      height: 76px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      object-fit: cover;
+      background: #fff7ed;
+      box-shadow: var(--shadow);
+      flex: 0 0 auto;
+    }
+
     .nav {
       display: flex;
       flex-wrap: wrap;
@@ -369,6 +386,16 @@
         font-size: 1.75rem;
       }
 
+      .brand-row {
+        align-items: flex-start;
+      }
+
+      .brand-mascot {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+      }
+
       .two-col {
         grid-template-columns: 1fr;
       }
@@ -378,7 +405,10 @@
 <body>
   <header>
     <main>
-      <h1>Cutiepie Session Lifecycle</h1>
+      <div class="brand-row">
+        <img class="brand-mascot" src="../../assets/cutepie.png" alt="Cutiepie mascot">
+        <h1>Cutiepie Session Lifecycle</h1>
+      </div>
       <p class="lede">Cutiepie helps an agent write code by keeping the development loop explicit: load durable context, choose the right skill, create or update project artifacts, implement through gates, persist state, and hand off cleanly to the next session.</p>
       <nav class="nav" aria-label="Page sections">
         <a href="#influences">Influence graph</a>
@@ -411,6 +441,11 @@
         <svg class="influence-graph" viewBox="0 0 1240 900" role="img" aria-labelledby="influence-title influence-desc">
           <title id="influence-title">Cutiepie inspiration graph</title>
           <desc id="influence-desc">Cutiepie is the central node. Around it are article sources and the Cutiepie features those sources influenced.</desc>
+          <defs>
+            <clipPath id="mascot-clip">
+              <circle cx="620" cy="430" r="70"></circle>
+            </clipPath>
+          </defs>
 
           <line class="influence-line" data-source="harness" x1="620" y1="430" x2="235" y2="430"></line>
           <line class="influence-line" data-source="bootstrap" x1="620" y1="430" x2="620" y2="164"></line>
@@ -440,8 +475,8 @@
 
           <g class="center-node">
             <circle cx="620" cy="430" r="76"></circle>
-            <text x="620" y="422" text-anchor="middle">Cutiepie</text>
-            <text x="620" y="448" text-anchor="middle" style="font-size: 13px; font-weight: 550;">SWE harness</text>
+            <image href="../../assets/cutepie.png" x="550" y="360" width="140" height="140" preserveAspectRatio="xMidYMid slice" clip-path="url(#mascot-clip)"></image>
+            <circle cx="620" cy="430" r="70" fill="none" stroke="#ffffff" stroke-width="4"></circle>
           </g>
 
           <a href="https://openai.com/index/harness-engineering/" target="_blank" rel="noopener" class="node source-node" data-source="harness" aria-label="OpenAI harness engineering article">

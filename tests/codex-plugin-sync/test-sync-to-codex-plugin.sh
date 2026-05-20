@@ -197,11 +197,7 @@ EOF
 }
 EOF
 
-    cat > "$repo/assets/cutiepie-small.svg" <<'EOF'
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"></svg>
-EOF
-
-    printf 'png fixture\n' > "$repo/assets/app-icon.png"
+    printf 'png fixture\n' > "$repo/assets/cutepie.png"
 
     cat > "$repo/skills/example/SKILL.md" <<'EOF'
 # Example Skill
@@ -218,8 +214,7 @@ EOF
     git -C "$repo" add \
         .codex-plugin/plugin.json \
         .gitignore \
-        assets/app-icon.png \
-        assets/cutiepie-small.svg \
+        assets/cutepie.png \
         package.json \
         scripts/sync-to-codex-plugin.sh \
         skills/example/SKILL.md
@@ -270,11 +265,7 @@ write_synced_destination_fixture() {
 }
 EOF
 
-    cat > "$repo/plugins/cutiepie/assets/cutiepie-small.svg" <<'EOF'
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"></svg>
-EOF
-
-    printf 'png fixture\n' > "$repo/plugins/cutiepie/assets/app-icon.png"
+    printf 'png fixture\n' > "$repo/plugins/cutiepie/assets/cutepie.png"
 
     cat > "$repo/plugins/cutiepie/skills/example/SKILL.md" <<'EOF'
 # Example Skill
@@ -286,8 +277,7 @@ EOF
 
     git -C "$repo" add \
         plugins/cutiepie/.codex-plugin/plugin.json \
-        plugins/cutiepie/assets/app-icon.png \
-        plugins/cutiepie/assets/cutiepie-small.svg \
+        plugins/cutiepie/assets/cutepie.png \
         plugins/cutiepie/skills/example/SKILL.md \
         plugins/cutiepie/.private-journal/keep.txt
 
@@ -497,13 +487,12 @@ main() {
     assert_contains "$preview_output" "Version:  $MANIFEST_VERSION" "Preview uses manifest version"
     assert_not_contains "$preview_output" "Version:  $PACKAGE_VERSION" "Preview does not use package.json version"
     assert_contains "$preview_section" ".codex-plugin/plugin.json" "Preview includes manifest path"
-    assert_contains "$preview_section" "assets/cutiepie-small.svg" "Preview includes SVG asset"
-    assert_contains "$preview_section" "assets/app-icon.png" "Preview includes PNG asset"
+    assert_contains "$preview_section" "assets/cutepie.png" "Preview includes mascot PNG asset"
     assert_contains "$preview_section" ".private-journal/keep.txt" "Preview includes tracked ignored file"
     assert_not_contains "$preview_section" ".private-journal/leak.txt" "Preview excludes ignored untracked file"
     assert_not_contains "$preview_section" "ignored-cache/" "Preview excludes pure ignored directories"
     assert_not_contains "$preview_output" "Overlay file (.codex-plugin/plugin.json) will be regenerated" "Preview omits overlay regeneration note"
-    assert_not_contains "$preview_output" "Assets (cutiepie-small.svg, app-icon.png) will be seeded from" "Preview omits assets seeding note"
+    assert_not_contains "$preview_output" "Assets (cutepie.png) will be seeded from" "Preview omits assets seeding note"
     assert_contains "$preview_section" "skills/example/SKILL.md" "Preview reflects dirty tracked destination file"
     assert_current_branch "$dest" "$dest_branch" "Preview leaves destination checkout on its original branch"
     assert_branch_absent "$dest" "sync/cutiepie-*" "Preview does not create sync branch in destination checkout"

@@ -37,8 +37,8 @@
       "Let's scaffold a Cutiepie project workflow."
     ],
     "brandColor": "#F59E0B",
-    "composerIcon": "./assets/cutiepie-small.svg",
-    "logo": "./assets/app-icon.png",
+    "composerIcon": "./assets/cutepie.png",
+    "logo": "./assets/cutepie.png",
     "screenshots": []
   }
 }
