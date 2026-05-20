@@ -208,10 +208,16 @@
       fill: #ffffff;
     }
 
-    .center-node circle {
+    .center-node .center-bg {
       fill: #17202a;
       stroke: #17202a;
       stroke-width: 2;
+    }
+
+    .center-node .center-ring {
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 4;
     }
 
     .center-node text {
@@ -474,9 +480,9 @@
           <line class="influence-line" data-source="council" x1="313" y1="756" x2="398" y2="792"></line>
 
           <g class="center-node">
-            <circle cx="620" cy="430" r="76"></circle>
+            <circle class="center-bg" cx="620" cy="430" r="76"></circle>
             <image href="../../assets/cutepie.png" x="550" y="360" width="140" height="140" preserveAspectRatio="xMidYMid slice" clip-path="url(#mascot-clip)"></image>
-            <circle cx="620" cy="430" r="70" fill="none" stroke="#ffffff" stroke-width="4"></circle>
+            <circle class="center-ring" cx="620" cy="430" r="70"></circle>
           </g>
 
           <a href="https://openai.com/index/harness-engineering/" target="_blank" rel="noopener" class="node source-node" data-source="harness" aria-label="OpenAI harness engineering article">
