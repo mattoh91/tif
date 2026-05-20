@@ -46,6 +46,7 @@ Check for:
 - `.sweet/FRD.md` or `docs/sweet/FRD.md`
 - `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
 - `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md`
+- `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md`
 - `~/.sweet/memory/<project-slug>/MEMORY.md`
 - `~/.sweet/memory/<project-slug>/FAILURES.md`
 
@@ -55,14 +56,16 @@ For each completed feature/component slice:
 2. Verify the feature acceptance gate passed before marking the feature complete.
 3. Update FRD progress/status for the feature and touched components.
 4. Record meaningful deviations from the plan in the plan, caveats, or memory.
-5. Append durable implementation notes to `~/.sweet/memory/<project-slug>/MEMORY.md`:
+5. Update CONFIG.md and the settings/config owner for any hyperparameters or tunables added, removed, renamed, or changed.
+6. Append durable implementation notes to `~/.sweet/memory/<project-slug>/MEMORY.md`:
    - feature/component completed
    - feature acceptance gate command/result
    - component contract gate command/result
+   - settings/config changes
    - design decisions made during implementation
    - deviations from `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
    - follow-ups
-6. If repeated failure patterns occurred, use `capturing-failure-modes` before ending the session.
+7. If repeated failure patterns occurred, use `capturing-failure-modes` before ending the session.
 
 After a coherent feature/component slice is completed and state is updated, suggest clearing or compacting before starting another large slice so the next session can restart from `.sweet/` artifacts, recent commits, and `~/.sweet/memory`.
 

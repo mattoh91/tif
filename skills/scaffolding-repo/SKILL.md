@@ -16,12 +16,13 @@ Default in-repo artifacts:
 - `.sweet/ARD.md`
 - `.sweet/CAVEATS.md`
 - `.sweet/ARCHI.md`
+- `.sweet/CONFIG.md`
 - `.sweet/PLAN.md`
 - `init.sh`
 - `Makefile`
 - `.github/workflows/ci.yml`
 
-If the repo already uses `docs/`, ask whether to place Sweet artifacts under `docs/sweet/` instead. Only put `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `PLAN.md` at the project root if the user explicitly wants root-level planning files.
+If the repo already uses `docs/`, ask whether to place Sweet artifacts under `docs/sweet/` instead. Only put `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md` at the project root if the user explicitly wants root-level planning files.
 
 Out-of-tree memory artifacts:
 
@@ -77,6 +78,7 @@ Initialize planning docs with useful structure, not fake content:
 - `ARD.md`: architecture decisions with options and consequences
 - `CAVEATS.md`: assumptions, dependencies, constraints, known unknowns
 - `ARCHI.md`: Mermaid C4 L1/L2 and sequence diagram placeholders
+- `CONFIG.md`: settings/config owner plus documented hyperparameters and tunables
 - `PLAN.md`: feature-by-feature implementation plan with component contract gates and nested TDD blocks
 
 Every generated gate should be automatable where feasible. Feature gates prove user/system outcomes through API/CLI scenarios, Playwright/browser/computer-use flows, or equivalent project-specific harness automation. Component gates prove boundaries through DTO/data-contract checks, schema checks, adapter payload checks, public API behavior, or equivalent contract verification.

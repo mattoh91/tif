@@ -27,7 +27,7 @@ You MUST create a task for each of these items and complete them in order:
 4. **Probe requirements for missed features/data** — request sample data or user scenarios; audit analogous tools when web/docs access is available; use user-provided/local materials when not
 5. **Propose 2-3 approaches** — with trade-offs and your recommendation
 6. **Present design** — in sections scaled to their complexity, get user approval after each section
-7. **Write Sweet spec set** — save `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, and `ARCHI.md` under `.sweet/` or `docs/sweet/`, then commit
+7. **Write Sweet spec set** — save `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `CONFIG.md` under `.sweet/` or `docs/sweet/`, then commit
 8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 9. **User reviews written spec** — ask user to review the spec files before proceeding
 10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
@@ -125,8 +125,9 @@ digraph brainstorming {
   - `.sweet/ARD.md` or `docs/sweet/ARD.md` — architecture decisions, options, consequences
   - `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md` — assumptions, dependencies, constraints, known unknowns
   - `.sweet/ARCHI.md` or `docs/sweet/ARCHI.md` — Mermaid C4 L1/L2 and sequence diagrams
+  - `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md` — settings/config owner plus hyperparameters and tunables
 - Use `.sweet/` by default. Use `docs/sweet/` when the repo already organizes project docs under `docs/`.
-- Root-level `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `PLAN.md` are allowed only when the user explicitly requests root-level planning files.
+- Root-level `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md` are allowed only when the user explicitly requests root-level planning files.
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the spec set to git
 
@@ -137,7 +138,8 @@ After writing the spec set, look at it with fresh eyes:
 2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the FRD? Does every PRD feature map to FRD components and gates?
 3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
 4. **Gate check:** Does every FRD feature have an automated feature acceptance gate? Does every touched component boundary have an automated component contract gate?
-5. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
+5. **Config check:** Are all known hyperparameters and tunables assigned to a settings/config owner and documented in CONFIG.md?
+6. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
 
 Fix any issues inline. No need to re-review — just fix and move on.
 

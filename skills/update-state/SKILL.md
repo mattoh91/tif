@@ -20,6 +20,7 @@ Use this skill to turn the hook-generated static audit into a curated state refr
 - `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
 - `.sweet/ARD.md` or `docs/sweet/ARD.md`
 - `.sweet/ARCHI.md` or `docs/sweet/ARCHI.md`
+- `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md`
 - `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md`
 
 ## Workflow
@@ -31,6 +32,7 @@ Use this skill to turn the hook-generated static audit into a curated state refr
    - PLAN tasks inconsistent with FRD status
    - architecture-affecting code changes not reflected in ARD
    - changed components/interfaces not reflected in ARCHI diagrams
+   - new hyperparameters/tunables not reflected in CONFIG or the settings/config owner
    - assumptions, deviations, or limitations missing from CAVEATS
    - durable implementation decisions missing from MEMORY
    - repeated failures or root causes missing from FAILURES
@@ -46,6 +48,7 @@ State is refreshed when:
 - git status is understood and intentionally clean or intentionally dirty
 - feature/component progress in FRD matches the implemented state
 - PLAN, ARD, ARCHI, and CAVEATS are not obviously stale relative to recent commits/diff
+- CONFIG documents settings owners, defaults, allowed values, and hyperparameters/tunables touched by recent work
 - MEMORY and FAILURES contain durable lessons worth carrying forward
 - `~/.sweet/memory/<project-slug>/PREAMBLE.md` names the next task, relevant gates, and key files for the next session
 

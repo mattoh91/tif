@@ -34,6 +34,7 @@ Before writing or updating an implementation plan, verify the full Sweet spec se
 - `ARD.md`
 - `CAVEATS.md`
 - `ARCHI.md`
+- `CONFIG.md`
 
 `PLAN.md` may be missing only when this skill is creating it for the first time. If any required spec file is missing, stop and use `brainstorming` or `scaffolding-repo` to create the missing file before planning. Do not proceed with a partial spec set.
 
@@ -79,7 +80,7 @@ The visible progress unit is the feature acceptance gate. The implementation own
 
 **Tech Stack:** [Key technologies/libraries]
 
-**Spec Set:** [.sweet/PRD.md, .sweet/FRD.md, .sweet/ARD.md, .sweet/CAVEATS.md, .sweet/ARCHI.md or docs/sweet equivalents]
+**Spec Set:** [.sweet/PRD.md, .sweet/FRD.md, .sweet/ARD.md, .sweet/CAVEATS.md, .sweet/ARCHI.md, .sweet/CONFIG.md or docs/sweet equivalents]
 
 ---
 ```
@@ -106,6 +107,11 @@ The visible progress unit is the feature acceptance gate. The implementation own
 - Command: `exact command`
 - Test data/scenario: [exact fixture, sample, or user-flow]
 - Expected result: [observable pass condition]
+
+**Settings / Hyperparameters:**
+- Settings owner: [class/module/function path, e.g. `src/config.py::Settings`]
+- CONFIG.md entries: [setting names documented in `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md`]
+- Tunables used: [timeouts, thresholds, retry counts, model names, token limits, temperatures, feature flags, batch sizes, or "none"]
 
 **Files:**
 - Create: `exact/path/to/file.py`
@@ -170,6 +176,7 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - References to types, functions, or methods not defined in any task
 - Feature tasks without an automated feature gate command
 - Component blocks without an automated contract gate command
+- New hyperparameters, thresholds, retry counts, timeouts, model names, token limits, temperatures, feature flags, or batch sizes without a settings owner and `CONFIG.md` entry
 
 ## Remember
 - Exact file paths always
@@ -179,6 +186,7 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - Feature acceptance gates for user/system outcomes
 - Component contract gates for DTO/data-contract and boundary clarity
 - FRD progress and Sweet memory updates after coherent completed slices
+- Settings/config owner and CONFIG.md entries for all hyperparameters and tunables
 
 ## Self-Review
 
@@ -191,6 +199,8 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 **3. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
 
 **4. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Component 3 but `clearFullLayers()` in Component 7 is a bug.
+
+**5. Config consistency:** Are all hyperparameters and tunables routed through the settings/config owner and documented in CONFIG.md?
 
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 

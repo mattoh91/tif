@@ -6,7 +6,7 @@ This fork (`mattoh91/sweet`) descends from `mattoh91/sweet`. Goal: turn it into 
 
 1. Severing upstream contributor pressure (the inherited `CLAUDE.md` is anti-slop guidance for PRs *to* `mattoh91/sweet` — irrelevant here, actively misdirects agents working on the fork).
 2. Rebranding manifests so installs don't collide with upstream.
-3. Reshaping the spec/plan artifact format to a structured AGILE-style multi-doc layout: `PRD.md` (product/biz, conventional) + `FRD.md` + `ARD.md` + `CAVEATS.md` + `ARCHI.md` as the spec set, plus a separate implementation `PLAN.md`.
+3. Reshaping the spec/plan artifact format to a structured AGILE-style multi-doc layout: `PRD.md` (product/biz, conventional) + `FRD.md` + `ARD.md` + `CAVEATS.md` + `ARCHI.md` + `CONFIG.md` as the spec set, plus a separate implementation `PLAN.md`.
 4. Two-tier testing: unit TDD stays as the implementer discipline (machine-internal), while each feature has an automated feature acceptance gate and each touched component has an automated component contract gate backed by one or more functional checks.
 5. Adding context-aware requirements probing (sample data, edge cases, analogous-tool feature lists) to brainstorming.
 6. Adding failure-mode capture, memory persistence (out-of-tree, per-user, under `~/.sweet/memory/<project>/`), and a session-bootstrap `/preamble` skill that *generates a copy-paste string* (not auto-writes).
@@ -16,7 +16,7 @@ The fork targets Claude Code and Codex. Claude Code packaging uses `.claude-plug
 
 ### Resolved decisions
 
-- **Doc mapping:** `PRD.md` = product/biz requirements (conventional). `FRD.md` + `ARD.md` + `CAVEATS.md` + `ARCHI.md` + `PRD.md` collectively = the spec set. `PLAN.md` = the implementation plan (feature-by-feature and component-by-component, with TDD nested inside each component). By default these files live under `.sweet/` or `docs/sweet/`; root-level output is a scaffold option for new app repos that want visible project-management files.
+- **Doc mapping:** `PRD.md` = product/biz requirements (conventional). `FRD.md` + `ARD.md` + `CAVEATS.md` + `ARCHI.md` + `CONFIG.md` + `PRD.md` collectively = the spec set. `PLAN.md` = the implementation plan (feature-by-feature and component-by-component, with TDD nested inside each component). By default these files live under `.sweet/` or `docs/sweet/`; root-level output is a scaffold option for new app repos that want visible project-management files.
 - **Test layering:** Two-tier. Unit TDD inside (RED-GREEN-REFACTOR, machine-internal). Each feature has an automated feature acceptance gate for the user/system outcome. Each touched component has an automated component contract gate for DTO/data-contract shape, schema behavior, adapter payloads, public API behavior, or equivalent boundary verification.
 - **Agentic engineering guidelines:** `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` is the shared meta-contract for feature progress, component contracts, closed verification loops, YAGNI/KISS/DRY/SOLID, surgical changes, commit hygiene, memory updates, and subagent handoffs.
 - **Memory location:** Per-user, out of tree, at `~/.sweet/memory/<project-slug>/{MEMORY.md,FAILURES.md,SESSIONS/}`. Never committed. The `<project-slug>` is derived from the repo's git remote or directory name.
@@ -115,9 +115,10 @@ flowchart TD
 - `.sweet/ARD.md` or `docs/sweet/ARD.md` — architecture decision record. One section per significant decision (problem, options, decision, consequences).
 - `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md` — assumptions, dependencies, known unknowns, environmental constraints.
 - `.sweet/ARCHI.md` or `docs/sweet/ARCHI.md` — mermaid diagrams: C4 L1 (system context), C4 L2 (containers), and per-component sequence diagrams.
+- `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md` — settings/config owner and documented hyperparameters/tunables: model names, temperatures, token limits, thresholds, retry counts, timeouts, polling intervals, batch sizes, feature flags, and similar values.
 - `.sweet/PLAN.md` or `docs/sweet/PLAN.md` — implementation plan, organized by feature and component. Each feature lists its acceptance gate; each component lists its contract gate and implementer-internal TDD step blocks. Replaces the date-prefixed `docs/sweet/plans/YYYY-MM-DD-feature.md` for Sweet-managed projects.
 
-Root-level `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `PLAN.md` are allowed as an explicit scaffold option for new app repos, but they are not the default inside this harness repo because they collide with repo-maintenance plans.
+Root-level `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md` are allowed as an explicit scaffold option for new app repos, but they are not the default inside this harness repo because they collide with repo-maintenance plans.
 
 **Out-of-tree (per-user, never committed) — at `~/.sweet/memory/<project-slug>/`:**
 
@@ -133,7 +134,7 @@ The `<project-slug>` resolution is git-remote-based (e.g. `github.com-mattoh91-s
 
 ### Updates to existing components
 
-- **`skills/brainstorming/SKILL.md`** — add (i) requirements-probing phase (sample data, edge cases, analogous-tool web research when available, local/user-provided fallback when not), (ii) emit `PRD.md` + `FRD.md` + `ARD.md` + `CAVEATS.md` + `ARCHI.md` multi-file output under `.sweet/` or `docs/sweet/` instead of single `design.md`, (iii) require mermaid C4 L1+L2 + sequence diagrams in `ARCHI.md`.
+- **`skills/brainstorming/SKILL.md`** — add (i) requirements-probing phase (sample data, edge cases, analogous-tool web research when available, local/user-provided fallback when not), (ii) emit `PRD.md` + `FRD.md` + `ARD.md` + `CAVEATS.md` + `ARCHI.md` + `CONFIG.md` multi-file output under `.sweet/` or `docs/sweet/` instead of single `design.md`, (iii) require mermaid C4 L1+L2 + sequence diagrams in `ARCHI.md`.
 - **`skills/writing-plans/SKILL.md`** — re-frame plan as a list of features and components matching FRD entries, with feature acceptance gates, component contract gates, and TDD step-blocks nested inside as implementer-internal detail. Output to `.sweet/PLAN.md` or `docs/sweet/PLAN.md` by default instead of dated `docs/sweet/plans/`.
 - **`skills/test-driven-development/SKILL.md`** — keep the RED-GREEN-REFACTOR core; add an explicit reference to `component-functional-testing` as the layer above unit TDD. Document that unit tests are implementer-internal, component contract gates are boundary-level, and feature acceptance gates are outcome-level.
 - **`skills/requesting-code-review/SKILL.md`** + **`agents/code-reviewer.md`** — review must verify feature/component gates exist, run, and match the FRD; not just unit tests.
@@ -153,15 +154,15 @@ The `<project-slug>` resolution is git-remote-based (e.g. `github.com-mattoh91-s
 - **`skills/capturing-failure-modes/SKILL.md`** — agent-facing workflow for summarizing repeated patterns, root causes, and fixes. Hook scripts persist raw/structured session state; this skill turns that state into durable entries. Appends structured entries to `~/.sweet/memory/<project>/FAILURES.md`.
 - **`skills/preamble/SKILL.md`** + **`commands/preamble.md`** — `/preamble` slash command that prints a copy-paste context block: reads `~/.sweet/memory/<project>/MEMORY.md` + `FAILURES.md` + `SESSIONS/` (last N), last K git commits, open FRD features/components, current PLAN.md tasks, and key DTO/schema/adapter references. Pure stdout — no file mutation.
 - **`docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md`** — canonical engineering meta-contract referenced by repo-level instructions and skills.
-- **`skills/scaffolding-repo/SKILL.md`** + **`skills/scaffolding-repo/template/`** — emits `init.sh`, `Makefile` (with `lint`, `typecheck`, `test`, `smoke`, `fmt` targets), CI baseline workflow (GitHub Actions by default), `.gitignore`, and the in-repo file skeletons under `.sweet/` or `docs/sweet/` by default: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `PLAN.md`. Also creates `~/.sweet/memory/<project>/{MEMORY.md,FAILURES.md,SESSIONS/}` on first run.
+- **`skills/scaffolding-repo/SKILL.md`** + **`skills/scaffolding-repo/template/`** — emits `init.sh`, `Makefile` (with `lint`, `typecheck`, `test`, `smoke`, `fmt` targets), CI baseline workflow (GitHub Actions by default), `.gitignore`, and the in-repo file skeletons under `.sweet/` or `docs/sweet/` by default: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, `PLAN.md`. Also creates `~/.sweet/memory/<project>/{MEMORY.md,FAILURES.md,SESSIONS/}` on first run.
 - **`hooks/pre-compact`** — bash script (polyglot like `session-start`) that persists current session state to `~/.sweet/memory/<project>/SESSIONS/<YYYY-MM-DD>.md` with a compaction marker. It cannot load a markdown skill directly.
 - **`hooks/session-end`** — bash script that finalizes the daily session file (writes end-time + summary when available). It cannot inject new context into the just-ended session.
-- **In-repo artifact skeletons (templated by `scaffolding-repo` skill):** `.sweet/PRD.md`, `.sweet/FRD.md`, `.sweet/ARD.md`, `.sweet/CAVEATS.md`, `.sweet/ARCHI.md`, `.sweet/PLAN.md` or `docs/sweet/*` equivalents.
+- **In-repo artifact skeletons (templated by `scaffolding-repo` skill):** `.sweet/PRD.md`, `.sweet/FRD.md`, `.sweet/ARD.md`, `.sweet/CAVEATS.md`, `.sweet/ARCHI.md`, `.sweet/CONFIG.md`, `.sweet/PLAN.md` or `docs/sweet/*` equivalents.
 - **Out-of-tree artifact skeletons (also templated by `scaffolding-repo`):** `~/.sweet/memory/<project>/{MEMORY.md, FAILURES.md, SESSIONS/}`.
 
 ### Displacements (one-for-one swaps)
 
-- Single `docs/sweet/specs/YYYY-MM-DD-topic-design.md` → 5-file in-repo set under `.sweet/` or `docs/sweet/`: `PRD.md` + `FRD.md` + `ARD.md` + `CAVEATS.md` + `ARCHI.md` (per-project, not date-prefixed; live-edited as the project evolves).
+- Single `docs/sweet/specs/YYYY-MM-DD-topic-design.md` → active in-repo set under `.sweet/` or `docs/sweet/`: `PRD.md` + `FRD.md` + `ARD.md` + `CAVEATS.md` + `ARCHI.md` + `CONFIG.md` (per-project, not date-prefixed; live-edited as the project evolves).
 - Single `docs/sweet/plans/YYYY-MM-DD-feature.md` (TDD-step granularity) → `.sweet/PLAN.md` or `docs/sweet/PLAN.md` (feature/component granularity matching FRD entries, with TDD step-blocks nested inside each component as implementer-internal detail).
 - Review unit: TDD step → component contract gate pass plus feature acceptance gate pass when the feature is integrated.
 - Memory implicit-in-context-window → explicit out-of-tree memory at `~/.sweet/memory/<project>/`.

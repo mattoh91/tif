@@ -76,6 +76,8 @@ build_sweet_context() {
         append_if_exists "Sweet FRD" "docs/sweet/FRD.md" 160
         append_if_exists "Sweet PLAN" ".sweet/PLAN.md" 160
         append_if_exists "Sweet PLAN" "docs/sweet/PLAN.md" 160
+        append_if_exists "Sweet CONFIG" ".sweet/CONFIG.md" 120
+        append_if_exists "Sweet CONFIG" "docs/sweet/CONFIG.md" 120
         append_if_exists "Sweet Caveats" ".sweet/CAVEATS.md" 100
         append_if_exists "Sweet Caveats" "docs/sweet/CAVEATS.md" 100
 

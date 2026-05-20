@@ -19,7 +19,7 @@ When working in this repo:
 
 Sweet provides:
 
-- structured project artifacts under `.sweet/` or `docs/sweet/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `PLAN.md`
+- structured project artifacts under `.sweet/` or `docs/sweet/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md`
 - feature acceptance gates backed by automated e2e/user-flow, API scenario, CLI, or equivalent project-specific checks
 - component contract gates backed by DTO/data-contract checks, schema checks, adapter payload checks, public API behavior, or equivalent boundary verification
 - context-aware requirements probing with no-network fallbacks
@@ -31,7 +31,9 @@ Sweet provides:
 
 Root-level `PLAN.md` and `USERSTORIES.md` describe work on this harness itself. Generated artifacts for downstream projects should default to `.sweet/` or `docs/sweet/` to avoid colliding with harness-maintenance docs.
 
-Active Sweet project artifacts are only the top-level files under `.sweet/` or `docs/sweet/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `PLAN.md`. Dated files under `docs/sweet/specs/`, `docs/sweet/plans/`, or `docs/plans/` are historical archives unless the user explicitly says to use them. Do not treat archived dated plans/specs as satisfying the active Sweet spec-set gate.
+Active Sweet project artifacts are only the top-level files under `.sweet/` or `docs/sweet/`: `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md`. Dated files under `docs/sweet/specs/`, `docs/sweet/plans/`, or `docs/plans/` are historical archives unless the user explicitly says to use them. Do not treat archived dated plans/specs as satisfying the active Sweet spec-set gate.
+
+All hyperparameters and tunable settings belong in a proper settings/config owner in the project code and must be documented in active `CONFIG.md`: model names, temperatures, token limits, thresholds, retry counts, timeouts, polling intervals, batch sizes, feature flags, and similar values. Do not scatter magic numbers or configuration literals through implementation code without documenting why they are intentionally local constants.
 
 ## Verification
 

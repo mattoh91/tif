@@ -74,7 +74,7 @@ if [ -n "$git_status" ]; then
   append_issue "attention" "Working tree has uncommitted changes; review or commit before clearing context."
 fi
 
-for doc in PRD.md FRD.md ARD.md CAVEATS.md ARCHI.md PLAN.md; do
+for doc in PRD.md FRD.md ARD.md CAVEATS.md ARCHI.md CONFIG.md PLAN.md; do
   if ! has_sweet_file "$doc"; then
     append_issue "missing" "Sweet planning artifact is missing: .sweet/${doc} or docs/sweet/${doc}."
   fi
@@ -83,8 +83,15 @@ done
 if [ -n "$changed_files" ]; then
   if printf '%s\n' "$changed_files" | grep -Eq '(^|/)(src|app|lib|packages|cmd|internal|components|pages|routes|api|server|client|tests?)/|\.([cm]?[jt]sx?|py|go|rs|java|kt|rb|php|swift|cs|cpp|h|hpp)$'; then
     if ! printf '%s\n' "$changed_files" | grep -Eq '(^|/)(\.sweet|docs/sweet)/'; then
-      append_issue "possible-stale" "Code/test files changed without Sweet planning docs in the current diff; check FRD/PLAN/ARD/ARCHI/CAVEATS."
+      append_issue "possible-stale" "Code/test files changed without Sweet planning docs in the current diff; check FRD/PLAN/ARD/ARCHI/CAVEATS/CONFIG."
     fi
+  fi
+fi
+
+if has_sweet_file "CONFIG.md"; then
+  config_file="$(first_sweet_file "CONFIG.md")"
+  if ! grep -Eiq 'settings|config|hyperparameter|tunable|default|allowed|owner' "$config_file" 2>/dev/null; then
+    append_issue "possible-stale" "${config_file} does not appear to document settings owners, defaults, or tunables."
   fi
 fi
 
@@ -159,6 +166,7 @@ fi
   printf 'Next session checklist:\n'
   printf -- '- Read .sweet/FRD.md or docs/sweet/FRD.md for current feature/component status.\n'
   printf -- '- Read .sweet/PLAN.md or docs/sweet/PLAN.md for next task and gates.\n'
+  printf -- '- Read .sweet/CONFIG.md or docs/sweet/CONFIG.md for settings owners and tunables.\n'
   printf -- '- Read %s and update stale docs or memory before implementation.\n' "$audit_file"
   printf -- '- Run the relevant feature acceptance gate and component contract gate before claiming completion.\n'
   printf '</sweet-preamble>\n'

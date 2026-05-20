@@ -37,6 +37,9 @@ Task tool (general-purpose):
     Neighbor contracts to preserve:
     [Public interfaces, schemas, adapters, API endpoints, UI state, or events that must remain compatible]
 
+    Settings/config contract:
+    [Settings/config owner and CONFIG.md entries for any timeouts, thresholds, retry counts, model names, token limits, temperatures, feature flags, batch sizes, or other tunables this task touches]
+
     ## Before You Begin
 
     If you have questions about:
@@ -122,6 +125,7 @@ Task tool (general-purpose):
 
     **Handoff State:**
     - Did I update FRD progress when a feature/component status changed?
+    - Did I update CONFIG.md and the settings/config owner for any hyperparameters or tunables I touched?
     - Did I update Sweet memory with durable decisions or deviations?
     - Is the commit message descriptive enough for the next agent to understand the slice?
 

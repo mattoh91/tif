@@ -24,6 +24,7 @@ Before executing any plan in a Sweet-managed project, verify the full spec set e
 - `ARD.md`
 - `CAVEATS.md`
 - `ARCHI.md`
+- `CONFIG.md`
 - `PLAN.md`
 
 If any file is missing, stop. Do not implement. Use `brainstorming`, `scaffolding-repo`, or `writing-plans` to create the missing artifact first.

@@ -16,6 +16,7 @@ Sweet projects use these committed artifacts by default:
 - `.sweet/ARD.md` — architecture decisions, options, and consequences.
 - `.sweet/CAVEATS.md` — assumptions, dependencies, constraints, risks, and known unknowns.
 - `.sweet/ARCHI.md` — C4 L1/L2 and sequence diagrams in Mermaid.
+- `.sweet/CONFIG.md` — settings/config owner plus documented hyperparameters and tunables.
 - `.sweet/PLAN.md` — component-by-component implementation plan.
 - `docs/sweet/AGENTIC_ENGINEERING_GUIDELINES.md` — shared engineering contract for feature progress, component contracts, verification loops, commits, memory, and subagent handoffs.
 
@@ -233,7 +234,7 @@ Useful checks:
 ```bash
 node -e "for (const f of ['.agents/plugins/marketplace.json','package.json','.claude-plugin/plugin.json','.claude-plugin/marketplace.json','.codex-plugin/plugin.json','gemini-extension.json','.version-bump.json','hooks/hooks.json']) JSON.parse(require('fs').readFileSync(f,'utf8'))"
 bash -n hooks/session-start hooks/pre-compact hooks/session-end scripts/sync-to-codex-plugin.sh
-tmpdir="$(mktemp -d)" && mkdir -p "$tmpdir/.sweet" && touch "$tmpdir/.sweet"/{PRD,FRD,ARD,CAVEATS,ARCHI,PLAN}.md && scripts/check-sweet-spec-set.sh "$tmpdir"
+tmpdir="$(mktemp -d)" && mkdir -p "$tmpdir/.sweet" && touch "$tmpdir/.sweet"/{PRD,FRD,ARD,CAVEATS,ARCHI,CONFIG,PLAN}.md && scripts/check-sweet-spec-set.sh "$tmpdir"
 tests/skill-triggering/run-all.sh
 tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 ```

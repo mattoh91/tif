@@ -56,8 +56,11 @@ Expected artifacts:
 - `.sweet/ARD.md`
 - `.sweet/CAVEATS.md`
 - `.sweet/ARCHI.md`
+- `.sweet/CONFIG.md`
 - `.sweet/PLAN.md`
 - or `docs/sweet/` equivalents
+
+`CONFIG.md` must name the settings/config owner and document all hyperparameters and tunables.
 
 Manual verification:
 

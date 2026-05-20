@@ -20,6 +20,7 @@ Use what exists:
 - `.sweet/FRD.md` or `docs/sweet/FRD.md`
 - `.sweet/PLAN.md` or `docs/sweet/PLAN.md`
 - `.sweet/CAVEATS.md` or `docs/sweet/CAVEATS.md`
+- `.sweet/CONFIG.md` or `docs/sweet/CONFIG.md`
 - feature/component source, test, DTO, schema, adapter, and gate files referenced by the current FRD/PLAN task
 
 ## Workflow
@@ -34,11 +35,13 @@ Use what exists:
    - feature acceptance gate and component contract gate to run next
    - key component code references to inspect before editing
    - relevant decisions/caveats
+   - relevant settings/config owner and tunables
    - known failure modes
    - dirty git state
 4. Include code references only when they help the next session start safely:
    - component entry points
    - public interfaces, DTOs, schemas, adapters, or boundary modules
+   - settings/config owner and CONFIG.md entries for relevant hyperparameters
    - feature acceptance gate and component contract gate files
    - focused unit/integration tests
    - recently changed files from `git diff --stat` or recent commits
@@ -66,6 +69,7 @@ Code references to inspect:
 - path/to/contract.test.ts — automated component contract gate
 - path/to/feature.spec.ts — automated feature acceptance gate
 Important decisions: ...
+Relevant config: ...
 Known caveats/failure modes: ...
 Relevant files:
 - ...

@@ -50,6 +50,7 @@ Before dispatching any implementer subagent in a Sweet-managed project, verify t
 - `ARD.md`
 - `CAVEATS.md`
 - `ARCHI.md`
+- `CONFIG.md`
 - `PLAN.md`
 
 If any file is missing, stop. Do not dispatch implementation work. Use `brainstorming`, `scaffolding-repo`, or `writing-plans` to create the missing artifact first.
@@ -65,6 +66,7 @@ Every implementer subagent prompt must include a precise task contract, not just
 - **Input DTO/data shape:** fields, required/optional status, IDs, enums/status values, validation rules, and sample input.
 - **Output DTO/data shape:** returned fields, side effects, emitted events, persistence shape, error shape, and sample output.
 - **Neighbor contracts:** public interfaces, schemas, adapters, API endpoints, or UI state the task must preserve.
+- **Settings/config contract:** any hyperparameters or tunables the task reads or changes, where they live in the settings/config owner, and how `CONFIG.md` documents them.
 - **Gate commands:** component contract gate and feature acceptance gate commands the subagent must run.
 
 If the plan does not state these shapes clearly enough to dispatch a fresh agent without inherited context, stop and update the plan before dispatching.
