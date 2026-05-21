@@ -13,7 +13,7 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 **Violating the letter of the rules is violating the spirit of the rules.**
 
-**Cutiepie layering:** TDD is the implementer-internal loop. For component completion, also use `component-functional-testing` to define and run the automated component contract gate: DTO/data-contract checks, schema checks, adapter payload checks, public API behavior, or equivalent boundary automation. For feature completion, run the automated feature acceptance gate: API/CLI scenarios, Playwright/browser/computer-use flows, or equivalent harness automation.
+**Cutiepie layering:** TDD is the implementer-internal loop. The visible source of truth is `.cutiepie/docs/feature_list.json`: feature specs, prescribed steps, implementation phases, and `passes`. Do not set `passes: true` until the feature's prescribed steps pass. `PLAN.md` tracks workflow progress only.
 
 ## When to Use
 
@@ -199,7 +199,7 @@ Next failing test for next feature.
 
 ## Cutiepie Gates
 
-After the focused TDD loop for a component is green, run the component contract gate from the FRD/plan before marking the component complete. If the component completes an integrated feature slice, run the feature acceptance gate before marking the feature complete.
+After the focused TDD loop for a component is green, run the relevant contract or feature steps from `.cutiepie/docs/feature_list.json` before claiming the feature passes.
 
 The gates are not replacements for TDD. They are the higher-level proof that the code works across the boundaries that matter:
 
@@ -209,7 +209,7 @@ The gates are not replacements for TDD. They are the higher-level proof that the
 - automated e2e/user-flow journey
 - project-specific harness check
 
-If a gate fails, return to RED-GREEN-REFACTOR or systematic debugging. Do not mark the FRD feature or component complete from unit tests alone.
+If a feature step fails, return to RED-GREEN-REFACTOR or systematic debugging. Do not mark `feature_list.json` `passes` true from unit tests alone.
 
 ## Good Tests
 

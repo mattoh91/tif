@@ -19,7 +19,7 @@ Send the subagent only the context needed to critique the decision:
 - relevant component boundaries, DTO/data contracts, settings owner, and verification gates
 - recent failures, caveats, and unresolved questions
 
-Do not treat dated archives under `docs/cutiepie/specs/`, `docs/cutiepie/plans/`, or `docs/plans/` as active requirements unless the user explicitly promoted them.
+Do not treat dated archives under `docs/cutiepie/specs/`, `docs/cutiepie/plans/`, `docs/plans/`, old `.cutiepie/*.md`, or root planning files as active requirements unless the user explicitly migrated them into `.cutiepie/docs/`.
 
 ## Workflow
 

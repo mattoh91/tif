@@ -12,7 +12,7 @@ Use this skill to turn session problems into reusable memory.
 - Before `clear`, `compact`, or ending a long session
 - After the same mistake happens more than once
 - After debugging reveals a misleading assumption
-- After a feature acceptance gate or component contract gate failed for a non-obvious reason
+- After a feature step or component contract check failed for a non-obvious reason
 
 Claude-compatible hooks persist raw session markers under `~/.cutiepie/memory/<project>/SESSIONS/`. Hooks do not load this skill. The agent uses this skill to summarize and update durable memory.
 
@@ -25,7 +25,7 @@ Claude-compatible hooks persist raw session markers under `~/.cutiepie/memory/<p
 ## Workflow
 
 1. Identify the project slug from git remote or directory name.
-2. Read recent session notes, current git diff, recent commits, `.cutiepie/PLAN.md` or `docs/cutiepie/PLAN.md`, and `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` if present.
+2. Read recent session notes, current git diff, recent commits, `.cutiepie/docs/PLAN.md`, and `.cutiepie/docs/feature_list.json` if present.
 3. Extract repeated or high-cost failure modes. Ignore one-off trivia.
 4. Append concise entries to `FAILURES.md` using the format below.
 5. If the lesson changes how future agents should work in this repo, append a short entry to `MEMORY.md`.

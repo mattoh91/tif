@@ -1,26 +1,25 @@
 # Cutiepie
 
-Cutiepie is an opinionated SWE harness for Claude Code and Codex. It packages reusable skills, project artifacts, feature acceptance gates, component contract gates, and memory conventions so agents can move from idea to implementation with less context loss and less unit-test micromanagement.
+Cutiepie is an opinionated SWE harness for Claude Code and Codex. It packages reusable skills, canonical project artifacts, spec-driven feature checks, component contract checks, and memory conventions so agents can move from idea to implementation with less context loss and less unit-test micromanagement.
 
 Cutiepie is built around two host surfaces:
 
 - **Claude Code:** plugin manifest, skills, agents, slash commands, and lifecycle hooks.
-- **Codex:** plugin manifest, local marketplace metadata, shared skills, and Codex lifecycle hooks when `codex_hooks` is enabled.
+- **Codex:** plugin manifest, local marketplace metadata, shared skills, and Codex lifecycle hooks when `hooks` is enabled.
 
 ## Core Contract
 
-Cutiepie projects use these committed artifacts by default:
+Cutiepie projects use these committed artifacts:
 
-- `.cutiepie/PRD.md` — product and business requirements.
-- `.cutiepie/FRD.md` — features, component/capability mapping, functional requirements, gates, and progress.
-- `.cutiepie/ARD.md` — architecture decisions, options, and consequences.
-- `.cutiepie/CAVEATS.md` — assumptions, dependencies, constraints, risks, and known unknowns.
-- `.cutiepie/ARCHI.md` — C4 L1/L2 and sequence diagrams in Mermaid.
-- `.cutiepie/CONFIG.md` — settings/config owner plus documented hyperparameters and tunables.
-- `.cutiepie/PLAN.md` — component-by-component implementation plan.
+- `.cutiepie/docs/PRD.md` — problem statement, users, user stories, success criteria, and non-goals.
+- `.cutiepie/docs/feature_list.json` — machine-readable feature specs, steps, citations, implementation phases, and `passes`.
+- `.cutiepie/docs/ARD.md` — architecture decisions, assumptions, caveats, options, and consequences.
+- `.cutiepie/docs/ARCHI.md` — draw.io dataflow diagram plus component/interface notes.
+- `.cutiepie/docs/CONFIG.md` — environment variables, settings owners, hyperparameters, and tunables.
+- `.cutiepie/docs/PLAN.md` — human workflow checklist and phase-level progress.
 - `docs/cutiepie/AGENTIC_ENGINEERING_GUIDELINES.md` — shared engineering contract for feature progress, component contracts, verification loops, commits, memory, and subagent handoffs.
 
-`docs/cutiepie/` is also acceptable for repos that already keep planning docs under `docs/`. Root-level planning files are opt-in.
+`feature_list.json` owns individual feature completion. `PLAN.md` must not duplicate feature pass/fail state.
 
 Runtime memory is per-user and out of tree:
 
@@ -55,19 +54,19 @@ flowchart TD
     H -->|scaffold repo| N[scaffolding-repo]
 
     I --> I1[Probe requirements: sample data, scenarios, analogous tools]
-    I1 --> I2[Write PRD, FRD, ARD, CAVEATS, ARCHI]
+    I1 --> I2[Write PRD and feature_list.json]
     I2 --> J
 
-    J --> J1[Write feature/component PLAN]
-    J1 --> J2[Define feature gates + component contract gates]
+    J --> J1[Write workflow PLAN]
+    J1 --> J2[Define feature steps + component checks]
     J2 --> K
 
     K --> K1[Implement with internal TDD]
     K1 --> K2[Run focused tests]
-    K2 --> K3[Run component contract gate]
-    K3 --> K4[Run feature gate when slice is integrated]
+    K2 --> K3[Run component contract check]
+    K3 --> K4[Run feature steps when slice is integrated]
     K4 --> K5[Code review]
-    K5 --> K6[Update FRD progress, memory, and commit]
+    K5 --> K6[Update feature_list, PLAN phase, memory, and commit]
     K6 --> O{More components?}
     O -->|yes| K
     O -->|no| P[finishing-a-development-branch]
@@ -94,7 +93,7 @@ sequenceDiagram
     User->>Claude: Start / resume / clear / compact
     Claude->>Hooks: SessionStart
     Hooks->>Memory: Read MEMORY, FAILURES, recent SESSIONS
-    Hooks->>Hooks: Read .cutiepie/FRD.md, .cutiepie/PLAN.md, git status/log
+    Hooks->>Hooks: Read .cutiepie/docs/feature_list.json, PLAN.md, git status/log
     Hooks-->>Claude: additionalContext
     Claude->>Agent: Prompt + Cutiepie context
 
@@ -112,7 +111,7 @@ sequenceDiagram
 
 Current hook files:
 
-- `hooks/session-start` — injects Cutiepie bootstrap, memory, recent sessions, FRD/PLAN/CAVEATS snippets, and git state.
+- `hooks/session-start` — injects Cutiepie bootstrap, memory, recent sessions, canonical docs, state-contract report, and git state.
 - `hooks/pre-compact` — records compaction marker, raw hook payload, branch, and git status.
 - `hooks/session-end` — records session-end marker, raw hook payload, branch, and git status.
 - `hooks/codex-stop` — records Codex turn-stop markers, raw hook payload, branch, and git status.
@@ -127,21 +126,21 @@ Codex hooks are behind a feature flag:
 
 ```toml
 [features]
-codex_hooks = true
+hooks = true
 ```
 
 Cutiepie currently wires Codex `SessionStart` to `hooks/session-start` and Codex `Stop` to `hooks/codex-stop`. Use the `preamble` and `capturing-failure-modes` skills explicitly when you want a curated handoff summary rather than raw hook persistence.
 
-## Feature and Component Gates
+## Feature Specs and Component Checks
 
 Cutiepie tracks work at two levels:
 
-- Features are the user-visible progress unit and should have an automated feature acceptance gate.
-- Components are the implementation ownership unit and should have automated contract gates for the boundaries other agents or systems depend on.
+- Features are the user-visible progress unit and have prescribed checks in `.cutiepie/docs/feature_list.json`.
+- Components are the implementation ownership unit and should have automated contract checks for the boundaries other agents or systems depend on.
 
-Feature gates usually take the form of API/CLI scenarios, e2e/user-flow automation through Playwright/browser/computer-use tooling, or equivalent project harnesses. Component gates usually verify DTO/data-contract shape, schema behavior, adapter payloads, public API behavior, and error cases across system/domain boundaries.
+Feature checks usually take the form of API/CLI scenarios, e2e/user-flow automation through Playwright/browser/computer-use tooling, or equivalent project harnesses. Component checks usually verify DTO/data-contract shape, schema behavior, adapter payloads, public API behavior, and error cases across system/domain boundaries.
 
-Unit TDD remains internal to implementation. Completion is proven by the relevant feature/component gate plus review, followed by FRD progress, memory, and commit updates. See `docs/cutiepie/AGENTIC_ENGINEERING_GUIDELINES.md` for the full contract.
+Unit TDD remains internal to implementation. Completion is proven by the relevant feature steps plus review, followed by `feature_list.json`, `PLAN.md`, memory, and commit updates. See `docs/cutiepie/AGENTIC_ENGINEERING_GUIDELINES.md` for the full contract.
 
 ## Claude Code Setup
 
@@ -194,7 +193,7 @@ For subagent workflows in Codex, enable multi-agent support in `~/.codex/config.
 ```toml
 [features]
 multi_agent = true
-codex_hooks = true
+hooks = true
 ```
 
 ## Starting Work
@@ -236,7 +235,8 @@ Useful checks:
 ```bash
 node -e "for (const f of ['.agents/plugins/marketplace.json','package.json','.claude-plugin/plugin.json','.claude-plugin/marketplace.json','.codex-plugin/plugin.json','gemini-extension.json','.version-bump.json','hooks/hooks.json']) JSON.parse(require('fs').readFileSync(f,'utf8'))"
 bash -n hooks/session-start hooks/pre-compact hooks/session-end scripts/sync-to-codex-plugin.sh
-tmpdir="$(mktemp -d)" && mkdir -p "$tmpdir/.cutiepie" && touch "$tmpdir/.cutiepie"/{PRD,FRD,ARD,CAVEATS,ARCHI,CONFIG,PLAN}.md && scripts/check-cutiepie-spec-set.sh "$tmpdir"
+tmpdir="$(mktemp -d)" && mkdir -p "$tmpdir/.cutiepie/docs" && cp -R skills/scaffolding-repo/template/.cutiepie/docs/. "$tmpdir/.cutiepie/docs/" && scripts/check-cutiepie-spec-set.sh "$tmpdir"
+tests/cutiepie-state/test-check-cutiepie-state.sh
 tests/skill-triggering/run-all.sh
 tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 ```

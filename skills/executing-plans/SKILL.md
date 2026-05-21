@@ -1,86 +1,53 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute in a separate session with review checkpoints
+description: Use when executing Cutiepie implementation work inline from .cutiepie/docs/feature_list.json.
 ---
 
 # Executing Plans
 
-## Overview
+Inline fallback for hosts where subagents are unavailable. Prefer `subagent-driven-spec-development` when subagents are available.
 
-Load plan, review critically, execute all tasks, report when complete.
+## Step 0: Verify Cutiepie State
 
-**Announce at start:** "I'm using the executing-plans skill to implement this plan."
+Run:
 
-**Note:** Tell your human partner that Cutiepie works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use cutiepie:subagent-driven-development instead of this skill.
+```bash
+scripts/check-cutiepie-state.sh .
+```
 
-## The Process
+Stop on missing, invalid, or blocked state.
 
-### Step 0: Verify Cutiepie Spec Set
+## Step 1: Load State
 
-Before executing any plan in a Cutiepie-managed project, verify the full spec set exists as top-level files in either `.cutiepie/` or `docs/cutiepie/`:
+Read:
 
-- `PRD.md`
-- `FRD.md`
-- `ARD.md`
-- `CAVEATS.md`
-- `ARCHI.md`
-- `CONFIG.md`
-- `PLAN.md`
+- `.cutiepie/docs/feature_list.json`
+- `.cutiepie/docs/PLAN.md`
+- `.cutiepie/docs/ARD.md`
+- `.cutiepie/docs/ARCHI.md`
+- `.cutiepie/docs/CONFIG.md`
 
-If any file is missing, stop. Do not implement. Use `brainstorming`, `scaffolding-repo`, or `writing-plans` to create the missing artifact first.
+Select the lowest `implementation_phase` with features whose `passes` is `false`.
 
-Dated archives such as `docs/cutiepie/specs/*.md`, `docs/cutiepie/plans/*.md`, or `docs/plans/*.md` are historical reference only. They do not satisfy this gate unless the user explicitly promotes one into the active `.cutiepie/` or `docs/cutiepie/` spec set.
+## Step 2: Execute Feature Work
 
-### Step 1: Load and Review Plan
-1. Read plan file
-2. Review critically - identify any questions or concerns about the plan
-3. If concerns: Raise them with your human partner before starting
-4. If no concerns: Create TodoWrite and proceed
+For each feature in the current phase:
 
-### Step 2: Execute Tasks
+1. Use internal TDD to build the required behavior.
+2. Run focused tests.
+3. Run component contract checks where boundaries changed.
+4. Run the feature's prescribed steps from `feature_list.json`.
+5. Set `passes: true` only if the prescribed steps pass.
+6. Update `PLAN.md` only for workflow/phase progress.
+7. Commit coherent slices.
 
-For each task:
-1. Mark as in_progress
-2. Follow each step exactly (plan has bite-sized steps)
-3. Run verifications as specified
-4. Mark as completed
+## Step 3: Complete Development
 
-### Step 3: Complete Development
+After all target features pass, use `finishing-a-development-branch`.
 
-After all tasks complete and verified:
-- Announce: "I'm using the finishing-a-development-branch skill to complete this work."
-- **REQUIRED SUB-SKILL:** Use cutiepie:finishing-a-development-branch
-- Follow that skill to verify tests, present options, execute choice
+## Stop Conditions
 
-## When to Stop and Ask for Help
-
-**STOP executing immediately when:**
-- Hit a blocker (missing dependency, test fails, instruction unclear)
-- Plan has critical gaps preventing starting
-- You don't understand an instruction
-- Verification fails repeatedly
-
-**Ask for clarification rather than guessing.**
-
-## When to Revisit Earlier Steps
-
-**Return to Review (Step 1) when:**
-- Partner updates the plan based on your feedback
-- Fundamental approach needs rethinking
-
-**Don't force through blockers** - stop and ask.
-
-## Remember
-- Review plan critically first
-- Follow plan steps exactly
-- Don't skip verifications
-- Reference skills when plan says to
-- Stop when blocked, don't guess
-- Never start implementation on main/master branch without explicit user consent
-
-## Integration
-
-**Required workflow skills:**
-- **cutiepie:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
-- **cutiepie:writing-plans** - Creates the plan this skill executes
-- **cutiepie:finishing-a-development-branch** - Complete development after all tasks
+- Feature steps are ambiguous or non-executable.
+- Required env vars/tunables are missing from `CONFIG.md`.
+- A later phase is requested before earlier phases pass.
+- Verification fails repeatedly.

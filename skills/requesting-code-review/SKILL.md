@@ -13,9 +13,9 @@ Dispatch cutiepie:code-reviewer subagent to catch issues before they cascade. Th
 
 **Mandatory:**
 - After each task in subagent-driven development
-- After each Cutiepie component contract gate passes
+- After each feature or component contract check passes
 - After completing major feature
-- After each Cutiepie feature acceptance gate passes
+- After each Cutiepie feature's prescribed steps pass
 - Before merge to main
 
 **Optional but valuable:**
@@ -60,7 +60,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 [Dispatch cutiepie:code-reviewer subagent]
   WHAT_WAS_IMPLEMENTED: Verification and repair functions for conversation index
-  PLAN_OR_REQUIREMENTS: Task 2 from docs/cutiepie/plans/deployment-plan.md
+  PLAN_OR_REQUIREMENTS: F002 from .cutiepie/docs/feature_list.json
   BASE_SHA: a7981ec
   HEAD_SHA: 3df7661
   DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
@@ -92,17 +92,18 @@ You: [Fix progress indicators]
 - Review when stuck
 
 **Cutiepie Component Work:**
-- Verify the component contract gate exists and is automated
-- Confirm the gate matches the FRD feature/component boundary
-- Confirm the gate was run and passed
-- Confirm `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` progress was updated when appropriate
-- Treat missing or non-runnable component gates as Important unless the component is genuinely not testable through an automated boundary
+- Verify the component contract check exists where the feature depends on a boundary
+- Confirm the check supports the prescribed feature steps
+- Confirm the check was run and passed
+- Treat missing or non-runnable boundary checks as Important unless the component is genuinely not testable through an automated boundary
 
 **Cutiepie Feature Work:**
-- Verify the feature acceptance gate exists and is automated
-- Confirm the gate proves the user-visible or system-visible outcome
-- Confirm all touched component contract gates passed
-- Confirm feature status, component status, commits, and Cutiepie memory are current enough for a fresh agent to resume
+- Verify the feature has prescribed steps in `.cutiepie/docs/feature_list.json`
+- Confirm the steps prove the user-visible or system-visible outcome
+- Confirm all touched component contract checks passed
+- Confirm `passes` changed only after the prescribed steps passed
+- Confirm `PLAN.md` was updated only for workflow/phase progress
+- Confirm commits and Cutiepie memory are current enough for a fresh agent to resume
 
 ## Red Flags
 

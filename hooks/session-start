@@ -45,10 +45,11 @@ append_if_exists() {
 }
 
 build_cutiepie_context() {
-    local slug memory_dir session_dir latest_session
+    local slug memory_dir session_dir latest_session state_report
     slug="$(project_slug)"
     memory_dir="${HOME}/.cutiepie/memory/${slug}"
     session_dir="${memory_dir}/SESSIONS"
+    state_report="$("${PLUGIN_ROOT}/scripts/check-cutiepie-state.sh" . 2>/dev/null || true)"
 
     {
         printf '<CUTIEPIE_PROJECT_CONTEXT>\n'
@@ -72,14 +73,17 @@ build_cutiepie_context() {
             fi
         fi
 
-        append_if_exists "Cutiepie FRD" ".cutiepie/FRD.md" 160
-        append_if_exists "Cutiepie FRD" "docs/cutiepie/FRD.md" 160
-        append_if_exists "Cutiepie PLAN" ".cutiepie/PLAN.md" 160
-        append_if_exists "Cutiepie PLAN" "docs/cutiepie/PLAN.md" 160
-        append_if_exists "Cutiepie CONFIG" ".cutiepie/CONFIG.md" 120
-        append_if_exists "Cutiepie CONFIG" "docs/cutiepie/CONFIG.md" 120
-        append_if_exists "Cutiepie Caveats" ".cutiepie/CAVEATS.md" 100
-        append_if_exists "Cutiepie Caveats" "docs/cutiepie/CAVEATS.md" 100
+        if [ -n "$state_report" ]; then
+            printf '\n## Cutiepie State Contract\n\n'
+            printf '%s\n' "$state_report"
+        fi
+
+        append_if_exists "Cutiepie PRD (.cutiepie/docs/PRD.md)" ".cutiepie/docs/PRD.md" 140
+        append_if_exists "Cutiepie Feature List (.cutiepie/docs/feature_list.json)" ".cutiepie/docs/feature_list.json" 180
+        append_if_exists "Cutiepie PLAN (.cutiepie/docs/PLAN.md)" ".cutiepie/docs/PLAN.md" 180
+        append_if_exists "Cutiepie ARD (.cutiepie/docs/ARD.md)" ".cutiepie/docs/ARD.md" 120
+        append_if_exists "Cutiepie ARCHI (.cutiepie/docs/ARCHI.md)" ".cutiepie/docs/ARCHI.md" 160
+        append_if_exists "Cutiepie CONFIG (.cutiepie/docs/CONFIG.md)" ".cutiepie/docs/CONFIG.md" 120
 
         printf '\n</CUTIEPIE_PROJECT_CONTEXT>'
     }

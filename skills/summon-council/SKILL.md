@@ -36,7 +36,7 @@ Give each council member the same minimal packet, plus its role prompt:
 - settings/configuration owner and documented hyperparameters
 - relevant tests, gates, failures, caveats, and open questions
 
-Do not treat dated archives under `docs/cutiepie/specs/`, `docs/cutiepie/plans/`, or `docs/plans/` as active requirements unless the user explicitly promoted them.
+Do not treat dated archives under `docs/cutiepie/specs/`, `docs/cutiepie/plans/`, `docs/plans/`, old `.cutiepie/*.md`, or root planning files as active requirements unless the user explicitly migrated them into `.cutiepie/docs/`.
 
 ## Dispatch
 

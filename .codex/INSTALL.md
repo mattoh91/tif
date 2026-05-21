@@ -34,7 +34,7 @@ For subagent workflows and Cutiepie hook persistence, enable these features in `
 ```toml
 [features]
 multi_agent = true
-codex_hooks = true
+hooks = true
 ```
 
 Codex loads project hooks from `.codex/hooks.json` when this repo's `.codex/` config layer is trusted. Cutiepie wires `SessionStart` to `hooks/session-start` and `Stop` to `hooks/codex-stop`.

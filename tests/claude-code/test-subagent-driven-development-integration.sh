@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Integration Test: subagent-driven-development workflow
-# Actually executes a plan and verifies the new workflow behaviors
+# Actually executes a canonical Cutiepie spec set and verifies workflow behaviors
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -11,7 +11,7 @@ echo " Integration Test: subagent-driven-development"
 echo "========================================"
 echo ""
 echo "This test executes a real plan using the skill and verifies:"
-echo "  1. Plan is read once (not per task)"
+echo "  1. Spec set is read once (not per task)"
 echo "  2. Full task text provided to subagents"
 echo "  3. Subagents perform self-review"
 echo "  4. Spec compliance review before code quality"
@@ -42,66 +42,101 @@ cat > package.json <<'EOF'
 }
 EOF
 
-mkdir -p src test docs/cutiepie/plans
+mkdir -p src test .cutiepie/docs
 
-# Create a simple implementation plan
-cat > docs/cutiepie/plans/implementation-plan.md <<'EOF'
-# Test Implementation Plan
+# Create a simple canonical Cutiepie spec set.
+cat > .cutiepie/docs/PRD.md <<'EOF'
+# Math Utility PRD
 
-This is a minimal plan to test the subagent-driven-development workflow.
+## Problem
+The test project needs a small math utility module with addition and multiplication behavior.
 
-## Task 1: Create Add Function
+## User Stories
+- As a developer, I can import an `add(a, b)` function.
+- As a developer, I can import a `multiply(a, b)` function.
+EOF
 
-Create a function that adds two numbers.
-
-**File:** `src/math.js`
-
-**Requirements:**
-- Function named `add`
-- Takes two parameters: `a` and `b`
-- Returns the sum of `a` and `b`
-- Export the function
-
-**Implementation:**
-```javascript
-export function add(a, b) {
-  return a + b;
+cat > .cutiepie/docs/feature_list.json <<'EOF'
+{
+  "schema_version": "cutiepie.feature_list.v1",
+  "scope": {
+    "waivers": [
+      {
+        "rule": "minimum_25_comprehensive_tests",
+        "reason": "Small integration fixture with two math features.",
+        "approved_by": "test fixture"
+      }
+    ]
+  },
+  "features": [
+    {
+      "id": "F001",
+      "category": "functional",
+      "description": "Create `src/math.js` with an exported `add(a, b)` function and tests.",
+      "steps": [
+        "Step 1: Implement `export function add(a, b)` in `src/math.js`.",
+        "Step 2: Verify `add(2, 3)` returns `5`.",
+        "Step 3: Verify `add(0, 0)` returns `0`.",
+        "Step 4: Verify `add(-1, 1)` returns `0`.",
+        "Step 5: Run `npm test` successfully."
+      ],
+      "references": [],
+      "implementation_phase": 1,
+      "passes": false
+    },
+    {
+      "id": "F002",
+      "category": "functional",
+      "description": "Extend `src/math.js` with an exported `multiply(a, b)` function and tests.",
+      "steps": [
+        "Step 1: Implement `export function multiply(a, b)` in `src/math.js` without adding unrelated operations.",
+        "Step 2: Verify `multiply(2, 3)` returns `6`.",
+        "Step 3: Verify `multiply(0, 5)` returns `0`.",
+        "Step 4: Verify `multiply(-2, 3)` returns `-6`.",
+        "Step 5: Run `npm test` successfully."
+      ],
+      "references": [],
+      "implementation_phase": 2,
+      "passes": false
+    }
+  ]
 }
+EOF
+
+cat > .cutiepie/docs/ARD.md <<'EOF'
+# Math Utility ARD
+
+## Decisions
+- Keep the module dependency-free.
+- Store tests in `test/math.test.js` using Node's built-in test runner.
+EOF
+
+cat > .cutiepie/docs/ARCHI.md <<'EOF'
+# Math Utility Architecture
+
+```xml
+<mxfile><diagram name="Math Utility"><mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel></diagram></mxfile>
 ```
+EOF
 
-**Tests:** Create `test/math.test.js` that verifies:
-- `add(2, 3)` returns `5`
-- `add(0, 0)` returns `0`
-- `add(-1, 1)` returns `0`
+cat > .cutiepie/docs/CONFIG.md <<'EOF'
+# Math Utility Config
 
-**Verification:** `npm test`
+No runtime configuration is required for this fixture.
+EOF
 
-## Task 2: Create Multiply Function
+cat > .cutiepie/docs/PLAN.md <<'EOF'
+# Math Utility PLAN
 
-Create a function that multiplies two numbers.
+## Bootstrapping
+- [x] Create package metadata with a test command.
 
-**File:** `src/math.js` (add to existing file)
+## Planning
+- [x] Create the canonical Cutiepie spec set.
 
-**Requirements:**
-- Function named `multiply`
-- Takes two parameters: `a` and `b`
-- Returns the product of `a` and `b`
-- Export the function
-- DO NOT add any extra features (like power, divide, etc.)
-
-**Implementation:**
-```javascript
-export function multiply(a, b) {
-  return a * b;
-}
-```
-
-**Tests:** Add to `test/math.test.js`:
-- `multiply(2, 3)` returns `6`
-- `multiply(0, 5)` returns `0`
-- `multiply(-2, 3)` returns `-6`
-
-**Verification:** `npm test`
+## Spec-Driven Implementation
+- [ ] Complete implementation phase 1.
+- [ ] Complete implementation phase 2.
 EOF
 
 # Initialize git repo
@@ -121,10 +156,10 @@ OUTPUT_FILE="$TEST_PROJECT/claude-output.txt"
 
 # Create prompt file
 cat > "$TEST_PROJECT/prompt.txt" <<'EOF'
-I want you to execute the implementation plan at docs/cutiepie/plans/implementation-plan.md using the subagent-driven-development skill.
+I want you to execute .cutiepie/docs/feature_list.json and .cutiepie/docs/PLAN.md using the subagent-driven-development skill.
 
 IMPORTANT: Follow the skill exactly. I will be verifying that you:
-1. Read the plan once at the beginning
+1. Read the spec set once at the beginning
 2. Provide full task text to subagents (don't make them read files)
 3. Ensure subagents do self-review before reporting
 4. Run spec compliance review before code quality review
@@ -136,10 +171,10 @@ EOF
 # Note: We use a longer timeout since this is integration testing
 # Use --allowed-tools to enable tool usage in headless mode
 # IMPORTANT: Run from cutiepie directory so local dev skills are available
-PROMPT="Change to directory $TEST_PROJECT and then execute the implementation plan at docs/cutiepie/plans/implementation-plan.md using the subagent-driven-development skill.
+PROMPT="Change to directory $TEST_PROJECT and then execute .cutiepie/docs/feature_list.json and .cutiepie/docs/PLAN.md using the subagent-driven-development skill.
 
 IMPORTANT: Follow the skill exactly. I will be verifying that you:
-1. Read the plan once at the beginning
+1. Read the spec set once at the beginning
 2. Provide full task text to subagents (don't make them read files)
 3. Ensure subagents do self-review before reporting
 4. Run spec compliance review before code quality review
@@ -149,7 +184,7 @@ Begin now. Execute the plan."
 
 echo "Running Claude (output will be shown below and saved to $OUTPUT_FILE)..."
 echo "================================================================================"
-cd "$SCRIPT_DIR/../.." && timeout 1800 claude -p "$PROMPT" --allowed-tools=all --add-dir "$TEST_PROJECT" --permission-mode bypassPermissions 2>&1 | tee "$OUTPUT_FILE" || {
+cd "$SCRIPT_DIR/../.." && run_with_timeout 1800 claude -p "$PROMPT" --allowed-tools=all --add-dir "$TEST_PROJECT" --permission-mode bypassPermissions 2>&1 | tee "$OUTPUT_FILE" || {
     echo ""
     echo "================================================================================"
     echo "EXECUTION FAILED (exit code: $?)"

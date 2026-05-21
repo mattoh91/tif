@@ -8,28 +8,29 @@ Tradeoff: these rules bias toward caution, clarity, and recoverability over raw 
 
 Cutiepie tracks work at two levels:
 
-- **Features** are the user-visible progress unit. A feature describes the capability that must work end to end.
-- **Components** are the implementation ownership unit. A component has clear boundaries, DTO/data-contract shapes, and a focused contract gate.
+- **Features** are the user-visible progress unit. A feature describes the capability that must work end to end and lives in `.cutiepie/docs/feature_list.json`.
+- **Components** are the implementation ownership unit. A component has clear boundaries, DTO/data-contract shapes, and focused checks that support feature completion.
 
-Every feature should have a feature acceptance gate. Every component touched by that feature should have a component contract gate. Feature gates prove the user/system outcome; component gates make the boundaries safe for independent agents to implement and review.
+Every feature should have prescribed steps that prove the user/system outcome. Every component touched by that feature should have a contract check when a boundary matters. Feature `passes` state lives only in `feature_list.json`.
 
-The active Cutiepie artifact set can be lightweight for small projects, but keep the roles distinct. `PLAN.md` is the executable implementation plan. `FRD.md` is the feature/component map, gate registry, and progress tracker. `PRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `CONFIG.md` provide intent, decisions, risks, diagrams, and settings context that subagents and fresh sessions can reload.
+The active Cutiepie artifact set can be lightweight for small projects, but keep the roles distinct. Canonical artifacts live under `.cutiepie/docs/`. `feature_list.json` is the machine-readable feature/test source of truth. `PLAN.md` is the human workflow checklist and phase-level progress tracker; it must not duplicate individual feature pass/fail state. `PRD.md`, `ARD.md`, `ARCHI.md`, and `CONFIG.md` provide intent, decisions, diagrams, and settings context that subagents and fresh sessions can reload.
 
 ## Multi-Agent Context Contract
 
 Subagents and fresh sessions must be able to reconstruct the current state without inheriting hidden context. To make that possible:
 
 - Commit meaningful progress with descriptive messages after each coherent component or feature slice.
-- Update `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` when feature or component status changes.
+- Update `.cutiepie/docs/feature_list.json` when a feature's prescribed steps pass.
+- Update `.cutiepie/docs/PLAN.md` only for workflow stage and phase-level progress.
 - Update `~/.cutiepie/memory/<project-slug>/MEMORY.md` with durable decisions, deviations, and integration notes.
 - Update `~/.cutiepie/memory/<project-slug>/FAILURES.md` when a repeated failure mode, root cause, or fix should affect future work.
 - Keep DTOs, schemas, public interfaces, adapters, and boundary modules easy to find from the plan, preamble, and recent commits.
 
-Git history, Cutiepie memory, FRD progress, and explicit contract gates are the shared substrate that lets multiple agents work in parallel without relying on one session's context window.
+Git history, Cutiepie memory, `feature_list.json`, `PLAN.md`, and explicit contract checks are the shared substrate that lets multiple agents work in parallel without relying on one session's context window.
 
 ## Subagent Divisibility Rule
 
-A component task is ready for subagent execution only when a fresh agent can implement it from the task block plus linked active Cutiepie docs, without relying on hidden conversation context. Each dispatchable component task must define:
+A feature or component task is ready for subagent execution only when a fresh agent can implement it from `feature_list.json`, `ARCHI.md`, `CONFIG.md`, and linked active Cutiepie docs, without relying on hidden conversation context. Each dispatchable task must define:
 
 - the system/module boundary it owns
 - the task boundary: files, symbols, and behaviors it may change, plus what is out of scope
@@ -37,9 +38,9 @@ A component task is ready for subagent execution only when a fresh agent can imp
 - output DTO/data shape with returned fields, side effects, persistence, emitted events, errors, and sample output
 - neighbor contracts it must preserve
 - settings/config owner and documented tunables
-- exact component contract gate and related feature acceptance gate commands
+- exact component contract checks and feature steps to run
 
-If those details are missing, update `PLAN.md` and the relevant active docs before dispatching implementation work.
+If those details are missing, update `feature_list.json`, `ARCHI.md`, `CONFIG.md`, and relevant active docs before dispatching implementation work.
 
 ## Think Before Coding
 
@@ -100,18 +101,18 @@ For multi-step tasks, plans should include the verification command or gate for 
 3. [Step] -> verify: [check]
 ```
 
-Unit TDD is the implementer-internal loop. A feature or component is not complete until the relevant acceptance or contract gate passes and progress/memory state is updated.
+Unit TDD is the implementer-internal loop. A feature is not complete until its prescribed steps pass and `feature_list.json`/memory state are updated.
 
-## Feature and Component Gates
+## Feature Steps and Component Checks
 
-Feature gates should verify user-visible or system-visible behavior, such as:
+Feature steps should verify user-visible or system-visible behavior, such as:
 
 - an e2e/user-flow check
 - an API scenario
 - a CLI scenario
 - a project-specific integration harness
 
-Component gates should verify the boundary that other agents or neighboring systems depend on, such as:
+Component checks should verify the boundary that other agents or neighboring systems depend on, such as:
 
 - DTO or data-contract shape
 - schema validation
@@ -119,17 +120,17 @@ Component gates should verify the boundary that other agents or neighboring syst
 - domain command/result types
 - public API behavior and error cases
 
-Prefer the smallest automated gate that gives real confidence. Do not mark a feature or component complete based only on implementation notes or unverified assumptions.
+Prefer the smallest automated check that gives real confidence. Do not set `passes: true` based only on implementation notes, unit tests, or unverified assumptions.
 
 ## Clean Handoff
 
 Before ending a session, compacting, or dispatching follow-on agents:
 
 - Make sure the working tree state is intentional.
-- Run the relevant focused tests and feature/component gates.
+- Run the relevant focused tests, component checks, and feature steps.
 - Commit coherent completed slices when appropriate.
-- Update FRD progress and Cutiepie memory.
-- Record caveats, known gaps, and failed approaches where future agents will see them.
+- Update `feature_list.json`, `PLAN.md` phase progress, and Cutiepie memory.
+- Record assumptions, caveats, known gaps, and failed approaches where future agents will see them.
 - Ensure the next agent can identify the next unfinished feature and the contracts it must preserve.
 
-These guidelines are working when diffs are smaller, assumptions are clearer, subagent handoffs need less repair, and completion claims are backed by tests, gates, commits, and memory updates.
+These guidelines are working when diffs are smaller, assumptions are clearer, subagent handoffs need less repair, and completion claims are backed by tests, feature steps, commits, and memory updates.

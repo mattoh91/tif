@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "scope": {
+    "size": "unknown",
+    "waivers": [
+      {
+        "rule": "minimum_25_comprehensive_tests",
+        "reason": "Initial scaffold placeholder; feature-list-builder must replace or remove this waiver before implementation.",
+        "approved_by": "scaffolding-repo",
+        "date": "YYYY-MM-DD"
+      }
+    ]
+  },
+  "features": [
+    {
+      "id": "F001",
+      "user_story_ids": ["US001"],
+      "category": "functional",
+      "priority": 1,
+      "description": "Brief description of the feature and what this test verifies.",
+      "steps": [
+        "Step 1: Set up the relevant starting state.",
+        "Step 2: Perform the user or system action.",
+        "Step 3: Verify the expected observable result."
+      ],
+      "references": [],
+      "dependencies": [],
+      "implementation_phase": 1,
+      "passes": false
+    }
+  ]
+}

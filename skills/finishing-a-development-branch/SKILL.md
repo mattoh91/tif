@@ -9,7 +9,7 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 Guide completion of development work by presenting clear options and handling chosen workflow.
 
-**Core principle:** Verify tests, component contract gates, and feature gates → update Cutiepie state → present options → execute choice → clean up.
+**Core principle:** Verify tests and feature steps → update Cutiepie state → present options → execute choice → clean up.
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
@@ -43,31 +43,32 @@ If this is a Cutiepie-managed project, update durable project state before prese
 
 Check for:
 
-- `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md`
-- `.cutiepie/PLAN.md` or `docs/cutiepie/PLAN.md`
-- `.cutiepie/CAVEATS.md` or `docs/cutiepie/CAVEATS.md`
-- `.cutiepie/CONFIG.md` or `docs/cutiepie/CONFIG.md`
+- `.cutiepie/docs/feature_list.json`
+- `.cutiepie/docs/PLAN.md`
+- `.cutiepie/docs/ARD.md`
+- `.cutiepie/docs/CONFIG.md`
 - `~/.cutiepie/memory/<project-slug>/MEMORY.md`
 - `~/.cutiepie/memory/<project-slug>/FAILURES.md`
 
-For each completed feature/component slice:
+For each completed feature slice:
 
-1. Verify the automated component contract gates passed, not just unit tests.
-2. Verify the feature acceptance gate passed before marking the feature complete.
-3. Update FRD progress/status for the feature and touched components.
-4. Record meaningful deviations from the plan in the plan, caveats, or memory.
-5. Update CONFIG.md and the settings/config owner for any hyperparameters or tunables added, removed, renamed, or changed.
-6. Append durable implementation notes to `~/.cutiepie/memory/<project-slug>/MEMORY.md`:
-   - feature/component completed
-   - feature acceptance gate command/result
-   - component contract gate command/result
-   - settings/config changes
+1. Verify focused tests and any component contract checks passed, not just implementation notes.
+2. Verify the prescribed feature steps in `feature_list.json` passed before setting `passes: true`.
+3. Update `feature_list.json` only for features whose prescribed steps passed.
+4. Update `PLAN.md` only for workflow/phase progress; do not duplicate individual feature pass/fail state.
+5. Record meaningful decisions, assumptions, or caveats in `ARD.md` or memory.
+6. Update CONFIG.md and the settings/config owner for any env vars, hyperparameters, or tunables added, removed, renamed, or changed.
+7. Append durable implementation notes to `~/.cutiepie/memory/<project-slug>/MEMORY.md`:
+   - feature completed
+   - feature steps command/result
+   - component contract check command/result when applicable
+   - env/settings/config changes
    - design decisions made during implementation
-   - deviations from `.cutiepie/PLAN.md` or `docs/cutiepie/PLAN.md`
+   - deviations from `.cutiepie/docs/PLAN.md`
    - follow-ups
-7. If repeated failure patterns occurred, use `capturing-failure-modes` before ending the session.
+8. If repeated failure patterns occurred, use `capturing-failure-modes` before ending the session.
 
-After a coherent feature/component slice is completed and state is updated, suggest clearing or compacting before starting another large slice so the next session can restart from `.cutiepie/` artifacts, recent commits, and `~/.cutiepie/memory`.
+After a coherent feature slice is completed and state is updated, suggest clearing or compacting before starting another large slice so the next session can restart from `.cutiepie/docs/` artifacts, recent commits, and `~/.cutiepie/memory`.
 
 Derive `<project-slug>` from git remote when available, otherwise use the directory name.
 
@@ -199,8 +200,8 @@ git worktree remove <worktree-path>
 - **Fix:** Always verify tests before offering options
 
 **Skipping Cutiepie state updates**
-- **Problem:** Next session starts from stale FRD/PLAN/memory
-- **Fix:** Update FRD progress and `~/.cutiepie/memory/<project-slug>/MEMORY.md` before presenting completion options
+- **Problem:** Next session starts from stale feature list, PLAN, or memory
+- **Fix:** Update `feature_list.json`, `PLAN.md`, and `~/.cutiepie/memory/<project-slug>/MEMORY.md` before presenting completion options
 
 **Open-ended questions**
 - **Problem:** "What should I do next?" → ambiguous
@@ -218,15 +219,14 @@ git worktree remove <worktree-path>
 
 **Never:**
 - Proceed with failing tests
-- Mark Cutiepie components complete without passing automated component contract gates
-- Mark Cutiepie features complete without a passing automated feature acceptance gate
+- Mark Cutiepie features complete without passing their prescribed feature steps
 - Merge without verifying tests on result
 - Delete work without confirmation
 - Force-push without explicit request
 
 **Always:**
 - Verify tests before offering options
-- Update Cutiepie FRD progress and memory when applicable
+- Update Cutiepie feature list, PLAN phase progress, and memory when applicable
 - Present exactly 4 options
 - Get typed confirmation for Option 4
 - Clean up worktree for Options 1 & 4 only

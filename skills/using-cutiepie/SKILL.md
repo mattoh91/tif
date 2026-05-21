@@ -115,3 +115,23 @@ The skill itself tells you which.
 ## User Instructions
 
 Instructions say WHAT, not HOW. "Add X" or "Fix Y" doesn't mean skip workflows.
+
+## Cutiepie Artifact Contract
+
+Active project artifacts live only under `.cutiepie/docs/`:
+
+- `PRD.md` — problem statement and user stories
+- `feature_list.json` — machine-readable feature specs, references, implementation phases, and feature pass/fail state
+- `ARD.md` — architecture decisions, including assumptions and caveats that affect decisions
+- `ARCHI.md` — draw.io dataflow diagram and component/interface notes
+- `CONFIG.md` — environment variables, hyperparameters, and tunables
+- `PLAN.md` — human workflow checklist and phase-level progress
+
+Do not treat root-level planning files, `.cutiepie/*.md`, `docs/cutiepie/*.md`, or dated `docs/cutiepie/specs/` and `docs/cutiepie/plans/` archives as active project artifacts unless the user explicitly asks to migrate their contents into `.cutiepie/docs/`.
+
+Ownership boundary:
+
+- `feature_list.json` is the only place that owns individual feature completion through the `passes` field.
+- `PLAN.md` owns workflow stage progress only. It may summarize implementation phases, but it must not duplicate individual feature pass/fail state.
+
+Tiny or backend-only projects may waive the comprehensive-test volume rule only through an explicit waiver in `feature_list.json`, usually created by `feature-list-builder`. Do not hide this policy in `ARD.md`.

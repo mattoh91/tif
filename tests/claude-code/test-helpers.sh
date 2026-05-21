@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Helper functions for Claude Code skill tests
 
+TEST_HELPERS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$TEST_HELPERS_DIR/../cutiepie-fixtures.sh"
+
 # Run Claude Code with a prompt and capture output
 # Usage: run_claude "prompt text" [timeout_seconds] [allowed_tools]
 run_claude() {
@@ -16,7 +19,7 @@ run_claude() {
     fi
 
     # Run Claude in headless mode with timeout
-    if timeout "$timeout" bash -c "$cmd" > "$output_file" 2>&1; then
+    if run_with_timeout "$timeout" bash -c "$cmd" > "$output_file" 2>&1; then
         cat "$output_file"
         rm -f "$output_file"
         return 0
@@ -138,57 +141,12 @@ cleanup_test_project() {
     fi
 }
 
-# Create a simple plan file for testing
+# Create a canonical Cutiepie spec set for testing.
 # Usage: create_test_plan "$project_dir" "$plan_name"
 create_test_plan() {
     local project_dir="$1"
-    local plan_name="${2:-test-plan}"
-    local plan_file="$project_dir/docs/cutiepie/plans/$plan_name.md"
-
-    mkdir -p "$(dirname "$plan_file")"
-
-    cat > "$plan_file" <<'EOF'
-# Test Implementation Plan
-
-## Task 1: Create Hello Function
-
-Create a simple hello function that returns "Hello, World!".
-
-**File:** `src/hello.js`
-
-**Implementation:**
-```javascript
-export function hello() {
-  return "Hello, World!";
-}
-```
-
-**Tests:** Write a test that verifies the function returns the expected string.
-
-**Verification:** `npm test`
-
-## Task 2: Create Goodbye Function
-
-Create a goodbye function that takes a name and returns a goodbye message.
-
-**File:** `src/goodbye.js`
-
-**Implementation:**
-```javascript
-export function goodbye(name) {
-  return `Goodbye, ${name}!`;
-}
-```
-
-**Tests:** Write tests for:
-- Default name
-- Custom name
-- Edge cases (empty string, null)
-
-**Verification:** `npm test`
-EOF
-
-    echo "$plan_file"
+    create_cutiepie_docs_fixture "$project_dir"
+    echo "$project_dir/.cutiepie/docs/PLAN.md"
 }
 
 # Export functions for use in tests
@@ -199,4 +157,6 @@ export -f assert_count
 export -f assert_order
 export -f create_test_project
 export -f cleanup_test_project
+export -f run_with_timeout
+export -f create_cutiepie_docs_fixture
 export -f create_test_plan

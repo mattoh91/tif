@@ -6,13 +6,14 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+source "$SCRIPT_DIR/../cutiepie-fixtures.sh"
 
 TIMESTAMP=$(date +%s)
 OUTPUT_DIR="/tmp/cutiepie-tests/${TIMESTAMP}/explicit-skill-requests/extended-multiturn"
 mkdir -p "$OUTPUT_DIR"
 
 PROJECT_DIR="$OUTPUT_DIR/project"
-mkdir -p "$PROJECT_DIR/docs/cutiepie/plans"
+create_cutiepie_docs_fixture "$PROJECT_DIR"
 
 echo "=== Extended Multi-Turn Test ==="
 echo "Output dir: $OUTPUT_DIR"

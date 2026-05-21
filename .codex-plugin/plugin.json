@@ -1,7 +1,7 @@
 {
   "name": "cutiepie",
   "version": "5.0.7",
-  "description": "A personal cross-harness SWE workflow plugin for Codex and Claude Code: structured specs, component acceptance gates, memory, and agentic delivery skills.",
+  "description": "A personal cross-harness SWE workflow plugin for Codex and Claude Code: spec-driven features, canonical docs, memory, and agentic delivery skills.",
   "author": {
     "name": "mattoh91",
     "url": "https://github.com/mattoh91"
@@ -15,7 +15,7 @@
     "subagent-driven-development",
     "skills",
     "planning",
-    "tdd",
+    "spec-driven-development",
     "debugging",
     "code-review",
     "workflow"
@@ -24,7 +24,7 @@
   "interface": {
     "displayName": "Cutiepie",
     "shortDescription": "Structured SWE harness workflows for Codex and Claude Code",
-    "longDescription": "Use Cutiepie to guide agent work through structured requirements, architecture artifacts, implementation planning, component-level automated acceptance gates, test-driven development, memory, debugging, parallel execution, code review, and finish-the-branch workflows.",
+    "longDescription": "Use Cutiepie to guide agent work through PRD discovery, feature_list.json specs, research enrichment, architecture artifacts, PLAN workflow tracking, internal TDD, memory, debugging, parallel execution, code review, and finish-the-branch workflows.",
     "developerName": "mattoh91",
     "category": "Coding",
     "capabilities": [

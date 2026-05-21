@@ -1,184 +1,45 @@
 ---
 name: brainstorming
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
+description: "You MUST use this before creative project work unless the user has already approved the design; routes Cutiepie planning through PRD, feature list, research, architecture, and PLAN artifacts."
 ---
 
-# Brainstorming Ideas Into Designs
+# Brainstorming Ideas Into Specs
 
-Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
+Use this skill to move from an idea to approved planning artifacts under `.cutiepie/docs/`.
 
-Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
+## Hard Gate
 
-<HARD-GATE>
-Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
-</HARD-GATE>
+Do not implement code until the user has approved the planning artifacts or explicitly asks to bypass planning.
 
-## Anti-Pattern: "This Is Too Simple To Need A Design"
+## Canonical Artifacts
 
-Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+Active artifacts live only under `.cutiepie/docs/`:
 
-## Checklist
+- `PRD.md`
+- `feature_list.json`
+- `ARD.md`
+- `ARCHI.md`
+- `CONFIG.md`
+- `PLAN.md`
 
-You MUST create a task for each of these items and complete them in order:
+`feature_list.json` owns individual feature completion through `passes`. `PLAN.md` owns workflow progress only.
 
-1. **Explore project context** — check files, docs, recent commits
-2. **Offer visual companion** (if topic will involve visual questions) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
-3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-4. **Probe requirements for missed features/data** — request sample data or user scenarios; audit analogous tools when web/docs access is available; use user-provided/local materials when not
-5. **Propose 2-3 approaches** — with trade-offs and your recommendation
-6. **Present design** — in sections scaled to their complexity, get user approval after each section
-7. **Write Cutiepie spec set** — save `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, and `CONFIG.md` under `.cutiepie/` or `docs/cutiepie/`, then commit
-8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-9. **User reviews written spec** — ask user to review the spec files before proceeding
-10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+## Workflow
 
-## Process Flow
+1. Inspect repo context, existing `.cutiepie/docs/`, README, and recent commits.
+2. Use `prd-discovery` to create or update `PRD.md` through Socratic Q&A.
+3. Use `feature-list-builder` to derive `feature_list.json` from user stories.
+4. Use `research-enrichment` when research can improve requirements; prioritize primary papers, major AI lab materials, and major relevant repos.
+5. Use `solution-architect` to create `ARD.md` and `ARCHI.md` with draw.io dataflow.
+6. Use `implementation-sequencer` to set `implementation_phase` values in `feature_list.json`.
+7. Use `progress-planner` to create or update `PLAN.md`.
+8. Run `scripts/check-cutiepie-state.sh .`.
+9. Ask the user to approve the artifacts before implementation.
 
-```dot
-digraph brainstorming {
-    "Explore project context" [shape=box];
-    "Visual questions ahead?" [shape=diamond];
-    "Offer Visual Companion\n(own message, no other content)" [shape=box];
-    "Ask clarifying questions" [shape=box];
-    "Probe requirements\n(sample data/scenarios/tool audit)" [shape=box];
-    "Propose 2-3 approaches" [shape=box];
-    "Present design sections" [shape=box];
-    "User approves design?" [shape=diamond];
-    "Write Cutiepie spec set" [shape=box];
-    "Spec self-review\n(fix inline)" [shape=box];
-    "User reviews spec?" [shape=diamond];
-    "Invoke writing-plans skill" [shape=doublecircle];
+## Tiny Project Policy
 
-    "Explore project context" -> "Visual questions ahead?";
-    "Visual questions ahead?" -> "Offer Visual Companion\n(own message, no other content)" [label="yes"];
-    "Visual questions ahead?" -> "Ask clarifying questions" [label="no"];
-    "Offer Visual Companion\n(own message, no other content)" -> "Ask clarifying questions";
-    "Ask clarifying questions" -> "Probe requirements\n(sample data/scenarios/tool audit)";
-    "Probe requirements\n(sample data/scenarios/tool audit)" -> "Propose 2-3 approaches";
-    "Propose 2-3 approaches" -> "Present design sections";
-    "Present design sections" -> "User approves design?";
-    "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Write Cutiepie spec set" [label="yes"];
-    "Write Cutiepie spec set" -> "Spec self-review\n(fix inline)";
-    "Spec self-review\n(fix inline)" -> "User reviews spec?";
-    "User reviews spec?" -> "Write Cutiepie spec set" [label="changes requested"];
-    "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
-}
-```
+Tiny or backend-only projects may waive the 25 comprehensive-feature requirement only through an explicit waiver in `feature_list.json`, created by `feature-list-builder`. Do not put this waiver in `ARD.md`.
 
-**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+## Handoff
 
-## The Process
-
-**Understanding the idea:**
-
-- Check out the current project state first (files, docs, recent commits)
-- Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., "build a platform with chat, file storage, billing, and analytics"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.
-- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. Each sub-project gets its own spec → plan → implementation cycle.
-- For appropriately-scoped projects, ask questions one at a time to refine the idea
-- Prefer multiple choice questions when possible, but open-ended is fine too
-- Only one question per message - if a topic needs more exploration, break it into multiple questions
-- Focus on understanding: purpose, constraints, success criteria
-
-**Probing for missed requirements:**
-
-- Ask for sample inputs, outputs, data files, screenshots, exports, or realistic user scenarios when the domain depends on data shape or workflows.
-- If web/docs access is available and useful, inspect analogous off-the-shelf tools, product docs, or API docs to identify missing features, edge cases, and data elements.
-- If web/docs access is unavailable, ask the user for comparable tools, docs, sample data, screenshots, exports, or 3-5 realistic scenarios and perform the same missing-feature audit from those materials.
-- Flag gaps explicitly before proposing approaches.
-
-**Exploring approaches:**
-
-- Propose 2-3 different approaches with trade-offs
-- Present options conversationally with your recommendation and reasoning
-- Lead with your recommended option and explain why
-
-**Presenting the design:**
-
-- Once you believe you understand what you're building, present the design
-- Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced
-- Ask after each section whether it looks right so far
-- Cover: architecture, features, components, data flow, error handling, testing
-- For testing, identify the automated feature acceptance gate for each user/system capability and the component contract gates for each touched boundary: DTO/data-contract check, schema check, API scenario, automated e2e/user-flow, or equivalent project-specific harness check.
-- Be ready to go back and clarify if something doesn't make sense
-
-**Design for isolation and clarity:**
-
-- Break the system into smaller units that each have one clear purpose, communicate through well-defined interfaces, and can be understood and tested independently
-- For each unit, you should be able to answer: what does it do, how do you use it, and what does it depend on?
-- Can someone understand what a unit does without reading its internals? Can you change the internals without breaking consumers? If not, the boundaries need work.
-- Smaller, well-bounded units are also easier for you to work with - you reason better about code you can hold in context at once, and your edits are more reliable when files are focused. When a file grows large, that's often a signal that it's doing too much.
-
-**Working in existing codebases:**
-
-- Explore the current structure before proposing changes. Follow existing patterns.
-- Where existing code has problems that affect the work (e.g., a file that's grown too large, unclear boundaries, tangled responsibilities), include targeted improvements as part of the design - the way a good developer improves code they're working in.
-- Don't propose unrelated refactoring. Stay focused on what serves the current goal.
-
-## After the Design
-
-**Documentation:**
-
-- Write the validated design as a Cutiepie spec set:
-  - `.cutiepie/PRD.md` or `docs/cutiepie/PRD.md` — product/business requirements, users, epics, non-goals
-  - `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md` — functional requirements, feature-to-component map, automated feature acceptance gates, component contract gates, progress
-  - `.cutiepie/ARD.md` or `docs/cutiepie/ARD.md` — architecture decisions, options, consequences
-  - `.cutiepie/CAVEATS.md` or `docs/cutiepie/CAVEATS.md` — assumptions, dependencies, constraints, known unknowns
-  - `.cutiepie/ARCHI.md` or `docs/cutiepie/ARCHI.md` — Mermaid C4 L1/L2 and sequence diagrams
-  - `.cutiepie/CONFIG.md` or `docs/cutiepie/CONFIG.md` — settings/config owner plus hyperparameters and tunables
-- Use `.cutiepie/` by default. Use `docs/cutiepie/` when the repo already organizes project docs under `docs/`.
-- Root-level `PRD.md`, `FRD.md`, `ARD.md`, `CAVEATS.md`, `ARCHI.md`, `CONFIG.md`, and `PLAN.md` are allowed only when the user explicitly requests root-level planning files.
-- Use elements-of-style:writing-clearly-and-concisely skill if available
-- Commit the spec set to git
-
-**Spec Self-Review:**
-After writing the spec set, look at it with fresh eyes:
-
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
-2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the FRD? Does every PRD feature map to FRD components and gates?
-3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Gate check:** Does every FRD feature have an automated feature acceptance gate? Does every touched component boundary have an automated component contract gate?
-5. **Config check:** Are all known hyperparameters and tunables assigned to a settings/config owner and documented in CONFIG.md?
-6. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
-
-Fix any issues inline. No need to re-review — just fix and move on.
-
-**User Review Gate:**
-After the spec review loop passes, ask the user to review the written spec before proceeding:
-
-> "Spec set written and committed under `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
-
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
-
-**Implementation:**
-
-- Invoke the writing-plans skill to create a detailed implementation plan
-- Do NOT invoke any other skill. writing-plans is the next step.
-
-## Key Principles
-
-- **One question at a time** - Don't overwhelm with multiple questions
-- **Multiple choice preferred** - Easier to answer than open-ended when possible
-- **YAGNI ruthlessly** - Remove unnecessary features from all designs
-- **Explore alternatives** - Always propose 2-3 approaches before settling
-- **Incremental validation** - Present design, get approval before moving on
-- **Be flexible** - Go back and clarify when something doesn't make sense
-
-## Visual Companion
-
-A browser-based companion for showing mockups, diagrams, and visual options during brainstorming. Available as a tool — not a mode. Accepting the companion means it's available for questions that benefit from visual treatment; it does NOT mean every question goes through the browser.
-
-**Offering the companion:** When you anticipate that upcoming questions will involve visual content (mockups, layouts, diagrams), offer it once for consent:
-> "Some of what we're working on might be easier to explain if I can show it to you in a web browser. I can put together mockups, diagrams, comparisons, and other visuals as we go. This feature is still new and can be token-intensive. Want to try it? (Requires opening a local URL)"
-
-**This offer MUST be its own message.** Do not combine it with clarifying questions, context summaries, or any other content. The message should contain ONLY the offer above and nothing else. Wait for the user's response before continuing. If they decline, proceed with text-only brainstorming.
-
-**Per-question decision:** Even after the user accepts, decide FOR EACH QUESTION whether to use the browser or the terminal. The test: **would the user understand this better by seeing it than reading it?**
-
-- **Use the browser** for content that IS visual — mockups, wireframes, layout comparisons, architecture diagrams, side-by-side visual designs
-- **Use the terminal** for content that is text — requirements questions, conceptual choices, tradeoff lists, A/B/C/D text options, scope decisions
-
-A question about a UI topic is not automatically a visual question. "What does personality mean in this context?" is a conceptual question — use the terminal. "Which wizard layout works better?" is a visual question — use the browser.
-
-If they agree to the companion, read the detailed guide before proceeding:
-`skills/brainstorming/visual-companion.md`
+After user approval, implementation uses `subagent-driven-spec-development` or, on hosts exposing only legacy names, `subagent-driven-development`.

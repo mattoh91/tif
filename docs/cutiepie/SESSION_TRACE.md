@@ -7,7 +7,7 @@ This trace defines the expected lifecycle for a typical Cutiepie-managed coding 
 Expected host trigger:
 
 - Claude Code: `SessionStart` from `hooks/hooks.json`
-- Codex: `SessionStart` from `.codex/hooks.json` when `codex_hooks = true`
+- Codex: `SessionStart` from `.codex/hooks.json` when `hooks = true`
 
 Expected script:
 
@@ -17,7 +17,7 @@ Expected effect:
 
 - Injects `using-cutiepie`
 - Injects recent git status/log
-- Injects Cutiepie memory, failures, latest session, FRD, PLAN, and CAVEATS snippets when present
+- Injects Cutiepie memory, failures, latest session, canonical `.cutiepie/docs/` snippets, and the state-contract report when present
 
 Verify locally:
 
@@ -47,18 +47,16 @@ Expected skills:
 
 - `scaffolding-repo` for new/under-structured repos
 - `brainstorming` for new feature/product work
-- `writing-plans` after a spec exists
+- `prd-discovery`, `feature-list-builder`, `research-enrichment`, `solution-architect`, `implementation-sequencer`, and `writing-plans` as planning advances
 
 Expected artifacts:
 
-- `.cutiepie/PRD.md`
-- `.cutiepie/FRD.md`
-- `.cutiepie/ARD.md`
-- `.cutiepie/CAVEATS.md`
-- `.cutiepie/ARCHI.md`
-- `.cutiepie/CONFIG.md`
-- `.cutiepie/PLAN.md`
-- or `docs/cutiepie/` equivalents
+- `.cutiepie/docs/PRD.md`
+- `.cutiepie/docs/feature_list.json`
+- `.cutiepie/docs/ARD.md`
+- `.cutiepie/docs/ARCHI.md`
+- `.cutiepie/docs/CONFIG.md`
+- `.cutiepie/docs/PLAN.md`
 
 `CONFIG.md` must name the settings/config owner and document all hyperparameters and tunables.
 
@@ -76,15 +74,15 @@ Expected skills:
 - `subagent-driven-development` when subagents are available
 - `executing-plans` fallback when executing inline
 - `test-driven-development` inside implementation
-- `component-functional-testing` for feature acceptance gates and component contract gates
+- `component-functional-testing` for feature steps and component contract checks
 - `requesting-code-review` before moving on
 
 Expected state updates:
 
-- Feature progress updated in FRD
-- Component contract gates recorded
-- Feature acceptance gate recorded
-- Meaningful decisions/deviations written to Cutiepie memory or caveats
+- Feature `passes` state updated in `feature_list.json` only after prescribed steps pass
+- Phase/workflow progress updated in `PLAN.md`
+- Component contract checks recorded when relevant
+- Meaningful decisions/deviations written to Cutiepie memory or `ARD.md`
 - Coherent commits after completed slices
 
 Manual verification:
@@ -94,7 +92,7 @@ git status --short
 git log --oneline -5
 ```
 
-Check the relevant FRD/PLAN gates and memory files.
+Check `feature_list.json`, `PLAN.md`, and memory files.
 
 ## 5. Refresh State Before Clear, Compact, or Handoff
 
@@ -186,4 +184,4 @@ Manual verification:
 Use the preamble skill to generate my session context.
 ```
 
-The generated context should name the current feature/component, next task, gates to run, important decisions, failure modes, recent commits, dirty git state, and key files to inspect.
+The generated context should name the current implementation phase, next feature/task, feature steps to run, important decisions, failure modes, recent commits, dirty git state, and key files to inspect.

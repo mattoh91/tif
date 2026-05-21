@@ -1,6 +1,6 @@
 ---
 name: preamble
-description: Use when starting or resuming work after a clear/compact/new session to generate a copy-paste context block from ~/.cutiepie memory, git logs, FRD progress, and PLAN status.
+description: Use when starting or resuming work after a clear/compact/new session to generate a copy-paste context block from ~/.cutiepie memory, git logs, feature_list.json, and PLAN status.
 ---
 
 # Preamble
@@ -17,11 +17,12 @@ Use what exists:
 - recent git commits
 - current git status
 - recent git diff/stat
-- `.cutiepie/FRD.md` or `docs/cutiepie/FRD.md`
-- `.cutiepie/PLAN.md` or `docs/cutiepie/PLAN.md`
-- `.cutiepie/CAVEATS.md` or `docs/cutiepie/CAVEATS.md`
-- `.cutiepie/CONFIG.md` or `docs/cutiepie/CONFIG.md`
-- feature/component source, test, DTO, schema, adapter, and gate files referenced by the current FRD/PLAN task
+- `.cutiepie/docs/feature_list.json`
+- `.cutiepie/docs/PLAN.md`
+- `.cutiepie/docs/ARD.md`
+- `.cutiepie/docs/ARCHI.md`
+- `.cutiepie/docs/CONFIG.md`
+- feature/component source, test, DTO, schema, adapter, and feature-step files referenced by the current implementation phase
 
 ## Workflow
 
@@ -29,12 +30,12 @@ Use what exists:
 2. Read the files above if present. Do not fail if some are missing.
 3. Summarize only what is needed to resume work:
    - project goal
-   - current feature and component
-   - completed components
+   - current implementation phase and feature group
+   - completed features from `feature_list.json`
    - next task
-   - feature acceptance gate and component contract gate to run next
+   - feature steps to run next
    - key component code references to inspect before editing
-   - relevant decisions/caveats
+   - relevant decisions, assumptions, and caveats from `ARD.md`
    - relevant settings/config owner and tunables
    - known failure modes
    - dirty git state
@@ -42,7 +43,7 @@ Use what exists:
    - component entry points
    - public interfaces, DTOs, schemas, adapters, or boundary modules
    - settings/config owner and CONFIG.md entries for relevant hyperparameters
-   - feature acceptance gate and component contract gate files
+   - feature step harness files
    - focused unit/integration tests
    - recently changed files from `git diff --stat` or recent commits
    - files with known caveats or failure modes
@@ -60,14 +61,13 @@ Project: ...
 Current goal: ...
 Current state: ...
 Completed components: ...
-Next feature/component/task: ...
-Feature acceptance gate: ...
-Component contract gate: ...
+Next implementation phase/feature/task: ...
+Feature steps to run: ...
 Code references to inspect:
 - path/to/component.ts — component entry point; key symbols: ...
 - path/to/component.test.ts — focused tests for ...
-- path/to/contract.test.ts — automated component contract gate
-- path/to/feature.spec.ts — automated feature acceptance gate
+- path/to/contract.test.ts — automated component contract check
+- path/to/feature.spec.ts — automated feature step harness
 Important decisions: ...
 Relevant config: ...
 Known caveats/failure modes: ...

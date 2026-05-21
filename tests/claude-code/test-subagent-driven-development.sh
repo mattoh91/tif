@@ -20,7 +20,7 @@ else
     exit 1
 fi
 
-if assert_contains "$output" "Load Plan\|read.*plan\|extract.*tasks" "Mentions loading plan"; then
+if assert_contains "$output" "feature_list\|spec set\|implementation_phase" "Mentions loading spec set"; then
     : # pass
 else
     exit 1
@@ -60,18 +60,18 @@ fi
 
 echo ""
 
-# Test 4: Verify plan is read once
-echo "Test 4: Plan reading efficiency..."
+# Test 4: Verify spec set is read once
+echo "Test 4: Spec-set reading efficiency..."
 
-output=$(run_claude "In subagent-driven-development, how many times should the controller read the plan file? When does this happen?" 30)
+output=$(run_claude "In subagent-driven-development, how many times should the controller read feature_list.json and PLAN.md? When does this happen?" 30)
 
-if assert_contains "$output" "once\|one time\|single" "Read plan once"; then
+if assert_contains "$output" "once\|one time\|single" "Read spec set once"; then
     : # pass
 else
     exit 1
 fi
 
-if assert_contains "$output" "Step 1\|beginning\|start\|Load Plan" "Read at beginning"; then
+if assert_contains "$output" "Step 1\|beginning\|start\|Read" "Read at beginning"; then
     : # pass
 else
     exit 1
@@ -136,12 +136,12 @@ fi
 
 echo ""
 
-# Test 8: Verify worktree requirement
-echo "Test 8: Worktree requirement..."
+# Test 8: Verify state contract requirement
+echo "Test 8: State contract requirement..."
 
-output=$(run_claude "What workflow skills are required before using subagent-driven-development? List any prerequisites or required skills." 30)
+output=$(run_claude "What checks are required before using subagent-driven-development? List any prerequisites." 30)
 
-if assert_contains "$output" "using-git-worktrees\|worktree" "Mentions worktree requirement"; then
+if assert_contains "$output" "check-cutiepie-state\|feature_list\|PLAN.md\|canonical artifacts" "Mentions state contract"; then
     : # pass
 else
     exit 1
@@ -149,12 +149,12 @@ fi
 
 echo ""
 
-# Test 9: Verify main branch warning
-echo "Test 9: Main branch red flag..."
+# Test 9: Verify passes ownership
+echo "Test 9: passes ownership..."
 
-output=$(run_claude "In subagent-driven-development, is it okay to start implementation directly on the main branch?" 30)
+output=$(run_claude "In subagent-driven-development, when can a feature in feature_list.json be marked passes=true?" 30)
 
-if assert_contains "$output" "worktree\|feature.*branch\|not.*main\|never.*main\|avoid.*main\|don't.*main\|consent\|permission" "Warns against main branch"; then
+if assert_contains "$output" "prescribed.*steps.*pass\|steps.*passed\|only.*after.*pass\|feature.*steps" "Requires feature steps to pass"; then
     : # pass
 else
     exit 1

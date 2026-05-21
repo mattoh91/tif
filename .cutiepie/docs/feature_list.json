@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "scope": {
+    "size": "tiny",
+    "waivers": [
+      {
+        "rule": "minimum_25_comprehensive_tests",
+        "reason": "Harness refactor is a small meta-workflow change with focused shell/JSON/static checks rather than a user-facing application requiring 25 comprehensive flows.",
+        "approved_by": "user",
+        "date": "2026-05-22"
+      }
+    ]
+  },
+  "features": [
+    {
+      "id": "F001",
+      "user_story_ids": ["US001", "US002", "US003"],
+      "category": "functional",
+      "priority": 1,
+      "description": "Canonicalize Cutiepie active artifacts under .cutiepie/docs/ with feature_list.json owning feature pass/fail and PLAN.md owning workflow progress only.",
+      "steps": [
+        "Step 1: Run scripts/check-cutiepie-state.sh against a valid scaffold fixture.",
+        "Step 2: Verify the valid fixture passes.",
+        "Step 3: Add a checked PLAN.md line that duplicates a feature ID and passes state.",
+        "Step 4: Verify scripts/check-cutiepie-state.sh rejects the duplicate ownership.",
+        "Step 5: Add a checked later-phase PLAN.md line while earlier-phase features are false.",
+        "Step 6: Verify scripts/check-cutiepie-state.sh rejects the sequencing violation."
+      ],
+      "references": [],
+      "dependencies": [],
+      "implementation_phase": 1,
+      "passes": true
+    },
+    {
+      "id": "F002",
+      "user_story_ids": ["US004"],
+      "category": "functional",
+      "priority": 2,
+      "description": "Refactor lifecycle hooks so session start and update-state use the new canonical state contract.",
+      "steps": [
+        "Step 1: Run bash -n on hooks/session-start and hooks/update-state.",
+        "Step 2: Run hooks/update-state with HOME set to a temp directory.",
+        "Step 3: Verify STATE_AUDIT.md is written under temp ~/.cutiepie/memory/<slug>/.",
+        "Step 4: Verify PREAMBLE.md names .cutiepie/docs/PLAN.md and feature_list.json.",
+        "Step 5: Run the SessionStart local contract check.",
+        "Step 6: Verify the injected context includes Cutiepie State Contract."
+      ],
+      "references": [],
+      "dependencies": ["F001"],
+      "implementation_phase": 1,
+      "passes": true
+    },
+    {
+      "id": "F003",
+      "user_story_ids": ["US005"],
+      "category": "functional",
+      "priority": 3,
+      "description": "Refactor core skills to spec-driven development with internal TDD and feature-step completion.",
+      "steps": [
+        "Step 1: Inspect core skill files for stale FRD/CAVEATS active-artifact references.",
+        "Step 2: Verify planning skills route through PRD, feature_list, research, architecture, sequencing, and PLAN.",
+        "Step 3: Verify implementation skills state that TDD is internal and passes changes only after feature steps pass.",
+        "Step 4: Verify scaffold templates create .cutiepie/docs/ artifacts.",
+        "Step 5: Run shell syntax and JSON config checks.",
+        "Step 6: Run the focused Cutiepie state validator regression test."
+      ],
+      "references": [],
+      "dependencies": ["F001"],
+      "implementation_phase": 1,
+      "passes": true
+    }
+  ]
+}

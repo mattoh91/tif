@@ -529,7 +529,7 @@
           <a href="#state" class="node feature-node" data-source="harness" aria-label="Required artifact set">
             <rect x="28" y="328" width="176" height="78"></rect>
             <text x="116" y="358" text-anchor="middle">Required docs</text>
-            <text class="sub" x="116" y="382" text-anchor="middle">PRD, FRD, ARD, PLAN</text>
+            <text class="sub" x="116" y="382" text-anchor="middle">PRD, features, ARD, PLAN</text>
           </a>
 
           <a href="#tools" class="node feature-node" data-source="harness" aria-label="Agent legible tools">
@@ -571,7 +571,7 @@
           <a href="#state" class="node feature-node" data-source="memory" aria-label="Progress tracking">
             <rect x="1038" y="440" width="176" height="78"></rect>
             <text x="1126" y="470" text-anchor="middle">Progress</text>
-            <text class="sub" x="1126" y="494" text-anchor="middle">FRD and commits</text>
+            <text class="sub" x="1126" y="494" text-anchor="middle">features and commits</text>
           </a>
 
           <a href="#gates" class="node feature-node" data-source="loop" aria-label="Closed verification loop">
@@ -687,7 +687,7 @@
           <a href="#state" class="node state" aria-label="Required docs">
             <rect x="558" y="204" width="164" height="92"></rect>
             <text x="640" y="236" text-anchor="middle">Required docs</text>
-            <text class="sub" x="640" y="260" text-anchor="middle">PRD, FRD, ARD, PLAN</text>
+            <text class="sub" x="640" y="260" text-anchor="middle">PRD, features, ARD, PLAN</text>
           </a>
 
           <a href="#skills" class="node skill" aria-label="Execution skills">
@@ -723,7 +723,7 @@
           <a href="#state" class="node state" aria-label="Commit and memory">
             <rect x="558" y="542" width="164" height="100"></rect>
             <text x="640" y="576" text-anchor="middle">Persist progress</text>
-            <text class="sub" x="640" y="600" text-anchor="middle">FRD, memory, commit</text>
+            <text class="sub" x="640" y="600" text-anchor="middle">features, memory, commit</text>
           </a>
 
           <a href="#handoff" class="node hook" aria-label="Preamble handoff">
@@ -775,7 +775,7 @@
           <ul>
             <li>Loads plugin metadata from <code>.codex-plugin/plugin.json</code>.</li>
             <li>Uses shared skills from <code>skills/</code>.</li>
-            <li>Uses Codex hooks from <code>.codex/hooks.json</code> when <code>codex_hooks = true</code>.</li>
+            <li>Uses Codex hooks from <code>.codex/hooks.json</code> when <code>hooks = true</code>.</li>
           </ul>
         </div>
       </div>
@@ -882,13 +882,12 @@
         <div>
           <h3>Committed artifacts</h3>
           <ul>
-            <li><code>.cutiepie/PRD.md</code> or <code>docs/cutiepie/PRD.md</code></li>
-            <li><code>FRD.md</code> for features, component map, gates, and progress</li>
-            <li><code>ARD.md</code> for architecture decisions</li>
-            <li><code>CAVEATS.md</code> for assumptions and risks</li>
-            <li><code>ARCHI.md</code> for diagrams</li>
-            <li><code>CONFIG.md</code> for settings owners and tunables</li>
-            <li><code>PLAN.md</code> for implementation sequence</li>
+            <li><code>.cutiepie/docs/PRD.md</code> for problem statement and user stories</li>
+            <li><code>feature_list.json</code> for feature specs, references, phases, and pass/fail state</li>
+            <li><code>ARD.md</code> for decisions, assumptions, and caveats</li>
+            <li><code>ARCHI.md</code> for draw.io dataflow and component interfaces</li>
+            <li><code>CONFIG.md</code> for environment variables and tunables</li>
+            <li><code>PLAN.md</code> for workflow checklist and phase progress</li>
           </ul>
         </div>
         <div>
@@ -919,8 +918,8 @@
       <h2>Handoff</h2>
       <p>A good session ends with a clean runway for the next one. The agent should update progress, commit coherent work, refresh state, and write enough memory for a fresh session to continue without archaeology.</p>
       <ol>
-        <li>Run the relevant feature and component gates.</li>
-        <li>Update <code>FRD.md</code>, <code>PLAN.md</code>, <code>CAVEATS.md</code>, <code>CONFIG.md</code>, or <code>ARD.md</code> when the implementation changed the plan or decision record.</li>
+        <li>Run the relevant feature steps and component checks.</li>
+        <li>Update <code>feature_list.json</code>, <code>PLAN.md</code>, <code>CONFIG.md</code>, or <code>ARD.md</code> when implementation changed feature state, workflow state, config, or decisions.</li>
         <li>Capture durable lessons in memory and failure-mode docs.</li>
         <li>Commit a coherent slice with the docs and code that explain each other.</li>
         <li>Run <code>/update-state</code> before clearing, compacting, or handing work to another agent.</li>

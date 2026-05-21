@@ -6,7 +6,7 @@ Status: Proposed
 
 Problem:
 
-- Describe the decision pressure.
+- Describe the decision pressure, including assumptions, caveats, and constraints that materially affect the decision.
 
 Options:
 

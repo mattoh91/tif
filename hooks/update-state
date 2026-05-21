@@ -21,15 +21,13 @@ project_slug() {
 
 has_cutiepie_file() {
   local rel="$1"
-  [ -f ".cutiepie/${rel}" ] || [ -f "docs/cutiepie/${rel}" ]
+  [ -f ".cutiepie/docs/${rel}" ]
 }
 
 first_cutiepie_file() {
   local rel="$1"
-  if [ -f ".cutiepie/${rel}" ]; then
-    printf '.cutiepie/%s' "$rel"
-  elif [ -f "docs/cutiepie/${rel}" ]; then
-    printf 'docs/cutiepie/%s' "$rel"
+  if [ -f ".cutiepie/docs/${rel}" ]; then
+    printf '.cutiepie/docs/%s' "$rel"
   fi
 }
 
@@ -52,7 +50,8 @@ audit_file="${memory_dir}/STATE_AUDIT.md"
 preamble_file="${memory_dir}/PREAMBLE.md"
 session_file="${session_dir}/${today}.md"
 issues_tmp="$(mktemp)"
-trap 'rm -f "$issues_tmp"' EXIT
+validator_tmp="$(mktemp)"
+trap 'rm -f "$issues_tmp" "$validator_tmp"' EXIT
 issue_count=0
 
 git_status="$(git status --short 2>/dev/null || true)"
@@ -74,16 +73,24 @@ if [ -n "$git_status" ]; then
   append_issue "attention" "Working tree has uncommitted changes; review or commit before clearing context."
 fi
 
-for doc in PRD.md FRD.md ARD.md CAVEATS.md ARCHI.md CONFIG.md PLAN.md; do
-  if ! has_cutiepie_file "$doc"; then
-    append_issue "missing" "Cutiepie planning artifact is missing: .cutiepie/${doc} or docs/cutiepie/${doc}."
-  fi
-done
+if [ -x "${script_dir}/../scripts/check-cutiepie-state.sh" ]; then
+  "${script_dir}/../scripts/check-cutiepie-state.sh" . > "$validator_tmp" || true
+  while IFS= read -r validator_line; do
+    case "$validator_line" in
+      "- [ok]"*)
+        ;;
+      "- ["*)
+        issue_count=$((issue_count + 1))
+        printf '%s\n' "$validator_line" >> "$issues_tmp"
+        ;;
+    esac
+  done < "$validator_tmp"
+fi
 
 if [ -n "$changed_files" ]; then
   if printf '%s\n' "$changed_files" | grep -Eq '(^|/)(src|app|lib|packages|cmd|internal|components|pages|routes|api|server|client|tests?)/|\.([cm]?[jt]sx?|py|go|rs|java|kt|rb|php|swift|cs|cpp|h|hpp)$'; then
-    if ! printf '%s\n' "$changed_files" | grep -Eq '(^|/)(\.cutiepie|docs/cutiepie)/'; then
-      append_issue "possible-stale" "Code/test files changed without Cutiepie planning docs in the current diff; check FRD/PLAN/ARD/ARCHI/CAVEATS/CONFIG."
+    if ! printf '%s\n' "$changed_files" | grep -Eq '(^|/)\.cutiepie/docs/'; then
+      append_issue "possible-stale" "Code/test files changed without canonical Cutiepie docs in the current diff; check feature_list.json, PLAN.md, ARD.md, ARCHI.md, and CONFIG.md."
     fi
   fi
 fi
@@ -97,8 +104,8 @@ fi
 
 if has_cutiepie_file "ARCHI.md"; then
   archi_file="$(first_cutiepie_file "ARCHI.md")"
-  if ! grep -Eq '```mermaid|graph |flowchart |sequenceDiagram|C4Context|C4Container' "$archi_file" 2>/dev/null; then
-    append_issue "possible-stale" "${archi_file} does not appear to contain Mermaid/C4/sequence diagrams."
+  if ! grep -Eq '<mxfile|drawio|draw\.io|```mermaid|graph |flowchart |sequenceDiagram|C4Context|C4Container' "$archi_file" 2>/dev/null; then
+    append_issue "possible-stale" "${archi_file} does not appear to contain a draw.io dataflow diagram or supported diagram source."
   fi
 fi
 
@@ -164,11 +171,11 @@ fi
     printf -- '- Unavailable.\n'
   fi
   printf 'Next session checklist:\n'
-  printf -- '- Read .cutiepie/FRD.md or docs/cutiepie/FRD.md for current feature/component status.\n'
-  printf -- '- Read .cutiepie/PLAN.md or docs/cutiepie/PLAN.md for next task and gates.\n'
-  printf -- '- Read .cutiepie/CONFIG.md or docs/cutiepie/CONFIG.md for settings owners and tunables.\n'
+  printf -- '- Read .cutiepie/docs/PLAN.md for current workflow stage and next checklist item.\n'
+  printf -- '- Read .cutiepie/docs/feature_list.json for feature specs, implementation phases, and pass/fail state.\n'
+  printf -- '- Read .cutiepie/docs/CONFIG.md for env vars, settings owners, and tunables.\n'
   printf -- '- Read %s and update stale docs or memory before implementation.\n' "$audit_file"
-  printf -- '- Run the relevant feature acceptance gate and component contract gate before claiming completion.\n'
+  printf -- '- Do not mark feature_list.json passes=true until the feature steps pass.\n'
   printf '</cutiepie-preamble>\n'
 } > "$preamble_file"
 
