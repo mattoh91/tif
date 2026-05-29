@@ -6,7 +6,7 @@ Status: Accepted
 
 Problem:
 
-- A global feature list and global plan duplicate story/spec state once each story has its own implementation specs and acceptance checks.
+- Separate cross-story trackers duplicate story/spec state once each story has its own implementation specs and acceptance checks.
 
 Decision:
 

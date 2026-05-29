@@ -132,7 +132,7 @@ Useful checks:
 
 ```bash
 node -e "for (const f of ['.agents/plugins/marketplace.json','package.json','.claude-plugin/plugin.json','.claude-plugin/marketplace.json','.codex-plugin/plugin.json','gemini-extension.json','.version-bump.json','hooks/hooks.json']) JSON.parse(require('fs').readFileSync(f,'utf8'))"
-bash -n hooks/session-start hooks/pre-compact hooks/session-end hooks/codex-stop hooks/update-state scripts/check-cutiepie-state.sh scripts/check-cutiepie-spec-set.sh scripts/check-cutiepie-story-state.sh scripts/sync-to-codex-plugin.sh
+bash -n hooks/session-start hooks/pre-compact hooks/session-end hooks/codex-stop hooks/update-state scripts/check-cutiepie-state.sh scripts/check-cutiepie-story-state.sh scripts/sync-to-codex-plugin.sh
 python3 scripts/cutiepie-compile.py skills --agent codex --output "$(mktemp -d)"
 tests/cutiepie-state/test-check-cutiepie-state.sh
 tests/scaffolding-repo/test-scaffold-contract.sh

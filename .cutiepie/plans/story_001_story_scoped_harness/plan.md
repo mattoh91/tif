@@ -8,7 +8,7 @@ status: in_progress
 
 ## Goal
 
-Replace global feature-list and global-plan state with story-local plans, specs, contracts, and ADRs.
+Consolidate planning state into story-local plans, specs, contracts, and ADRs.
 
 ## Flow
 
