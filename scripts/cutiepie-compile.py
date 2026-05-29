@@ -5,7 +5,7 @@ This is intentionally dependency-free. It supports the common Cutiepie skill sha
 
     skills/<name>/SKILL.md
 
-and the Hephaestus-style shape:
+and the flat skill-file shape:
 
     skills/<name>.skill.md
 """
