@@ -1,14 +1,16 @@
 # Cutiepie for Codex
 
-Guide for using Cutiepie with OpenAI Codex via native skill discovery.
+Guide for using Cutiepie with OpenAI Codex via local plugin installation.
 
 ## Quick Install
 
-Tell Codex:
+From a local checkout:
 
+```bash
+codex plugin marketplace add /absolute/path/to/cutiepie
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/mattoh91/cutiepie/refs/heads/main/.codex/INSTALL.md
-```
+
+Restart Codex, open `/plugins`, choose `Cutiepie Local`, install `Cutiepie`, then start a new thread.
 
 ## Manual Installation
 
@@ -24,18 +26,32 @@ Fetch and follow instructions from https://raw.githubusercontent.com/mattoh91/cu
    git clone https://github.com/mattoh91/cutiepie.git ~/.codex/cutiepie
    ```
 
-2. Create the skills symlink:
+2. Add the local plugin marketplace:
    ```bash
-   mkdir -p ~/.agents/skills
-   ln -s ~/.codex/cutiepie/skills ~/.agents/skills/cutiepie
+   codex plugin marketplace add ~/.codex/cutiepie
    ```
 
-3. Restart Codex.
+3. Restart Codex, open `/plugins`, choose `Cutiepie Local`, and install `Cutiepie`.
 
-4. **For subagent skills** (optional): Skills like `dispatching-parallel-agents` and `subagent-driven-development` require Codex's multi-agent feature. Add to your Codex config:
+### Direct Skill Symlink
+
+For raw skill development without installing the plugin:
+
+   ```bash
+   mkdir -p ~/.agents/skills
+   ln -sfn ~/.codex/cutiepie/skills ~/.agents/skills/cutiepie
+   ```
+
+Restart Codex after changing the symlink.
+
+### Subagents and Hooks
+
+For subagent skills and hook-based state refresh, enable these features in `~/.codex/config.toml`:
+
    ```toml
    [features]
    multi_agent = true
+   hooks = true
    ```
 
 ### Windows
@@ -49,13 +65,15 @@ cmd /c mklink /J "$env:USERPROFILE\.agents\skills\cutiepie" "$env:USERPROFILE\.c
 
 ## How It Works
 
-Codex has native skill discovery — it scans `~/.agents/skills/` at startup, parses SKILL.md frontmatter, and loads skills on demand. Cutiepie skills are made visible through a single symlink:
+Codex installs Cutiepie through the local marketplace in `.agents/plugins/marketplace.json`, which points at this checkout and reads `.codex-plugin/plugin.json`.
+
+The direct symlink fallback uses Codex skill discovery, which scans `~/.agents/skills/` at startup, parses SKILL.md frontmatter, and loads skills on demand:
 
 ```
 ~/.agents/skills/cutiepie/ → ~/.codex/cutiepie/skills/
 ```
 
-The `using-cutiepie` skill is discovered automatically and enforces skill usage discipline — no additional configuration needed.
+The `using-cutiepie` skill is discovered automatically in either path and enforces skill usage discipline.
 
 ## Usage
 
@@ -93,9 +111,17 @@ The `description` field is how Codex decides when to activate a skill automatica
 cd ~/.codex/cutiepie && git pull
 ```
 
-Skills update instantly through the symlink.
+Restart Codex after updating a plugin install. Direct symlink installs see file changes immediately, but Codex still needs a restart for discovery changes.
 
 ## Uninstalling
+
+Plugin install:
+
+```bash
+codex plugin marketplace remove cutiepie-local
+```
+
+Direct symlink install:
 
 ```bash
 rm ~/.agents/skills/cutiepie

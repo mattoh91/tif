@@ -4,6 +4,37 @@ Cutiepie is a personal SWE harness for Claude Code, Codex, Cursor, Copilot, Gemi
 
 Cutiepie is intentionally story-scoped. It does not use a separate global feature list or global implementation plan.
 
+## Installation
+
+Full installation steps live in [docs/INSTALL.md](docs/INSTALL.md).
+
+Quick paths:
+
+```bash
+# Codex local plugin install
+codex plugin marketplace add /absolute/path/to/cutiepie
+```
+
+OpenCode:
+
+```json
+{ "plugin": ["cutiepie@git+https://github.com/mattoh91/cutiepie.git"] }
+```
+
+Claude Code:
+
+```text
+/plugin marketplace add /absolute/path/to/cutiepie/.claude-plugin/marketplace.json
+/plugin install cutiepie@cutiepie-dev
+/reload-plugins
+```
+
+For Cursor, Copilot, and other hosts, generate host-native instruction files:
+
+```bash
+python3 scripts/cutiepie-compile.py skills --all --output /tmp/cutiepie-skills
+```
+
 ## Core Contract
 
 Active state lives here:

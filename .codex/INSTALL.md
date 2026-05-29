@@ -5,7 +5,7 @@ Cutiepie can be installed as a Codex plugin from this local checkout.
 ## Local Plugin Installation
 
 ```bash
-codex plugin marketplace add /Users/OHM02/Repos/cutiepie
+codex plugin marketplace add /absolute/path/to/cutiepie
 ```
 
 Restart Codex, open:
@@ -22,7 +22,7 @@ For raw skill development without installing the plugin:
 
 ```bash
 mkdir -p ~/.agents/skills
-ln -sfn /Users/OHM02/Repos/cutiepie/skills ~/.agents/skills/cutiepie
+ln -sfn /absolute/path/to/cutiepie/skills ~/.agents/skills/cutiepie
 ```
 
 Restart Codex after changing the symlink.
