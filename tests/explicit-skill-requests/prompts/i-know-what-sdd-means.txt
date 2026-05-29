@@ -1,7 +1,7 @@
-I have my spec set ready at .cutiepie/docs/feature_list.json and .cutiepie/docs/PLAN.md.
+I have my story specs and contracts ready under .cutiepie/plans/story_001_auth/.
 
 I want to use subagent-driven-development to execute it. That means:
-- Dispatch a fresh subagent for each implementation phase in feature_list.json
+- Dispatch fresh subagents for dependency-ready specs with non-overlapping contracts
 - Review the output between phases
 - Keep iteration fast within this conversation
 

@@ -1,5 +1,5 @@
 ---
-description: "Deprecated - use the cutiepie:writing-plans skill instead"
+description: "Create or update Cutiepie story plans and specs"
 ---
 
-Tell your human partner that this command is deprecated and will be removed in the next major release. They should ask you to use the "cutiepie writing-plans" skill instead.
+Use `cutiepie:story-planner` to create or update `.cutiepie/plans/story_*/plan.md`, `ADR.md`, draft specs, then run `cutiepie:contract-designer`.

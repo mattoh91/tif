@@ -1,27 +1,22 @@
-# Planning Artifact Reviewer Prompt
+# Story Spec Reviewer Prompt
 
-Use this template after `.cutiepie/docs/PRD.md` and `.cutiepie/docs/feature_list.json` are written.
+Review the Cutiepie story planning set.
 
-```yaml
-description: "Review Cutiepie planning artifacts"
-prompt: |
-  Review the Cutiepie planning artifacts for completeness and consistency.
+Inputs:
 
-  Active artifacts:
-  - .cutiepie/docs/PRD.md
-  - .cutiepie/docs/feature_list.json
-  - .cutiepie/docs/ARD.md
-  - .cutiepie/docs/ARCHI.md
-  - .cutiepie/docs/CONFIG.md
-  - .cutiepie/docs/PLAN.md
+- `.cutiepie/docs/PRD.md`
+- story `plan.md`
+- story `ADR.md`
+- story `contracts.json`
+- story specs
 
-  Check:
-  - Every PRD user story maps to feature_list.json features.
-  - feature_list.json has executable steps and all initial passes are false.
-  - Tiny/backend-only waiver is explicit when comprehensive coverage is below the default threshold.
-  - ARCHI.md dataflow supports the implementation phases.
-  - ARD.md captures assumptions and caveats that affect decisions.
-  - PLAN.md contains only workflow/phase progress, not individual feature pass/fail state.
+Check:
 
-  Return blocking issues first, then suggestions.
-```
+- every PRD story has a story folder
+- every spec has valid frontmatter and acceptance checks
+- specs are subagent-ready
+- research/tool/library choices are captured in the story ADR
+- contracts align providers and consumers
+- dependencies and safe parallel groups are sensible
+
+Return blocking issues first.

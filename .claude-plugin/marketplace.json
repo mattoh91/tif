@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "cutiepie",
-      "description": "Personal cross-harness SWE workflow plugin: spec-driven features, canonical docs, memory, and agentic delivery skills.",
+      "description": "Personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
       "version": "5.0.7",
       "source": "./",
       "author": {

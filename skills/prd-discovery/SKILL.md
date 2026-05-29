@@ -1,30 +1,29 @@
 ---
 name: prd-discovery
-description: Use when starting a new Cutiepie-managed project or missing PRD.md; gathers problem statement and user stories through Socratic Q&A before feature planning.
+description: Use when starting or updating a Cutiepie project; gathers problem statement and stories before story planning.
 ---
 
 # PRD Discovery
 
-Create `.cutiepie/docs/PRD.md` from a focused requirements conversation.
+Create or update `.cutiepie/docs/PRD.md`.
 
-## Workflow
+## Required Frontmatter
 
-1. Inspect current repo context, existing `.cutiepie/docs/`, README, and recent commits.
-2. Ask one Socratic question at a time until the problem, users, success criteria, constraints, and non-goals are clear.
-3. Capture user stories with stable IDs such as `US001`.
-4. Write `.cutiepie/docs/PRD.md`.
-5. Run a self-review for ambiguity, missing actors, missing acceptance notes, and unsupported assumptions.
-6. Ask the user to approve the PRD before deriving features.
+```yaml
+---
+project_mode: POC
+project_context: personal
+repo_kind: greenfield
+---
+```
 
-## PRD Required Sections
+Use `project-intake` first when these fields are unknown.
+
+## Required Sections
 
 - Problem Statement
-- Users
-- User Stories
-- Success Criteria
+- Stories table with stable `story_<nnn>` IDs
+- Acceptance Notes for each story
 - Non-Goals
-- Open Questions
 
-## Handoff
-
-After user approval, use `feature-list-builder` to create `.cutiepie/docs/feature_list.json`.
+After the user approves PRD stories, use `story-planner`.

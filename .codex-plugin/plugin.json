@@ -1,7 +1,7 @@
 {
   "name": "cutiepie",
   "version": "5.0.7",
-  "description": "A personal cross-harness SWE workflow plugin for Codex and Claude Code: spec-driven features, canonical docs, memory, and agentic delivery skills.",
+  "description": "A personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
   "author": {
     "name": "mattoh91",
     "url": "https://github.com/mattoh91"
@@ -18,13 +18,18 @@
     "spec-driven-development",
     "debugging",
     "code-review",
+    "build",
+    "review",
+    "multi-agent-adapter",
+    "poc-mvp",
+    "brewery-client",
     "workflow"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Cutiepie",
     "shortDescription": "Structured SWE harness workflows for Codex and Claude Code",
-    "longDescription": "Use Cutiepie to guide agent work through PRD discovery, feature_list.json specs, research enrichment, architecture artifacts, PLAN workflow tracking, internal TDD, memory, debugging, parallel execution, code review, and finish-the-branch workflows.",
+    "longDescription": "Use Cutiepie to guide agent work through project intake, PRD stories, story-local specs/contracts/ADRs, research enrichment, architecture artifacts, internal TDD, memory, debugging, multi-agent adapter dispatch, build/review workflows, documentation, cleanup, and scaffolded Brewery/GenAI Gateway client setup.",
     "developerName": "mattoh91",
     "category": "Coding",
     "capabilities": [

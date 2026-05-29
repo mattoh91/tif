@@ -44,6 +44,24 @@ append_if_exists() {
     fi
 }
 
+append_story_state() {
+    if [ ! -d ".cutiepie/plans" ]; then
+        return
+    fi
+
+    printf '\n## Cutiepie Story Plans (.cutiepie/plans)\n\n'
+    find .cutiepie/plans -maxdepth 3 -type f \( -name 'plan.md' -o -name 'ADR.md' -o -name 'contracts.json' -o -name 'spec_*.md' \) 2>/dev/null \
+        | sort \
+        | while IFS= read -r file; do
+            printf '\n### %s\n\n' "$file"
+            sed -n '1,80p' "$file"
+            line_count="$(wc -l < "$file" | tr -d ' ')"
+            if [ "$line_count" -gt 80 ]; then
+                printf '\n[Truncated to first 80 lines of %s]\n' "$file"
+            fi
+        done
+}
+
 build_cutiepie_context() {
     local slug memory_dir session_dir latest_session state_report
     slug="$(project_slug)"
@@ -79,11 +97,10 @@ build_cutiepie_context() {
         fi
 
         append_if_exists "Cutiepie PRD (.cutiepie/docs/PRD.md)" ".cutiepie/docs/PRD.md" 140
-        append_if_exists "Cutiepie Feature List (.cutiepie/docs/feature_list.json)" ".cutiepie/docs/feature_list.json" 180
-        append_if_exists "Cutiepie PLAN (.cutiepie/docs/PLAN.md)" ".cutiepie/docs/PLAN.md" 180
-        append_if_exists "Cutiepie ARD (.cutiepie/docs/ARD.md)" ".cutiepie/docs/ARD.md" 120
         append_if_exists "Cutiepie ARCHI (.cutiepie/docs/ARCHI.md)" ".cutiepie/docs/ARCHI.md" 160
         append_if_exists "Cutiepie CONFIG (.cutiepie/docs/CONFIG.md)" ".cutiepie/docs/CONFIG.md" 120
+        append_if_exists "Cutiepie Repo Review (.cutiepie/docs/REPO_REVIEW.md)" ".cutiepie/docs/REPO_REVIEW.md" 120
+        append_story_state
 
         printf '\n</CUTIEPIE_PROJECT_CONTEXT>'
     }

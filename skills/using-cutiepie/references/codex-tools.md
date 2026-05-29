@@ -4,8 +4,8 @@ Skills use Claude Code tool names. When you encounter these in a skill, use your
 
 | Skill references | Codex equivalent |
 |-----------------|------------------|
-| `Task` tool (dispatch subagent) | `spawn_agent` (see [Named agent dispatch](#named-agent-dispatch)) |
-| Multiple `Task` calls (parallel) | Multiple `spawn_agent` calls |
+| `Task` tool (dispatch subagent) | Use `multi-agent-adapter`, which maps to `spawn_agent` when available |
+| Multiple `Task` calls (parallel) | Use `multi-agent-adapter`; dispatch multiple `spawn_agent` workers only for independent task packets |
 | Task returns result | `wait` |
 | Task completes automatically | `close_agent` to free slot |
 | `TodoWrite` (task tracking) | `update_plan` |
@@ -22,7 +22,7 @@ Add to your Codex config (`~/.codex/config.toml`):
 multi_agent = true
 ```
 
-This enables `spawn_agent`, `wait`, and `close_agent` for skills like `dispatching-parallel-agents` and `subagent-driven-development`.
+This enables `spawn_agent`, `wait`, and `close_agent` for skills like `multi-agent-adapter`, `dispatching-parallel-agents`, and `subagent-driven-development`.
 
 ## Named agent dispatch
 
@@ -30,13 +30,14 @@ Claude Code skills reference named agent types like `cutiepie:code-reviewer`.
 Codex does not have a named agent registry — `spawn_agent` creates generic agents
 from built-in roles (`default`, `explorer`, `worker`).
 
-When a skill says to dispatch a named agent type:
+When a skill says to dispatch a named agent type, prefer `multi-agent-adapter`. Its Codex translation is:
 
 1. Find the agent's prompt file (e.g., `agents/code-reviewer.md` or the skill's
    local prompt template like `code-quality-reviewer-prompt.md`)
 2. Read the prompt content
 3. Fill any template placeholders (`{BASE_SHA}`, `{WHAT_WAS_IMPLEMENTED}`, etc.)
-4. Spawn a `worker` agent with the filled content as the `message`
+4. Wrap the filled content in the `multi-agent-adapter` task packet
+5. Spawn a `worker` agent with the packet as the `message`
 
 | Skill instruction | Codex equivalent |
 |-------------------|------------------|

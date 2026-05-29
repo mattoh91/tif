@@ -1,13 +1,11 @@
-# Configuration
+# Project Config
 
-## Environment Variables
-
-| Variable | Owner | Type | Default | Required | Allowed Values / Range | Used By | Notes |
+| Name | Owner | Type | Default | Required | Allowed Values | Used By | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `EXAMPLE_TIMEOUT_MS` | `Settings` | integer | `5000` | no | `>= 0` | component name | Replace with a real setting. |
+| `GENAI_API_KEY` | Heineken/Brewery projects | secret string | unset | only when Brewery client is enabled | non-empty | Brewery client | Heineken GenAI Gateway/Brewery API key. |
+| `ATLASSIAN_MCP_CONFIG` | Heineken projects | path/string | unset | only when Atlassian MCP is enabled | host-specific | documentation workflow | Documents Jira/Confluence MCP setup. |
 
 ## Rules
 
-- Hyperparameters and tunables must be exposed through environment variables or an explicit settings/config owner.
-- Document model names, temperatures, token limits, thresholds, retry counts, timeouts, polling intervals, batch sizes, feature flags, and similar values here.
-- Update this file whenever an environment variable or tunable is added, removed, renamed, or changes default/range/meaning.
+- Add every environment variable, model name, retry count, timeout, threshold, feature flag, and tunable setting here.
+- Story-specific decisions belong in `.cutiepie/plans/story_*/ADR.md`.

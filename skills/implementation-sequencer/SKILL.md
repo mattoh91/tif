@@ -1,24 +1,14 @@
 ---
 name: implementation-sequencer
-description: Use after ARCHI.md exists to set implementation_phase values in feature_list.json from dataflow and dependency order.
+description: Use after story specs exist to refine spec dependencies and safe parallel groups in contracts.json.
 ---
 
 # Implementation Sequencer
 
-Assign or update `implementation_phase` in `.cutiepie/docs/feature_list.json`.
+Sequencing is now story-local.
 
-## Rules
-
-- Earlier phases must provide dependencies required by later phases.
-- Features in the same phase should be parallel-safe for subagents.
-- Do not use phases to express priority alone; priority is a separate field.
-- If a feature depends on another feature, it must be in a later phase unless the dependency is already implemented.
-
-## Workflow
-
-1. Read `feature_list.json` and `ARCHI.md`.
-2. Build the dependency graph from feature dependencies and component dataflow.
-3. Assign phase numbers.
-4. Keep `passes` unchanged.
+1. Read `.cutiepie/plans/story_*/specs/spec_*.md`.
+2. Ensure each `depends_on` list is accurate.
+3. Update `contracts.json` `parallel_groups` for specs that can run safely together.
+4. Confirm specs in the same parallel group do not edit overlapping files or contracts.
 5. Run `scripts/check-cutiepie-state.sh .`.
-6. Update `PLAN.md` phase checklist only at the phase level.

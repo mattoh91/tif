@@ -1,29 +1,28 @@
 ---
 name: research-enrichment
-description: Use after feature_list.json exists when feature requirements should be enriched with research citations from papers, AI lab articles, docs, or major GitHub repos.
+description: Use when a story spec needs library, module, tool, database, vector store, framework, ML algorithm, or external-service research.
 ---
 
 # Research Enrichment
 
-Enrich `.cutiepie/docs/feature_list.json` with references and requirement suggestions.
+Research belongs inside the relevant story spec and story `ADR.md`.
 
-## Source Priority
+Use this when implementation choices affect simplicity or effectiveness:
 
-1. Recent arXiv papers or primary research papers.
-2. Articles, docs, or engineering posts from major AI companies and AI labs such as OpenAI, Anthropic, Google, DeepMind, Meta, Microsoft, and similar primary sources.
-3. Popular, relevant GitHub repos with active maintenance and concrete implementation patterns.
-4. User-provided/local docs when web access is unavailable.
+- ML algorithms
+- vector stores
+- databases
+- frameworks
+- model providers
+- third-party APIs
+- major libraries/modules/tools
 
 ## Workflow
 
-1. Read `PRD.md` and `feature_list.json`.
-2. Identify research questions per feature group.
-3. Use parallel research subagents when the host supports them; otherwise research serially and keep citations precise.
-4. Add references to existing features or propose new features only when evidence supports them.
-5. Do not mark features as passing.
-6. Record uncertain or rejected suggestions in `ARD.md` only if they affect a decision.
-
-## Output
-
-- Updated `feature_list.json` references and, when warranted, added feature specs with `passes: false`.
-- Short summary of sources and why they matter.
+1. Identify the spec(s) whose implementation choice depends on research.
+2. Prefer primary docs, papers, official references, and major repos.
+3. Compare the simplest viable options.
+4. Record the chosen option and rejected options in the story `ADR.md`.
+5. Add concise research notes and implementation guidance to the spec body.
+6. Update contracts if the choice changes schemas or dependencies.
+7. Run `scripts/check-cutiepie-state.sh .`.

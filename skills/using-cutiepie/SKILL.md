@@ -1,137 +1,115 @@
 ---
 name: using-cutiepie
-description: Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions
+description: Core orientation for Cutiepie's story-scoped SWE harness, active artifact locations, skill routing, and session gates.
 ---
 
-<SUBAGENT-STOP>
-If you were dispatched as a subagent to execute a specific task, skip this skill.
-</SUBAGENT-STOP>
+# Using Cutiepie
 
-<EXTREMELY-IMPORTANT>
-If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
+Cutiepie turns a user's build request into PRD stories, story-local plans/specs/contracts, implementation, documentation, cleanup, and memory refresh.
 
-IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
+## Active Artifacts
 
-This is not negotiable. This is not optional. You cannot rationalize your way out of this.
-</EXTREMELY-IMPORTANT>
+Active Cutiepie state lives only in these locations:
 
-## Instruction Priority
+```text
+.cutiepie/docs/
+  PRD.md
+  ARCHI.md
+  CONFIG.md
 
-Cutiepie skills override default system prompt behavior, but **user instructions always take precedence**:
-
-1. **User's explicit instructions** (CLAUDE.md, GEMINI.md, AGENTS.md, direct requests) — highest priority
-2. **Cutiepie skills** — override default system behavior where they conflict
-3. **Default system prompt** — lowest priority
-
-If CLAUDE.md, GEMINI.md, or AGENTS.md says "don't use TDD" and a skill says "always use TDD," follow the user's instructions. The user is in control.
-
-## How to Access Skills
-
-**In Claude Code:** Use the `Skill` tool. When you invoke a skill, its content is loaded and presented to you—follow it directly. Never use the Read tool on skill files.
-
-**In Copilot CLI:** Use the `skill` tool. Skills are auto-discovered from installed plugins. The `skill` tool works the same as Claude Code's `Skill` tool.
-
-**In Gemini CLI:** Skills activate via the `activate_skill` tool. Gemini loads skill metadata at session start and activates the full content on demand.
-
-**In other environments:** Check your platform's documentation for how skills are loaded.
-
-## Platform Adaptation
-
-Skills use Claude Code tool names. Non-CC platforms: see `references/copilot-tools.md` (Copilot CLI), `references/codex-tools.md` (Codex) for tool equivalents. Gemini CLI users get the tool mapping loaded automatically via GEMINI.md.
-
-# Using Skills
-
-## The Rule
-
-**Invoke relevant or requested skills BEFORE any response or action.** Even a 1% chance a skill might apply means that you should invoke the skill to check. If an invoked skill turns out to be wrong for the situation, you don't need to use it.
-
-```dot
-digraph skill_flow {
-    "User message received" [shape=doublecircle];
-    "About to EnterPlanMode?" [shape=doublecircle];
-    "Already brainstormed?" [shape=diamond];
-    "Invoke brainstorming skill" [shape=box];
-    "Might any skill apply?" [shape=diamond];
-    "Invoke Skill tool" [shape=box];
-    "Announce: 'Using [skill] to [purpose]'" [shape=box];
-    "Has checklist?" [shape=diamond];
-    "Create TodoWrite todo per item" [shape=box];
-    "Follow skill exactly" [shape=box];
-    "Respond (including clarifications)" [shape=doublecircle];
-
-    "About to EnterPlanMode?" -> "Already brainstormed?";
-    "Already brainstormed?" -> "Invoke brainstorming skill" [label="no"];
-    "Already brainstormed?" -> "Might any skill apply?" [label="yes"];
-    "Invoke brainstorming skill" -> "Might any skill apply?";
-
-    "User message received" -> "Might any skill apply?";
-    "Might any skill apply?" -> "Invoke Skill tool" [label="yes, even 1%"];
-    "Might any skill apply?" -> "Respond (including clarifications)" [label="definitely not"];
-    "Invoke Skill tool" -> "Announce: 'Using [skill] to [purpose]'";
-    "Announce: 'Using [skill] to [purpose]'" -> "Has checklist?";
-    "Has checklist?" -> "Create TodoWrite todo per item" [label="yes"];
-    "Has checklist?" -> "Follow skill exactly" [label="no"];
-    "Create TodoWrite todo per item" -> "Follow skill exactly";
-}
+.cutiepie/plans/story_<nnn>_<slug>/
+  plan.md
+  ADR.md
+  contracts.json
+  specs/
+    spec_<nnn>_<slug>.md
 ```
 
-## Red Flags
+`PRD.md` owns human stories. Story folders own implementation flow. Spec frontmatter owns completion state. `contracts.json` owns cross-spec schemas. There is no separate global feature list or global implementation plan.
 
-These thoughts mean STOP—you're rationalizing:
+## Required Trajectory
 
-| Thought | Reality |
-|---------|---------|
-| "This is just a simple question" | Questions are tasks. Check for skills. |
-| "I need more context first" | Skill check comes BEFORE clarifying questions. |
-| "Let me explore the codebase first" | Skills tell you HOW to explore. Check first. |
-| "I can check git/files quickly" | Files lack conversation context. Check for skills. |
-| "Let me gather information first" | Skills tell you HOW to gather information. |
-| "This doesn't need a formal skill" | If a skill exists, use it. |
-| "I remember this skill" | Skills evolve. Read current version. |
-| "This doesn't count as a task" | Action = task. Check for skills. |
-| "The skill is overkill" | Simple things become complex. Use it. |
-| "I'll just do this one thing first" | Check BEFORE doing anything. |
-| "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
-| "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
+For a new idea:
 
-## Skill Priority
+1. Use `project-intake` to classify greenfield/brownfield and personal/Heineken context.
+2. Use `prd-discovery` to capture stories in `PRD.md`.
+3. Use `story-planner` to create story folders and draft specs.
+4. Use `contract-designer` after specs exist.
+5. Run `scripts/check-cutiepie-state.sh .`.
+6. Ask the user to approve planning before implementation.
 
-When multiple skills could apply, use this order:
+For implementation:
 
-1. **Process skills first** (brainstorming, debugging) - these determine HOW to approach the task
-2. **Implementation skills second** (frontend-design, mcp-builder) - these guide execution
+1. Use `build`.
+2. Build specs with `completed: false` in dependency order.
+3. Use `multi-agent-adapter` for workers or inline fallback.
+4. Use TDD for each spec.
+5. Set acceptance check `passes: true` only after that check actually passes.
+6. Set spec `completed: true` only after all acceptance checks pass.
+7. Run `documentation`, then `cleanup`, then `update-state`.
 
-"Let's build X" → brainstorming first, then implementation skills.
-"Fix this bug" → debugging first, then domain-specific skills.
+## Spec Frontmatter Contract
 
-## Skill Types
+Every spec must include:
 
-**Rigid** (TDD, debugging): Follow exactly. Don't adapt away discipline.
+```yaml
+---
+story_id: story_001
+spec_id: spec_001
+title: Short title
+completed: false
+depends_on: []
+contracts:
+  provides: []
+  consumes: []
+acceptance_checks:
+  - id: check_001
+    category: functional
+    description: High-level integration or e2e outcome.
+    steps:
+      - "Step 1: Do the setup."
+      - "Step 2: Perform the action."
+      - "Step 3: Verify the expected result."
+    passes: false
+---
+```
 
-**Flexible** (patterns): Adapt principles to context.
+Spec bodies should include implementation notes, research when tools/libraries/frameworks are involved, design patterns/algorithms/data structures where useful, TDD unit-test plan, and natural-language integration/e2e expectations.
 
-The skill itself tells you which.
+## Heineken Projects
 
-## User Instructions
+If project context is Heineken:
 
-Instructions say WHAT, not HOW. "Add X" or "Fix Y" doesn't mean skip workflows.
+- bootstrap or document Brewery / GenAI Gateway client setup when relevant
+- document `GENAI_API_KEY`
+- set up or document Atlassian MCP
+- prepare Confluence-ready GenAILab documentation
+- ask for the target Confluence location and explicit approval before publishing
 
-## Cutiepie Artifact Contract
+## Skill Routing
 
-Active project artifacts live only under `.cutiepie/docs/`:
+- New repo/session: `project-intake`
+- New idea/story: `brainstorming`, which routes through `prd-discovery`, `story-planner`, and `contract-designer`
+- Draft story folders directly: `story-planner`
+- Align contracts after specs: `contract-designer`
+- Build next work: `build`
+- Inline execution compatibility: `executing-plans`
+- Worker execution compatibility: `subagent-driven-development`
+- Review feedback: `review`
+- End-session docs: `documentation`
+- End-session hygiene: `cleanup`
+- Resume context: `preamble`
+- Memory/state refresh: `update-state`
 
-- `PRD.md` — problem statement and user stories
-- `feature_list.json` — machine-readable feature specs, references, implementation phases, and feature pass/fail state
-- `ARD.md` — architecture decisions, including assumptions and caveats that affect decisions
-- `ARCHI.md` — draw.io dataflow diagram and component/interface notes
-- `CONFIG.md` — environment variables, hyperparameters, and tunables
-- `PLAN.md` — human workflow checklist and phase-level progress
+When a workflow dispatches subagents, reviewers, implementers, or parallel workers, use `multi-agent-adapter` to translate the same task packet for the current host.
 
-Do not treat root-level planning files, `.cutiepie/*.md`, `docs/cutiepie/*.md`, or dated `docs/cutiepie/specs/` and `docs/cutiepie/plans/` archives as active project artifacts unless the user explicitly asks to migrate their contents into `.cutiepie/docs/`.
+## Stop Conditions
 
-Ownership boundary:
+Stop before implementation when:
 
-- `feature_list.json` is the only place that owns individual feature completion through the `passes` field.
-- `PLAN.md` owns workflow stage progress only. It may summarize implementation phases, but it must not duplicate individual feature pass/fail state.
-
-Tiny or backend-only projects may waive the comprehensive-test volume rule only through an explicit waiver in `feature_list.json`, usually created by `feature-list-builder`. Do not hide this policy in `ARD.md`.
+- `scripts/check-cutiepie-state.sh .` fails.
+- Specs exist but `contracts.json` is missing or stale.
+- Consumed contracts are not provided or explicitly external.
+- A spec lacks acceptance checks.
+- A spec dependency is cyclic or incomplete.
+- Heineken publishing would happen without user-approved target and approval.

@@ -2,50 +2,14 @@
 set -euo pipefail
 
 root="${1:-.}"
-docs_dir="${root}/.cutiepie/docs"
-status=0
 
-emit() {
-  local severity="$1"
-  local message="$2"
-  printf -- '- [%s] %s\n' "$severity" "$message"
-  case "$severity" in
-    missing|blocked|invalid)
-      status=1
-      ;;
-  esac
-}
-
-if [ ! -d "$docs_dir" ]; then
-  emit "missing" "Expected canonical Cutiepie docs directory: ${docs_dir}"
-fi
-
-for doc in PRD.md feature_list.json ARD.md ARCHI.md CONFIG.md PLAN.md; do
-  if [ ! -f "${docs_dir}/${doc}" ]; then
-    emit "missing" "Cutiepie artifact is missing: ${docs_dir}/${doc}"
-  fi
-done
-
-for legacy in \
-  "${root}/.cutiepie/FRD.md" \
-  "${root}/.cutiepie/CAVEATS.md" \
-  "${root}/docs/cutiepie/FRD.md" \
-  "${root}/docs/cutiepie/CAVEATS.md"; do
-  if [ -f "$legacy" ]; then
-    emit "warning" "Legacy Cutiepie artifact exists outside canonical ownership: ${legacy}"
-  fi
-done
-
-if [ -f "${docs_dir}/feature_list.json" ]; then
-  set +e
-  node - "$root" <<'NODE'
+node - "$root" <<'NODE'
 const fs = require('fs');
 const path = require('path');
 
 const root = process.argv[2];
 const docsDir = path.join(root, '.cutiepie', 'docs');
-const featurePath = path.join(docsDir, 'feature_list.json');
-const planPath = path.join(docsDir, 'PLAN.md');
+const plansDir = path.join(root, '.cutiepie', 'plans');
 let status = 0;
 
 function emit(severity, message) {
@@ -55,158 +19,417 @@ function emit(severity, message) {
   }
 }
 
-function readJson(file) {
-  try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
-  } catch (error) {
-    emit('invalid', `${file} is not valid JSON: ${error.message}`);
+function exists(file) {
+  return fs.existsSync(file);
+}
+
+function read(file) {
+  return fs.readFileSync(file, 'utf8');
+}
+
+function cleanValue(value) {
+  return value.trim().replace(/^['"]|['"]$/g, '');
+}
+
+function parseInlineList(value) {
+  const trimmed = value.trim();
+  if (!trimmed.startsWith('[') || !trimmed.endsWith(']')) {
     return null;
+  }
+  const body = trimmed.slice(1, -1).trim();
+  if (!body) {
+    return [];
+  }
+  return body.split(',').map((part) => cleanValue(part)).filter(Boolean);
+}
+
+function parseFrontmatter(file) {
+  const text = read(file);
+  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) {
+    emit('invalid', `${file} must start with YAML frontmatter.`);
+    return null;
+  }
+
+  const meta = {
+    story_id: '',
+    spec_id: '',
+    title: '',
+    completed: null,
+    depends_on: [],
+    contracts: { provides: [], consumes: [] },
+    acceptance_checks: [],
+  };
+
+  let section = null;
+  let activeCheck = null;
+  let inSteps = false;
+
+  for (const rawLine of match[1].split(/\r?\n/)) {
+    const line = rawLine.replace(/\s+$/, '');
+    if (!line.trim()) {
+      continue;
+    }
+
+    const top = line.match(/^([A-Za-z_][A-Za-z0-9_]*):\s*(.*)$/);
+    if (top) {
+      const [, key, rawValue] = top;
+      const value = cleanValue(rawValue);
+      section = key;
+      inSteps = false;
+      if (key === 'story_id' || key === 'spec_id' || key === 'title') {
+        meta[key] = value;
+      } else if (key === 'completed') {
+        meta.completed = value === 'true' ? true : value === 'false' ? false : null;
+      } else if (key === 'depends_on') {
+        const inline = parseInlineList(rawValue);
+        meta.depends_on = inline || [];
+      } else if (key !== 'contracts' && key !== 'acceptance_checks') {
+        meta[key] = value;
+      }
+      continue;
+    }
+
+    if (section === 'depends_on') {
+      const item = line.match(/^\s*-\s*(.+)$/);
+      if (item) {
+        meta.depends_on.push(cleanValue(item[1]));
+      }
+      continue;
+    }
+
+    const contractList = line.match(/^\s{2}(provides|consumes):\s*(.*)$/);
+    if (section && section.startsWith('contracts') && contractList) {
+      const [, listName, rawValue] = contractList;
+      section = `contracts.${listName}`;
+      const inline = parseInlineList(rawValue);
+      if (inline) {
+        meta.contracts[listName] = inline;
+      }
+      continue;
+    }
+
+    const contractItem = line.match(/^\s*-\s*(.+)$/);
+    if (section === 'contracts.provides' && contractItem) {
+      meta.contracts.provides.push(cleanValue(contractItem[1]));
+      continue;
+    }
+    if (section === 'contracts.consumes' && contractItem) {
+      meta.contracts.consumes.push(cleanValue(contractItem[1]));
+      continue;
+    }
+
+    if (section === 'acceptance_checks') {
+      const checkStart = line.match(/^\s*-\s*id:\s*(.+)$/);
+      if (checkStart) {
+        activeCheck = {
+          id: cleanValue(checkStart[1]),
+          category: '',
+          description: '',
+          steps: [],
+          passes: null,
+        };
+        meta.acceptance_checks.push(activeCheck);
+        inSteps = false;
+        continue;
+      }
+    }
+
+    if (activeCheck) {
+      const attr = line.match(/^\s{4}([A-Za-z_][A-Za-z0-9_]*):\s*(.*)$/);
+      if (attr) {
+        const [, key, rawValue] = attr;
+        const value = cleanValue(rawValue);
+        if (key === 'category' || key === 'description') {
+          activeCheck[key] = value;
+        } else if (key === 'passes') {
+          activeCheck.passes = value === 'true' ? true : value === 'false' ? false : null;
+        } else if (key === 'steps') {
+          inSteps = true;
+        }
+        continue;
+      }
+
+      if (inSteps) {
+        const step = line.match(/^\s*-\s*(.+)$/);
+        if (step) {
+          activeCheck.steps.push(cleanValue(step[1]));
+        }
+      }
+    }
+  }
+
+  return meta;
+}
+
+function validateSpec(file, storyId) {
+  const meta = parseFrontmatter(file);
+  if (!meta) {
+    return null;
+  }
+
+  const label = `${storyId}/${path.basename(file)}`;
+  if (meta.story_id !== storyId) {
+    emit('invalid', `${label} story_id must be ${storyId}.`);
+  }
+  if (!/^spec_\d{3}$/.test(meta.spec_id)) {
+    emit('invalid', `${label} spec_id must look like spec_001.`);
+  }
+  if (!meta.title) {
+    emit('invalid', `${label} title is required.`);
+  }
+  if (typeof meta.completed !== 'boolean') {
+    emit('invalid', `${label} completed must be true or false.`);
+  }
+  if (!Array.isArray(meta.depends_on)) {
+    emit('invalid', `${label} depends_on must be a list.`);
+  }
+  if (!Array.isArray(meta.contracts.provides) || !Array.isArray(meta.contracts.consumes)) {
+    emit('invalid', `${label} contracts.provides and contracts.consumes must be lists.`);
+  }
+  if (!Array.isArray(meta.acceptance_checks) || meta.acceptance_checks.length === 0) {
+    emit('invalid', `${label} must define acceptance_checks.`);
+  }
+
+  meta.acceptance_checks.forEach((check, index) => {
+    const checkLabel = `${label} acceptance_checks[${index}]`;
+    if (!check.id) {
+      emit('invalid', `${checkLabel} id is required.`);
+    }
+    if (!['functional', 'style'].includes(check.category)) {
+      emit('invalid', `${checkLabel} category must be functional or style.`);
+    }
+    if (!check.description) {
+      emit('invalid', `${checkLabel} description is required.`);
+    }
+    if (!Array.isArray(check.steps) || check.steps.length === 0) {
+      emit('invalid', `${checkLabel} steps must be non-empty.`);
+    }
+    check.steps.forEach((step, stepIndex) => {
+      if (!/^Step\s+\d+:/i.test(step)) {
+        emit('invalid', `${checkLabel} step ${stepIndex + 1} must start with "Step N:".`);
+      }
+    });
+    if (typeof check.passes !== 'boolean') {
+      emit('invalid', `${checkLabel} passes must be true or false.`);
+    }
+  });
+
+  if (meta.completed === true && meta.acceptance_checks.some((check) => check.passes !== true)) {
+    emit('blocked', `${label} is completed but not all acceptance checks pass.`);
+  }
+
+  return meta;
+}
+
+function validateAcyclic(specsById, storyLabel) {
+  const visiting = new Set();
+  const visited = new Set();
+
+  function visit(specId, stack) {
+    if (visited.has(specId)) {
+      return;
+    }
+    if (visiting.has(specId)) {
+      emit('blocked', `${storyLabel} spec dependencies contain a cycle: ${[...stack, specId].join(' -> ')}`);
+      return;
+    }
+    visiting.add(specId);
+    const spec = specsById.get(specId);
+    for (const dependency of spec.depends_on) {
+      if (!specsById.has(dependency)) {
+        emit('invalid', `${storyLabel}/${specId} depends on missing spec ${dependency}.`);
+        continue;
+      }
+      visit(dependency, [...stack, specId]);
+    }
+    visiting.delete(specId);
+    visited.add(specId);
+  }
+
+  for (const specId of specsById.keys()) {
+    visit(specId, []);
   }
 }
 
-const raw = readJson(featurePath);
-if (!raw) {
-  process.exit(status);
-}
-
-const features = Array.isArray(raw) ? raw : raw.features;
-if (!Array.isArray(features)) {
-  emit('invalid', `${featurePath} must contain a top-level features array or be an array of features.`);
-  process.exit(status);
-}
-
-if (Array.isArray(raw)) {
-  emit('warning', `${featurePath} uses legacy bare-array shape; prefer an object with schema_version, scope, and features.`);
-}
-
-const seen = new Set();
-const ids = [];
-const phases = new Map();
-let comprehensiveCount = 0;
-
-features.forEach((feature, index) => {
-  const label = feature && feature.id ? feature.id : `feature[${index}]`;
-
-  if (!feature || typeof feature !== 'object' || Array.isArray(feature)) {
-    emit('invalid', `feature[${index}] must be an object.`);
+function validateContracts(file, storyId, specsById, storyDir) {
+  let raw;
+  try {
+    raw = JSON.parse(read(file));
+  } catch (error) {
+    emit('invalid', `${file} is not valid JSON: ${error.message}`);
     return;
   }
 
-  for (const field of ['id', 'category', 'description', 'steps', 'references', 'implementation_phase', 'passes']) {
-    if (!(field in feature)) {
-      emit('invalid', `${label} is missing required field: ${field}`);
+  if (raw.schema_version !== 'cutiepie.contracts.v1') {
+    emit('invalid', `${file} schema_version must be cutiepie.contracts.v1.`);
+  }
+  if (raw.story_id !== storyId) {
+    emit('invalid', `${file} story_id must be ${storyId}.`);
+  }
+  if (!Array.isArray(raw.contracts)) {
+    emit('invalid', `${file} contracts must be an array.`);
+    return;
+  }
+
+  const ids = new Set();
+  const providedBySpec = new Map();
+  for (const contract of raw.contracts) {
+    if (!contract || typeof contract !== 'object') {
+      emit('invalid', `${file} contains a non-object contract.`);
+      continue;
     }
-  }
-
-  if (typeof feature.id === 'string' && feature.id.trim()) {
-    if (seen.has(feature.id)) {
-      emit('invalid', `Duplicate feature id: ${feature.id}`);
+    if (!contract.id) {
+      emit('invalid', `${file} contract is missing id.`);
+      continue;
     }
-    seen.add(feature.id);
-    ids.push(feature.id);
-  } else {
-    emit('invalid', `feature[${index}] id must be a non-empty string.`);
-  }
-
-  if (!['functional', 'style'].includes(feature.category)) {
-    emit('invalid', `${label} category must be "functional" or "style".`);
-  }
-
-  if (typeof feature.description !== 'string' || !feature.description.trim()) {
-    emit('invalid', `${label} description must be a non-empty string.`);
-  }
-
-  if (!Array.isArray(feature.steps) || feature.steps.length === 0) {
-    emit('invalid', `${label} steps must be a non-empty array.`);
-  } else {
-    if (feature.steps.length >= 10) {
-      comprehensiveCount += 1;
+    if (ids.has(contract.id)) {
+      emit('invalid', `${file} has duplicate contract id ${contract.id}.`);
     }
-    feature.steps.forEach((step, stepIndex) => {
-      if (typeof step !== 'string' || !/^Step\s+\d+:/i.test(step.trim())) {
-        emit('invalid', `${label} step ${stepIndex + 1} must start with "Step N:".`);
+    ids.add(contract.id);
+
+    if (!contract.provider || !specsById.has(contract.provider)) {
+      emit('invalid', `${file} contract ${contract.id} has missing provider spec ${contract.provider || '(empty)'}.`);
+    } else {
+      const existing = providedBySpec.get(contract.id);
+      if (existing && existing !== contract.provider) {
+        emit('invalid', `${file} contract ${contract.id} has multiple providers: ${existing}, ${contract.provider}.`);
       }
-    });
+      providedBySpec.set(contract.id, contract.provider);
+    }
+
+    if (!Array.isArray(contract.consumers)) {
+      emit('invalid', `${file} contract ${contract.id} consumers must be an array.`);
+    } else {
+      for (const consumer of contract.consumers) {
+        if (!specsById.has(consumer)) {
+          emit('invalid', `${file} contract ${contract.id} has missing consumer spec ${consumer}.`);
+        }
+      }
+    }
   }
 
-  if (!Array.isArray(feature.references)) {
-    emit('invalid', `${label} references must be an array.`);
+  const external = new Set((raw.external_contracts || []).map((contract) => contract.id || contract));
+  for (const [specId, spec] of specsById.entries()) {
+    for (const provided of spec.contracts.provides) {
+      if (!ids.has(provided)) {
+        emit('invalid', `${storyId}/${specId} provides ${provided}, but contracts.json does not define it.`);
+      }
+    }
+    for (const consumed of spec.contracts.consumes) {
+      if (!ids.has(consumed) && !external.has(consumed)) {
+        emit('invalid', `${storyId}/${specId} consumes ${consumed}, but contracts.json does not define it or mark it external.`);
+      }
+    }
   }
 
-  if (!Number.isInteger(feature.implementation_phase) || feature.implementation_phase < 1) {
-    emit('invalid', `${label} implementation_phase must be a positive integer.`);
-  } else {
-    const group = phases.get(feature.implementation_phase) || [];
-    group.push(feature);
-    phases.set(feature.implementation_phase, group);
+  const contractsMtime = fs.statSync(file).mtimeMs;
+  const staleSpecs = [];
+  for (const specFile of fs.readdirSync(path.join(storyDir, 'specs')).filter((name) => name.endsWith('.md'))) {
+    const full = path.join(storyDir, 'specs', specFile);
+    if (fs.statSync(full).mtimeMs > contractsMtime + 1000) {
+      staleSpecs.push(specFile);
+    }
   }
-
-  if (typeof feature.passes !== 'boolean') {
-    emit('invalid', `${label} passes must be a boolean.`);
+  if (staleSpecs.length > 0) {
+    emit('warning', `${file} may be stale; specs changed after contracts.json: ${staleSpecs.join(', ')}`);
   }
-});
-
-const waivers = Array.isArray(raw?.scope?.waivers) ? raw.scope.waivers : [];
-const hasComprehensiveWaiver = waivers.some((waiver) => waiver && waiver.rule === 'minimum_25_comprehensive_tests');
-if (comprehensiveCount < 25 && !hasComprehensiveWaiver) {
-  emit('blocked', `${featurePath} has ${comprehensiveCount} comprehensive features with 10+ steps; add a scope waiver from feature-list-builder for tiny/backend-only projects or expand coverage to at least 25.`);
 }
 
-if (fs.existsSync(planPath)) {
-  const planLines = fs.readFileSync(planPath, 'utf8').split(/\r?\n/);
-  const featureIdPattern = ids.length > 0
-    ? new RegExp(`\\b(?:${ids.map((id) => id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\\b`)
-    : /\bF\d{3,}\b/;
+if (!exists(docsDir)) {
+  emit('missing', `Expected Cutiepie docs directory: ${docsDir}`);
+}
 
-  planLines.forEach((line, index) => {
-    const checked = /^\s*[-*]\s*\[[xX]\]/.test(line);
-    if (!checked) {
-      return;
-    }
+for (const doc of ['PRD.md', 'ARCHI.md', 'CONFIG.md']) {
+  const file = path.join(docsDir, doc);
+  if (!exists(file)) {
+    emit('missing', `Cutiepie doc is missing: ${file}`);
+  }
+}
 
-    if (featureIdPattern.test(line) || /\bpasses\b/.test(line)) {
-      emit('blocked', `${planPath}:${index + 1} duplicates feature completion state; PLAN.md may track workflow phases only. Keep feature pass/fail state in feature_list.json.`);
-    }
+if (!exists(plansDir)) {
+  emit('missing', `Expected Cutiepie story plans directory: ${plansDir}`);
+} else {
+  const storyDirs = fs.readdirSync(plansDir)
+    .filter((name) => fs.statSync(path.join(plansDir, name)).isDirectory())
+    .filter((name) => /^story_\d{3}_[a-z0-9][a-z0-9_-]*$/.test(name))
+    .sort();
 
-    const phaseMatch = line.match(/\bphase\s+(\d+)\b/i);
-    if (!phaseMatch) {
-      return;
-    }
+  if (storyDirs.length === 0) {
+    emit('missing', `${plansDir} must contain at least one story_<nnn>_<slug> directory after planning.`);
+  }
 
-    const phase = Number.parseInt(phaseMatch[1], 10);
-    const isCompletionLine = /feature checks|implementation complete|phase complete|complete/i.test(line);
-    if (!isCompletionLine) {
-      return;
-    }
+  for (const storyName of storyDirs) {
+    const storyDir = path.join(plansDir, storyName);
+    const storyId = storyName.match(/^(story_\d{3})_/)[1];
+    const planFile = path.join(storyDir, 'plan.md');
+    const adrFile = path.join(storyDir, 'ADR.md');
+    const contractsFile = path.join(storyDir, 'contracts.json');
+    const specsDir = path.join(storyDir, 'specs');
 
-    for (const prior of [...phases.keys()].filter((candidate) => candidate < phase).sort((a, b) => a - b)) {
-      const failing = phases.get(prior).filter((feature) => feature.passes !== true).map((feature) => feature.id);
-      if (failing.length > 0) {
-        emit('blocked', `${planPath}:${index + 1} marks phase ${phase} progress before phase ${prior} passes all features: ${failing.join(', ')}`);
+    if (!exists(planFile)) {
+      emit('missing', `${storyName} is missing plan.md.`);
+    } else {
+      const planMeta = parseFrontmatter(planFile);
+      if (planMeta && planMeta.story_id !== storyId) {
+        emit('invalid', `${planFile} story_id must be ${storyId}.`);
       }
     }
 
-    if (/feature checks|phase complete|complete/i.test(line)) {
-      const current = phases.get(phase) || [];
-      const failing = current.filter((feature) => feature.passes !== true).map((feature) => feature.id);
-      if (current.length > 0 && failing.length > 0) {
-        emit('blocked', `${planPath}:${index + 1} marks phase ${phase} complete, but these features do not pass: ${failing.join(', ')}`);
+    if (!exists(adrFile)) {
+      emit('missing', `${storyName} is missing ADR.md.`);
+    } else {
+      const adr = read(adrFile);
+      if (!/Status:/i.test(adr) || !/Decision:/i.test(adr)) {
+        emit('invalid', `${adrFile} must include Status and Decision sections.`);
       }
     }
-  });
+
+    if (!exists(specsDir)) {
+      emit('missing', `${storyName} is missing specs directory.`);
+      continue;
+    }
+
+    const specFiles = fs.readdirSync(specsDir)
+      .filter((name) => /^spec_\d{3}_[a-z0-9][a-z0-9_-]*\.md$/.test(name))
+      .sort();
+    if (specFiles.length === 0) {
+      emit('missing', `${specsDir} must contain spec_<nnn>_<slug>.md files.`);
+      continue;
+    }
+
+    const specsById = new Map();
+    let incomplete = 0;
+    for (const specFile of specFiles) {
+      const full = path.join(specsDir, specFile);
+      const meta = validateSpec(full, storyId);
+      if (!meta) {
+        continue;
+      }
+      if (specsById.has(meta.spec_id)) {
+        emit('invalid', `${storyName} has duplicate spec_id ${meta.spec_id}.`);
+      }
+      specsById.set(meta.spec_id, meta);
+      if (meta.completed !== true) {
+        incomplete += 1;
+      }
+    }
+
+    validateAcyclic(specsById, storyName);
+
+    if (!exists(contractsFile)) {
+      emit('missing', `${storyName} has specs but is missing contracts.json; run contract-designer before build.`);
+    } else {
+      validateContracts(contractsFile, storyId, specsById, storyDir);
+    }
+
+    console.log(`- [info] ${storyName}: ${specFiles.length} spec(s), ${incomplete} incomplete.`);
+  }
+}
+
+if (status === 0) {
+  console.log('- [ok] Cutiepie story state is mechanically valid.');
 }
 
 process.exit(status);
 NODE
-  node_status=$?
-  set -e
-  if [ "$node_status" -ne 0 ]; then
-    status=1
-  fi
-fi
-
-if [ "$status" -eq 0 ]; then
-  printf -- '- [ok] Cutiepie state contract is mechanically valid.\n'
-fi
-
-exit "$status"

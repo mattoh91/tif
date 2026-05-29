@@ -4,13 +4,17 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 repo_root="$(cd "$script_dir/../.." && pwd)"
 checker="$repo_root/scripts/check-cutiepie-state.sh"
+fixtures="$repo_root/tests/cutiepie-fixtures.sh"
 tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 
+# shellcheck source=../cutiepie-fixtures.sh
+. "$fixtures"
+
 copy_scaffold() {
   local target="$1"
-  mkdir -p "$target/.cutiepie/docs"
-  cp -R "$repo_root/skills/scaffolding-repo/template/.cutiepie/docs/." "$target/.cutiepie/docs/"
+  mkdir -p "$target"
+  cp -R "$repo_root/skills/scaffolding-repo/template/." "$target/"
 }
 
 assert_passes() {
@@ -38,73 +42,29 @@ assert_fails() {
 }
 
 valid="$tmpdir/valid"
-copy_scaffold "$valid"
-assert_passes "$valid" "valid scaffold passes state contract"
+create_cutiepie_docs_fixture "$valid"
+assert_passes "$valid" "valid story fixture passes state contract"
 
-duplicate="$tmpdir/duplicate"
-copy_scaffold "$duplicate"
-cat >> "$duplicate/.cutiepie/docs/PLAN.md" <<'EOF'
+scaffold="$tmpdir/scaffold"
+copy_scaffold "$scaffold"
+assert_passes "$scaffold" "scaffold template passes state contract"
 
-## Bad Duplicate
+missing_contracts="$tmpdir/missing-contracts"
+create_cutiepie_docs_fixture "$missing_contracts"
+rm "$missing_contracts/.cutiepie/plans/story_001_auth_system/contracts.json"
+assert_fails "$missing_contracts" "story specs require contracts.json"
 
-- [x] F001 passes true
-EOF
-assert_fails "$duplicate" "PLAN.md cannot duplicate feature pass/fail state"
+bad_completion="$tmpdir/bad-completion"
+create_cutiepie_docs_fixture "$bad_completion"
+perl -0pi -e 's/completed: false/completed: true/' "$bad_completion/.cutiepie/plans/story_001_auth_system/specs/spec_001_registration.md"
+assert_fails "$bad_completion" "completed specs require passing acceptance checks"
 
-phase="$tmpdir/phase"
-copy_scaffold "$phase"
-cat > "$phase/.cutiepie/docs/feature_list.json" <<'EOF'
-{
-  "schema_version": "1.0",
-  "scope": {
-    "size": "tiny",
-    "waivers": [
-      {
-        "rule": "minimum_25_comprehensive_tests",
-        "reason": "Tiny fixture for validator testing.",
-        "approved_by": "test",
-        "date": "2026-05-22"
-      }
-    ]
-  },
-  "features": [
-    {
-      "id": "F001",
-      "user_story_ids": ["US001"],
-      "category": "functional",
-      "priority": 1,
-      "description": "Phase one feature.",
-      "steps": [
-        "Step 1: Run phase one setup.",
-        "Step 2: Verify phase one result."
-      ],
-      "references": [],
-      "dependencies": [],
-      "implementation_phase": 1,
-      "passes": false
-    },
-    {
-      "id": "F002",
-      "user_story_ids": ["US001"],
-      "category": "functional",
-      "priority": 2,
-      "description": "Phase two feature.",
-      "steps": [
-        "Step 1: Run phase two setup.",
-        "Step 2: Verify phase two result."
-      ],
-      "references": [],
-      "dependencies": ["F001"],
-      "implementation_phase": 2,
-      "passes": false
-    }
-  ]
-}
-EOF
-cat >> "$phase/.cutiepie/docs/PLAN.md" <<'EOF'
+missing_contract_ref="$tmpdir/missing-contract-ref"
+create_cutiepie_docs_fixture "$missing_contract_ref"
+perl -0pi -e 's/auth.registration.request/auth.registration.missing/' "$missing_contract_ref/.cutiepie/plans/story_001_auth_system/specs/spec_002_login.md"
+assert_fails "$missing_contract_ref" "consumed contracts must exist"
 
-## Spec-Driven Development
-
-- [x] Phase 2 implementation complete.
-EOF
-assert_fails "$phase" "later phase cannot be complete before earlier phase passes"
+cycle="$tmpdir/cycle"
+create_cutiepie_docs_fixture "$cycle"
+perl -0pi -e 's/depends_on: \[\]/depends_on:\n  - spec_002/' "$cycle/.cutiepie/plans/story_001_auth_system/specs/spec_001_registration.md"
+assert_fails "$cycle" "cyclic spec dependencies fail"

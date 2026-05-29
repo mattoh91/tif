@@ -1,29 +1,28 @@
 ---
 name: scaffolding-repo
-description: Use when bootstrapping a new repository or adding Cutiepie project structure: init.sh, Makefile targets, CI baseline, .cutiepie/docs planning artifacts, and ~/.cutiepie memory files.
+description: Use when bootstrapping a new or under-structured repo with Cutiepie docs, story plans/specs/contracts, repo review, Brewery client, and baseline commands.
 ---
 
 # Scaffolding Repo
 
-Use this skill to create a practical baseline for a new or under-structured project.
+Cutiepie adopts the project; the project does not have to contort itself around Cutiepie.
 
 ## Output Contract
 
-Default in-repo artifacts:
+Default artifacts:
 
 - `.cutiepie/docs/PRD.md`
-- `.cutiepie/docs/feature_list.json`
-- `.cutiepie/docs/ARD.md`
 - `.cutiepie/docs/ARCHI.md`
 - `.cutiepie/docs/CONFIG.md`
-- `.cutiepie/docs/PLAN.md`
+- `.cutiepie/plans/story_001_initial_workflow/plan.md`
+- `.cutiepie/plans/story_001_initial_workflow/ADR.md`
+- `.cutiepie/plans/story_001_initial_workflow/contracts.json`
+- `.cutiepie/plans/story_001_initial_workflow/specs/spec_001_initial_slice.md`
 - `init.sh`
 - `Makefile`
 - `.github/workflows/ci.yml`
 
-Do not offer alternate active artifact locations. `.cutiepie/docs/` is canonical. Historical `docs/cutiepie/specs/`, `docs/cutiepie/plans/`, root-level planning files, and old `.cutiepie/*.md` files do not satisfy the active Cutiepie gate unless the user explicitly asks to migrate historical content into `.cutiepie/docs/`.
-
-Out-of-tree memory artifacts:
+Out-of-tree memory:
 
 - `~/.cutiepie/memory/<project-slug>/MEMORY.md`
 - `~/.cutiepie/memory/<project-slug>/FAILURES.md`
@@ -31,56 +30,59 @@ Out-of-tree memory artifacts:
 
 ## Workflow
 
-1. Inspect the repo: list top-level files, package/build files, existing CI, existing docs, and existing scripts.
-2. Infer the stack and available commands. Prefer existing package-manager scripts or project-native commands.
-3. Create or patch canonical artifacts under `.cutiepie/docs/`.
-4. Copy/adapt templates from `skills/scaffolding-repo/template/`.
-5. Do not overwrite meaningful existing files. If `Makefile`, `init.sh`, CI, or Cutiepie docs already exist, patch them conservatively or ask before replacing.
-6. Create the memory directory under `~/.cutiepie/memory/<project-slug>/`.
-7. Run lightweight validation: JSON/YAML syntax where applicable, `bash -n init.sh`, and `make -n` for new Make targets when available.
+1. Use `project-intake`.
+2. Inspect top-level files, package/build files, source/test layout, docs, CI, and scripts.
+3. Classify greenfield vs brownfield.
+4. Classify personal vs Heineken; ask only if uncertain after repo and config inspection.
+5. Copy/adapt templates from `skills/scaffolding-repo/template/`.
+6. For brownfield repos, write `.cutiepie/docs/REPO_REVIEW.md` and update `.cutiepie/docs/ARCHI.md`.
+7. For Heineken projects, add Brewery client setup when relevant and document Atlassian MCP.
+8. Do not overwrite meaningful existing files; patch conservatively.
+9. Run `scripts/check-cutiepie-state.sh .`.
 
-## Project Slug
+## Brownfield Adoption
 
-Derive `<project-slug>` from the git remote when available:
+For brownfield repos:
 
-```bash
-git remote get-url origin
-```
+- detect language/runtime/package manager
+- detect framework, route/endpoint conventions, and package layout
+- detect app/data/auth/API/UI/worker/ML/third-party layers
+- detect source/test layout
+- detect formatter/linter/typechecker/test commands
+- detect config/secrets pattern
+- detect CI/CD and infra files
+- identify stale docs and risky areas
+- produce a high-level dataflow or layer diagram
 
-Normalize host and path into lowercase filesystem-safe text, for example:
+Write findings to `.cutiepie/docs/REPO_REVIEW.md`.
 
-- `git@github.com:mattoh91/cutiepie.git` -> `github.com-mattoh91-cutiepie`
-- `https://github.com/acme/app.git` -> `github.com-acme-app`
+After the review, ask whether detected conventions should be treated as binding before generating story specs.
 
-If no remote exists, use the current directory name.
+## Brewery / GenAI Gateway Client
+
+For Heineken Python projects that call LLMs, or when the user asks for the Brewery client:
+
+- Create `src/<package_name>/models/llmrouter.py` from `references/brewery-client.py`.
+- Create or patch `src/<package_name>/models/__init__.py`.
+- Create `docs/brewery-client.md` from `references/brewery-client.md`.
+- Add dependencies to the project dependency owner when present: `openai`, `anthropic`, and `httpx`.
+- Document `GENAI_API_KEY` in `.cutiepie/docs/CONFIG.md`.
+
+Do not add the client to non-Python projects unless the user explicitly asks.
+
+## Atlassian MCP
+
+For Heineken projects:
+
+- identify the active host's MCP configuration surface
+- add or document Atlassian MCP setup for Jira/Confluence access
+- record the setup in `.cutiepie/docs/CONFIG.md`
+- ask the user for the GenAILab Confluence target before documentation publish
+
+Do not publish to Confluence without approval.
 
 ## Make Targets
 
-Use these standard targets when the project supports them:
+Use standard targets when supported: `init`, `fmt`, `lint`, `typecheck`, `test`, `smoke`, and `ci`.
 
-- `init`: install dependencies and prepare local config
-- `fmt`: format code
-- `lint`: static linting
-- `typecheck`: type checking
-- `test`: unit/integration tests
-- `smoke`: lowest-cost runnable health check
-- `ci`: all checks expected in CI
-
-If a command is unknown, keep the target present but make it fail with a clear message telling the user what project command must be filled in. Do not invent working commands for an unknown stack.
-
-## Planning Artifacts
-
-Initialize planning docs with useful structure, not fake content:
-
-- `PRD.md`: problem statement, users, user stories, acceptance notes, non-goals
-- `feature_list.json`: machine-readable feature specs, steps, citations, implementation phase, and `passes`
-- `ARD.md`: architecture decisions with assumptions, caveats, options, and consequences
-- `ARCHI.md`: draw.io dataflow diagram plus component/interface table
-- `CONFIG.md`: environment variables plus documented hyperparameters and tunables
-- `PLAN.md`: human workflow checklist and phase-level progress only; it must not duplicate individual feature pass/fail state
-
-Every generated feature step sequence should be executable or automatable where feasible. Feature specs prove user/system outcomes through API/CLI scenarios, Playwright/browser/computer-use flows, or equivalent project-specific harness automation. Component contract checks are implementation-internal and support the feature steps; feature pass/fail state lives only in `feature_list.json`.
-
-## Tiny Project Waivers
-
-If the project is intentionally tiny or backend-only, `feature_list.json` may include a scope waiver for the `minimum_25_comprehensive_tests` rule. The waiver must name the rule, reason, approval source, and date. Do not hide the waiver in `ARD.md`.
+If a command is unknown, keep the target present but make it fail with a clear message telling the user what project command must be filled in.

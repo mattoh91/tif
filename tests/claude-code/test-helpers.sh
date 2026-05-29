@@ -146,7 +146,7 @@ cleanup_test_project() {
 create_test_plan() {
     local project_dir="$1"
     create_cutiepie_docs_fixture "$project_dir"
-    echo "$project_dir/.cutiepie/docs/PLAN.md"
+    echo "$project_dir/.cutiepie/plans/story_001_auth_system/plan.md"
 }
 
 # Export functions for use in tests

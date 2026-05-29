@@ -43,7 +43,7 @@ echo ""
 # Turn 2: Continue with more planning detail
 echo ">>> Turn 2: Continuing planning..."
 TURN2_LOG="$OUTPUT_DIR/turn2.json"
-claude -p "Good analysis. I've already written .cutiepie/docs/feature_list.json and .cutiepie/docs/PLAN.md. Now I'm ready to implement. What are my options for execution?" \
+claude -p "Good analysis. I've already written .cutiepie/plans/story_001_auth/ specs and contracts. Now I'm ready to implement. What are my options for execution?" \
     --continue \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \

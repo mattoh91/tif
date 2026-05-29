@@ -97,7 +97,7 @@ Tests skill content and requirements (~2 minutes):
 #### test-subagent-driven-development-integration.sh
 Full workflow execution test (~10-30 minutes):
 - Creates real test project with Node.js setup
-- Creates `.cutiepie/docs/feature_list.json` and `.cutiepie/docs/PLAN.md`
+- Creates `.cutiepie/plans/story_001_auth_system/` story specs and contracts
 - Executes plan using subagent-driven-development
 - Verifies actual behaviors:
   - Plan read once at start (not per task)

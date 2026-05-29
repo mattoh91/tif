@@ -1,20 +1,21 @@
-# Product Requirements
+---
+project_mode: POC
+project_context: personal
+repo_kind: greenfield
+---
+
+# Project PRD
 
 ## Problem Statement
 
-Describe the problem, why it matters, and the intended outcome.
+Describe the problem this project solves.
 
-## Users
+## Stories
 
-- Primary user:
-- Secondary users:
-
-## User Stories
-
-| ID | User Story | Acceptance Notes | Priority |
-| --- | --- | --- | --- |
-| US001 | As a user, I want a defined capability so that I get a defined outcome. | Replace with concrete acceptance notes. | High |
+| ID | Story | Acceptance Notes |
+| --- | --- | --- |
+| story_001 | As a user, I can complete the first valuable workflow. | Replace this with the expected user/system outcome. |
 
 ## Non-Goals
 
-- List what this project will not attempt.
+- List what this project should not solve yet.

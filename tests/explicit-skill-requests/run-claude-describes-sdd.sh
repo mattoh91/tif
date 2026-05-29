@@ -23,7 +23,7 @@ cd "$PROJECT_DIR"
 
 # Turn 1: Have Claude describe execution options including SDD
 echo ">>> Turn 1: Ask Claude to describe execution options..."
-claude -p "I have .cutiepie/docs/feature_list.json and .cutiepie/docs/PLAN.md ready. Tell me about my options for executing them, including what subagent-driven-development means and how it works." \
+claude -p "I have .cutiepie/plans/story_001_auth/ with specs and contracts ready. Tell me about my options for executing them, including what subagent-driven-development means and how it works." \
     --model haiku \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \

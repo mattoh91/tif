@@ -1,6 +1,6 @@
 {
   "name": "cutiepie",
-  "description": "Personal cross-harness SWE workflow plugin for Claude Code and Codex: spec-driven features, canonical docs, memory, and agentic delivery skills.",
+  "description": "Personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
   "version": "5.0.7",
   "author": {
     "name": "mattoh91"
@@ -13,6 +13,11 @@
     "swe-harness",
     "spec-driven-development",
     "debugging",
+    "build",
+    "review",
+    "multi-agent-adapter",
+    "poc-mvp",
+    "brewery-client",
     "collaboration",
     "best-practices",
     "workflows"

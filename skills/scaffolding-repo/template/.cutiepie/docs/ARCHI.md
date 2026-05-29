@@ -1,24 +1,20 @@
-# Architecture
+# Project Architecture
 
-## Dataflow Diagram
-
-Store the draw.io diagram source here so the architecture can be reviewed and versioned with the code.
-
-```xml
-<mxfile host="app.diagrams.net">
-  <diagram name="Dataflow">
-    <mxGraphModel>
-      <root>
-        <mxCell id="0"/>
-        <mxCell id="1" parent="0"/>
-      </root>
-    </mxGraphModel>
-  </diagram>
-</mxfile>
+```mermaid
+flowchart TD
+    User["User"] --> App["Application"]
+    App --> Data["Data / State"]
+    App --> External["External Services"]
 ```
 
 ## Components
 
-| Component | Responsibility | Input Interface / DTO | Output Interface / DTO | Depends On |
-| --- | --- | --- | --- | --- |
-| Component name | Define responsibility. | Define shape. | Define shape. | Define dependency. |
+| Component | Responsibility | Inputs | Outputs |
+| --- | --- | --- | --- |
+| Application | Primary user/system workflow. | User request. | User-visible result. |
+| Data / State | Stores or retrieves project state. | Application data. | Persisted or computed state. |
+| External Services | Third-party APIs, model providers, auth, storage, or integrations. | API requests. | API responses. |
+
+## Diagram Notes
+
+Use a high-level layer/dataflow diagram first. Add C4 L1/L2 or sequence diagrams only when the project has enough actors, containers, or critical flows to justify them.

@@ -16,116 +16,175 @@ run_with_timeout() {
 
 create_cutiepie_docs_fixture() {
     local project_dir="$1"
+    local story_dir="$project_dir/.cutiepie/plans/story_001_auth_system"
 
-    mkdir -p "$project_dir/.cutiepie/docs"
+    mkdir -p "$project_dir/.cutiepie/docs" "$story_dir/specs"
 
     cat > "$project_dir/.cutiepie/docs/PRD.md" <<'EOF'
+---
+project_mode: POC
+project_context: personal
+repo_kind: greenfield
+---
+
 # Auth System PRD
 
 ## Problem
+
 The test project needs a small authentication system with registration, login, and protected routes.
 
-## User Stories
-- As a user, I can register with an email and password.
-- As a user, I can log in and receive a token.
-- As an API client, I can call protected routes with a valid token.
-EOF
+## Stories
 
-    cat > "$project_dir/.cutiepie/docs/feature_list.json" <<'EOF'
-{
-  "schema_version": "cutiepie.feature_list.v1",
-  "scope": {
-    "waivers": [
-      {
-        "rule": "minimum_25_comprehensive_tests",
-        "reason": "Small skill-triggering fixture with only enough features to exercise the harness.",
-        "approved_by": "test fixture"
-      }
-    ]
-  },
-  "features": [
-    {
-      "id": "F001",
-      "category": "functional",
-      "description": "Registration stores a user with email and password credentials.",
-      "steps": [
-        "Step 1: Call the registration entrypoint with a unique email and password.",
-        "Step 2: Verify the created user exposes the requested email.",
-        "Step 3: Verify credentials are not returned as plaintext in the response."
-      ],
-      "references": [],
-      "implementation_phase": 1,
-      "passes": false
-    },
-    {
-      "id": "F002",
-      "category": "functional",
-      "description": "Login returns a token for valid credentials.",
-      "steps": [
-        "Step 1: Create a registered user fixture.",
-        "Step 2: Call the login entrypoint with valid credentials.",
-        "Step 3: Verify the response contains a non-empty token."
-      ],
-      "references": [],
-      "implementation_phase": 1,
-      "passes": false
-    },
-    {
-      "id": "F003",
-      "category": "functional",
-      "description": "Protected routes reject missing or invalid tokens.",
-      "steps": [
-        "Step 1: Call a protected route without a token.",
-        "Step 2: Verify the response is unauthorized.",
-        "Step 3: Call the protected route with an invalid token.",
-        "Step 4: Verify the response remains unauthorized."
-      ],
-      "references": [],
-      "implementation_phase": 2,
-      "passes": false
-    }
-  ]
-}
-EOF
-
-    cat > "$project_dir/.cutiepie/docs/ARD.md" <<'EOF'
-# Auth System ARD
-
-## Decisions
-- Keep the fixture intentionally small so skill-triggering tests remain fast.
-- Store any broader coverage waivers in `feature_list.json`, not in ARD.
+| ID | Story | Acceptance Notes |
+| --- | --- | --- |
+| story_001 | As a user, I can register and log in. | Registration stores the user and login returns a token. |
 EOF
 
     cat > "$project_dir/.cutiepie/docs/ARCHI.md" <<'EOF'
 # Auth System Architecture
 
-```xml
-<mxfile><diagram name="Auth Fixture"><mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel></diagram></mxfile>
+```mermaid
+flowchart TD
+    Client --> AuthAPI
+    AuthAPI --> UserStore
 ```
 EOF
 
     cat > "$project_dir/.cutiepie/docs/CONFIG.md" <<'EOF'
 # Auth System Config
 
-| Setting | Default | Owner |
-| --- | --- | --- |
-| `JWT_EXPIRY_SECONDS` | `86400` | application config |
+| Name | Owner | Type | Default | Required | Allowed Values | Used By | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `JWT_EXPIRY_SECONDS` | application config | integer | `86400` | yes | positive integer | auth token signer | Token expiry. |
 EOF
 
-    cat > "$project_dir/.cutiepie/docs/PLAN.md" <<'EOF'
-# Auth System PLAN
+    cat > "$story_dir/plan.md" <<'EOF'
+---
+story_id: story_001
+title: Auth System
+status: planned
+---
 
-## Bootstrapping
-- [ ] Create the project structure and baseline test command.
+# Auth System Plan
 
-## Planning
-- [ ] Validate `.cutiepie/docs/feature_list.json`.
+## Flow
 
-## Spec-Driven Implementation
-- [ ] Complete implementation phase 1.
-- [ ] Complete implementation phase 2.
+1. Implement registration.
+2. Implement login.
+3. Verify the combined auth flow.
+EOF
 
-## Documentation
-- [ ] Update user-facing documentation.
+    cat > "$story_dir/ADR.md" <<'EOF'
+# Auth System ADR
+
+## ADR-001: Token-Based Login
+
+Status: Accepted
+
+Problem:
+
+- The fixture needs a simple auth boundary.
+
+Decision:
+
+- Use token-based login with an in-memory user store.
+
+Consequences:
+
+- The fixture stays lightweight.
+EOF
+
+    cat > "$story_dir/contracts.json" <<'EOF'
+{
+  "schema_version": "cutiepie.contracts.v1",
+  "story_id": "story_001",
+  "contracts": [
+    {
+      "id": "auth.registration.request",
+      "provider": "spec_001",
+      "consumers": ["spec_002"],
+      "schema": {
+        "type": "object",
+        "required": ["email", "password"]
+      }
+    },
+    {
+      "id": "auth.login.response",
+      "provider": "spec_002",
+      "consumers": [],
+      "schema": {
+        "type": "object",
+        "required": ["token"]
+      }
+    }
+  ],
+  "parallel_groups": [["spec_001"], ["spec_002"]]
+}
+EOF
+
+    cat > "$story_dir/specs/spec_001_registration.md" <<'EOF'
+---
+story_id: story_001
+spec_id: spec_001
+title: Registration
+completed: false
+depends_on: []
+contracts:
+  provides:
+    - auth.registration.request
+  consumes: []
+acceptance_checks:
+  - id: check_001
+    category: functional
+    description: Registration stores a user with email and password credentials.
+    steps:
+      - "Step 1: Call the registration entrypoint with a unique email and password."
+      - "Step 2: Verify the created user exposes the requested email."
+      - "Step 3: Verify credentials are not returned as plaintext in the response."
+    passes: false
+---
+
+## TDD Unit Tests
+
+- Registers a user with valid credentials.
+- Rejects duplicate emails.
+
+## Integration / E2E
+
+Register a user and verify login can use that account.
+EOF
+
+    cat > "$story_dir/specs/spec_002_login.md" <<'EOF'
+---
+story_id: story_001
+spec_id: spec_002
+title: Login
+completed: false
+depends_on:
+  - spec_001
+contracts:
+  provides:
+    - auth.login.response
+  consumes:
+    - auth.registration.request
+acceptance_checks:
+  - id: check_001
+    category: functional
+    description: Login returns a token for valid credentials.
+    steps:
+      - "Step 1: Create a registered user fixture."
+      - "Step 2: Call the login entrypoint with valid credentials."
+      - "Step 3: Verify the response contains a non-empty token."
+    passes: false
+---
+
+## TDD Unit Tests
+
+- Returns token for valid credentials.
+- Rejects invalid credentials.
+
+## Integration / E2E
+
+Register, log in, and call a protected route with the returned token.
 EOF
 }

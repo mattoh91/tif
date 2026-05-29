@@ -1,44 +1,38 @@
 # Cutiepie Architecture
 
-## Dataflow Diagram
-
-```xml
-<mxfile host="app.diagrams.net">
-  <diagram name="Cutiepie Spec-Driven Flow">
-    <mxGraphModel>
-      <root>
-        <mxCell id="0"/>
-        <mxCell id="1" parent="0"/>
-        <mxCell id="prd" value="PRD.md&#xa;problem + user stories" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="80" width="180" height="70" as="geometry"/>
-        </mxCell>
-        <mxCell id="features" value="feature_list.json&#xa;feature specs + passes" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="260" y="80" width="210" height="70" as="geometry"/>
-        </mxCell>
-        <mxCell id="arch" value="ARCHI.md / ARD.md&#xa;dataflow + decisions" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="510" y="80" width="220" height="70" as="geometry"/>
-        </mxCell>
-        <mxCell id="plan" value="PLAN.md&#xa;workflow checklist" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="770" y="80" width="190" height="70" as="geometry"/>
-        </mxCell>
-        <mxCell id="hooks" value="Hooks&#xa;session-start / update-state" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="260" y="220" width="210" height="70" as="geometry"/>
-        </mxCell>
-        <mxCell id="skills" value="Skills&#xa;planning + spec development" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="510" y="220" width="220" height="70" as="geometry"/>
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-</mxfile>
+```mermaid
+flowchart TD
+    U["User build request"] --> P[".cutiepie/docs/PRD.md stories"]
+    P --> I["project-intake detects greenfield/brownfield and personal/Heineken"]
+    I --> S[".cutiepie/plans/story_*/specs/spec_*.md"]
+    S --> C["contract-designer writes contracts.json"]
+    C --> V["check-cutiepie-state validates specs, dependencies, and contracts"]
+    V --> B["/build implements incomplete specs"]
+    B --> T["TDD unit tests + acceptance checks"]
+    T --> D["documentation step"]
+    D --> H{"Heineken project?"}
+    H -->|yes, approved| CF["Confluence GenAILab documentation"]
+    H -->|no or not approved| LD["local docs"]
+    CF --> CL["cleanup + memory refresh"]
+    LD --> CL
 ```
 
 ## Components
 
-| Component | Responsibility | Input Interface / DTO | Output Interface / DTO | Depends On |
-| --- | --- | --- | --- | --- |
-| `scripts/check-cutiepie-state.sh` | Validate canonical docs, `feature_list.json` schema, PLAN ownership, and phase sequencing. | Project root path. | State-contract report and exit code. | `.cutiepie/docs/*`, Node runtime. |
-| `hooks/session-start` | Inject skill bootstrap, memory, canonical docs, and validator report. | Host SessionStart event. | Host JSON additional context. | Validator script, memory files. |
-| `hooks/update-state` | Write mechanical state audit and preamble. | Manual call or lifecycle hook. | `STATE_AUDIT.md`, `PREAMBLE.md`, session note. | Validator script, git status. |
-| Planning skills | Create PRD, feature list, research enrichment, architecture, sequencing, and PLAN. | User prompt and canonical docs. | Updated `.cutiepie/docs/*`. | Skill instructions. |
-| Implementation skills | Implement by feature phase with internal TDD. | `feature_list.json`, `ARCHI.md`, `CONFIG.md`, `PLAN.md`. | Code changes, feature `passes`, memory, commits. | Project test harness. |
+| Component | Responsibility | Inputs | Outputs |
+| --- | --- | --- | --- |
+| `project-intake` | Detect greenfield/brownfield and personal/Heineken context. | Repo files, git remote, user confirmation. | Scaffold choice, repo review, Heineken setup tasks. |
+| `prd-discovery` | Convert the user's idea into PRD stories. | User prompt and repo context. | `.cutiepie/docs/PRD.md`. |
+| `story-planner` | Create story-local implementation plans and draft specs. | PRD stories, architecture, config, repo review. | `.cutiepie/plans/story_*/plan.md`, `ADR.md`, and `specs/spec_*.md`. |
+| `contract-designer` | Design story contracts after specs are drafted. | Story specs. | `contracts.json` and patched spec contract references. |
+| `check-cutiepie-state.sh` | Mechanically validate story state. | `.cutiepie/docs/*`, `.cutiepie/plans/story_*/*`. | State report and exit code. |
+| `build` | Implement incomplete specs. | Valid story state, specs, contracts, codebase. | Code changes, tests, acceptance check updates, completed specs. |
+| `documentation` | Produce local or Heineken docs. | PRD, specs, contracts, architecture, research, decisions. | Local docs or approved Confluence page draft/publish. |
+| `cleanup` | Remove stale/orphaned state and refresh memory. | Git diff, story state, generated files. | Clean state report, refreshed memory/preamble. |
+
+## Diagram Guidance
+
+- Use a high-level dataflow or layer diagram for most projects.
+- Add C4 L1/L2 only when external actors/services or deployable containers need explicit boundaries.
+- Add sequence diagrams only for the most important flows.
+- Prefer draw.io-compatible XML or Mermaid source for durable architecture docs.

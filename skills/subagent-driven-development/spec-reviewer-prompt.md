@@ -1,27 +1,13 @@
-# Spec Reviewer Prompt Template
+# Spec Reviewer Prompt
 
-Use this template when dispatching a reviewer to check feature-spec compliance.
+Review whether the implementation satisfies the target Cutiepie story spec.
 
-```yaml
-description: "Review {FEATURE_ID} spec compliance"
-prompt: |
-  You are reviewing whether an implementation satisfies .cutiepie/docs/feature_list.json.
+Check:
 
-  Feature contract:
-  {FEATURE_JSON}
+- spec acceptance checks are executable and were run
+- contracts are honored
+- dependencies are respected
+- completed flag is justified
+- story ADR/config/docs were updated when needed
 
-  Implementation diff:
-  {DIFF_OR_SHA_RANGE}
-
-  Review tasks:
-  - Confirm the implementation satisfies the feature description and prescribed steps.
-  - Confirm the steps were actually run and passed.
-  - Confirm component contract checks exist where boundaries changed.
-  - Confirm passes=true is used only when the prescribed steps passed.
-  - Confirm PLAN.md was updated only for workflow/phase progress and does not duplicate feature pass/fail state.
-  - Flag scope creep or missing behavior.
-
-  Output:
-  - Spec compliant, or
-  - Issues found with file/line references and required fixes.
-```
+Return blocking issues first.

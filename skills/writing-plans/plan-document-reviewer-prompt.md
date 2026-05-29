@@ -1,25 +1,18 @@
-# PLAN Reviewer Prompt Template
+# Story Plan Reviewer Prompt
 
-Use this template when reviewing `.cutiepie/docs/PLAN.md`.
+Review a story-local Cutiepie plan.
 
-```yaml
-description: "Review Cutiepie PLAN ownership"
-prompt: |
-  Review .cutiepie/docs/PLAN.md against the Cutiepie state contract.
+Inputs:
 
-  References:
-  - .cutiepie/docs/feature_list.json
-  - .cutiepie/docs/ARCHI.md
-  - scripts/check-cutiepie-state.sh .
+- story `plan.md`
+- story `ADR.md`
+- story `contracts.json`
+- story specs
 
-  Check:
-  - PLAN.md is a workflow checklist, not an implementation spec.
-  - PLAN.md does not duplicate feature IDs, feature steps, or passes state.
-  - PLAN.md has phase-level checkpoints matching implementation_phase values.
-  - Later phases are not marked complete before earlier phases pass.
-  - PLAN.md points readers to feature_list.json for feature completion.
+Check:
 
-  Output:
-  - Approved, or
-  - Blocking issues with line references.
-```
+- `plan.md` describes workflow without duplicating spec completion state
+- `ADR.md` records decisions and tradeoffs
+- specs define dependencies and acceptance checks
+- `contracts.json` aligns with spec contract references
+- the story is ready for `/build`

@@ -1,5 +1,5 @@
 [Previous assistant message]:
-Spec set complete and saved to .cutiepie/docs/feature_list.json and .cutiepie/docs/PLAN.md.
+Story specs and contracts are complete under .cutiepie/plans/story_001_auth/.
 
 Two execution options:
 1. Subagent-Driven (this session) - I dispatch fresh subagents per implementation phase, review between phases, fast iteration within this conversation

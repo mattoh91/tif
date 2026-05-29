@@ -1,0 +1,55 @@
+{
+  "schema_version": "cutiepie.contracts.v1",
+  "story_id": "story_001",
+  "verified_by": [
+    "tests/cutiepie-state/test-check-cutiepie-state.sh",
+    "tests/scaffolding-repo/test-scaffold-contract.sh",
+    "tests/multi-agent-adapter/test-multi-agent-adapter-contract.sh",
+    "tests/story-flow/test-story-flow-contract.sh"
+  ],
+  "contracts": [
+    {
+      "id": "cutiepie.story_state.layout",
+      "provider": "spec_001",
+      "consumers": ["spec_002", "spec_003", "spec_004"],
+      "schema": {
+        "story_folder": ".cutiepie/plans/story_<nnn>_<slug>/",
+        "required_files": ["plan.md", "ADR.md", "contracts.json", "specs/spec_*.md"]
+      }
+    },
+    {
+      "id": "cutiepie.spec_frontmatter.schema",
+      "provider": "spec_001",
+      "consumers": ["spec_002", "spec_003"],
+      "schema": {
+        "required_fields": ["story_id", "spec_id", "title", "completed", "depends_on", "contracts", "acceptance_checks"]
+      }
+    },
+    {
+      "id": "cutiepie.project_intake.profile",
+      "provider": "spec_002",
+      "consumers": ["spec_003", "spec_004"],
+      "schema": {
+        "fields": ["repo_kind", "project_context", "project_mode", "heineken_setup_required"],
+        "question_ladder": {
+          "principle": "detect before asking",
+          "max_questions_per_turn": 2,
+          "brownfield_followup": "confirm whether detected conventions are binding",
+          "heineken_followups": ["Confluence target", "Jira target", "Brewery client", "Atlassian MCP"]
+        }
+      }
+    },
+    {
+      "id": "cutiepie.session_closeout.report",
+      "provider": "spec_004",
+      "consumers": [],
+      "schema": {
+        "fields": ["docs_updated", "cleanup_actions", "state_check", "memory_refresh"]
+      }
+    }
+  ],
+  "parallel_groups": [
+    ["spec_002", "spec_003"],
+    ["spec_004"]
+  ]
+}

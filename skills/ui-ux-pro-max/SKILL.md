@@ -1,29 +1,28 @@
 ---
 name: ui-ux-pro-max
-description: Use to create .cutiepie/docs/deck.html as a modern minimal keyboard-navigable project deck with interactive architecture and citation cards.
+description: Use to create project documentation or deck-style HTML from PRD stories, story specs, contracts, and architecture.
 ---
 
 # UI UX Pro Max
 
-Create `.cutiepie/docs/deck.html`.
+Use when a project needs a polished interactive local HTML explainer.
 
-## Requirements
+Inputs:
 
-- Modern, minimalist visual design.
-- Blend serif and sans-serif fonts.
-- Arrow-key navigation.
-- Architecture section with an interactive dataflow diagram.
-- Clicking each component opens a tooltip/card.
-- Each component card has two tabs:
-  - Interface / DTO shape
-  - Citations
-- Use citations from `feature_list.json` and component/interface details from `ARCHI.md`.
+- `.cutiepie/docs/PRD.md`
+- `.cutiepie/docs/ARCHI.md`
+- story specs
+- story contracts
+- story ADRs
 
-## Verification
+Create a minimal keyboard-navigable document with:
 
-After writing the deck:
+- problem statement
+- stories/features
+- architecture diagram
+- component/contract cards
+- research and decisions
+- setup/config
+- next steps
 
-1. Open it in a browser-capable environment or use the project’s UI verification tooling.
-2. Verify arrow-key navigation.
-3. Verify component cards and tabs.
-4. Verify text does not overlap on desktop or mobile viewport sizes.
+For Heineken projects, prefer `documentation` first because it includes Confluence approval and GenAILab targeting.
