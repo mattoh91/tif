@@ -1,0 +1,114 @@
+{
+  "schema_version": "gummy.contracts.v1",
+  "story_id": "story_007",
+  "contracts": [
+    {
+      "id": "gummy.deck.output_spec",
+      "provider": "spec_001",
+      "consumers": ["spec_002", "spec_003"],
+      "schema": {
+        "type": "object",
+        "required": ["trigger", "output_dir", "sections"],
+        "properties": {
+          "trigger": { "type": "string" },
+          "output_dir": { "type": "string" },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "title", "source"],
+              "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string" },
+                "source": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "gummy.deck.diagram_artifact",
+      "provider": "spec_002",
+      "consumers": ["spec_003"],
+      "schema": {
+        "type": "object",
+        "required": ["drawio_source", "svg_export", "embeds_xml", "nodes", "edges"],
+        "properties": {
+          "drawio_source": { "type": "string" },
+          "svg_export": { "type": "string" },
+          "embeds_xml": { "type": "boolean" },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "label"],
+              "properties": {
+                "id": { "type": "string" },
+                "label": { "type": "string" }
+              }
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "source", "target"],
+              "properties": {
+                "id": { "type": "string" },
+                "source": { "type": "string" },
+                "target": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "gummy.deck.neatness_report",
+      "provider": "spec_003",
+      "consumers": [],
+      "schema": {
+        "type": "object",
+        "required": ["accepted", "checks"],
+        "properties": {
+          "accepted": { "type": "boolean" },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "severity", "passed", "detail"],
+              "properties": {
+                "id": { "type": "string" },
+                "severity": { "type": "string", "enum": ["fail", "warn"] },
+                "passed": { "type": "boolean" },
+                "detail": { "type": "string" }
+              }
+            }
+          },
+          "skipped": { "type": "boolean" },
+          "skipped_reason": { "type": "string" }
+        }
+      }
+    }
+  ],
+  "external_contracts": [
+    {
+      "id": "external.drawio.embedded_mxgraph_svg",
+      "description": "draw.io SVG export with embedded mxGraphModel XML, used as ground-truth topology (node geometry, edge source/target) for the neatness gate."
+    },
+    {
+      "id": "external.playwright.browser_runtime",
+      "description": "Playwright browser runtime used to render the deck and measure rendered element geometry via DOM bounding boxes. May be absent on some hosts; the gate degrades to skipped-and-reported."
+    },
+    {
+      "id": "external.ui_ux_pro_max.skill",
+      "description": "ui-ux-pro-max skill providing deck theme, layout, typography, and component styling."
+    }
+  ],
+  "parallel_groups": [
+    ["spec_001"],
+    ["spec_002"],
+    ["spec_003"]
+  ]
+}
