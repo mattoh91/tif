@@ -122,6 +122,31 @@ scripts/check-gummy-state.sh .
 tests/story-flow/test-story-flow-contract.sh
 ```
 
+## Slide Deck (optional)
+
+The `/deck` command renders a self-contained `docs/ppt/deck.html` presentation
+from your `.gummy/` artifacts, embedding a hand-authored draw.io architecture
+SVG. It is opt-in: `/finish` and `/document` never generate a deck.
+
+Requirements:
+
+- Node.js (already required for OpenCode; used here to build and verify the deck).
+- Playwright, only for the diagram neatness gate:
+
+  ```bash
+  npm install -D playwright
+  npx playwright install chromium
+  ```
+
+  Without Playwright the deck still renders; the neatness gate reports
+  `skipped` and never claims the diagram was verified.
+
+Run the deck's own tests:
+
+```bash
+npm run test:deck
+```
+
 ## Update
 
 For local installs:

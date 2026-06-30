@@ -88,6 +88,7 @@ flowchart TD
 /build       implement the next dependency-ready incomplete spec
 /review      handle PR/code review feedback
 /document    generate local or approved Heineken Confluence docs
+/deck        render an opt-in docs/ppt/deck.html slide deck (verified diagram)
 /cleanup     remove stale/orphaned state before closeout
 /preamble    manual resume context when hooks are unavailable
 /update-state refresh memory and preamble

@@ -1,5 +1,31 @@
 # Gummy Release Notes
 
+## Unreleased
+
+### Slide Deck Output (`/deck`)
+
+- **New `/deck` command** (story_007) renders an opt-in, self-contained
+  `docs/ppt/deck.html` presentation from `.gummy/` artifacts: narrative,
+  measurable value, architecture, and per-component research. `/finish` and
+  `/document` never generate a deck on their own.
+- **Hand-authored draw.io diagrams** over Mermaid — exported to SVG with the
+  draw.io XML embedded and inlined into the deck. `ARCHI.md` stays the canonical
+  markdown source; `/finish` flags when the deck diagram drifts from it.
+- **Playwright neatness gate** (`scripts/deck/verify-deck.mjs`) verifies the
+  diagram using the embedded XML as ground-truth topology: overlapping shapes,
+  off-canvas elements, and mislanded/dangling arrows are hard fails; edge
+  crossings, label overflow, unrelated-node routing, and tight spacing are
+  warnings. Degrades to a reported `skipped` when Playwright is absent — never a
+  false pass. See the optional install step in `docs/INSTALL.md`.
+- **40 unit/integration tests**: `npm run test:deck`.
+
+### Langfuse Agent Instrumentation Skill
+
+- Added the project-agnostic `langfuse-agent-instrumentation` skill (typed
+  observation `as_type`, evaluator-binding input/output/metadata discipline,
+  per-generation cost tagging, client-side vs Managed Evaluator split). Routed
+  via `using-gummy`; supplements the official `langfuse` skill.
+
 ## v5.0.7 (2026-03-31)
 
 ### GitHub Copilot CLI Support
