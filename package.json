@@ -1,6 +1,6 @@
 {
-  "name": "cutiepie",
+  "name": "gummy",
   "version": "5.0.7",
   "type": "module",
-  "main": ".opencode/plugins/cutiepie.js"
+  "main": ".opencode/plugins/gummy.js"
 }

@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/hooks/session-start\"",
-            "statusMessage": "Loading Cutiepie context"
+            "statusMessage": "Loading Gummy context"
           }
         ]
       }
@@ -18,7 +18,7 @@
           {
             "type": "command",
             "command": "bash \"$(git rev-parse --show-toplevel)/hooks/codex-stop\"",
-            "statusMessage": "Persisting Cutiepie turn state",
+            "statusMessage": "Persisting Gummy turn state",
             "timeout": 30
           }
         ]

@@ -1,11 +1,11 @@
 ---
 name: prd-discovery
-description: Use when starting or updating a Cutiepie project; gathers problem statement and stories before story planning.
+description: Use when starting or updating a Gummy project; gathers problem statement and stories before story planning.
 ---
 
 # PRD Discovery
 
-Create or update `.cutiepie/docs/PRD.md`.
+Create or update `.gummy/docs/PRD.md`.
 
 ## Required Frontmatter
 

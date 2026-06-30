@@ -1,0 +1,15 @@
+{
+  "schema_version": "gummy.contracts.v1",
+  "story_id": "story_001",
+  "contracts": [
+    {
+      "id": "story.initial.workflow",
+      "provider": "spec_001",
+      "consumers": [],
+      "schema": {
+        "description": "Replace with the concrete input/output contract after specs are drafted."
+      }
+    }
+  ],
+  "parallel_groups": [["spec_001"]]
+}

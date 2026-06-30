@@ -9,8 +9,8 @@ Use when a project needs a polished interactive local HTML explainer.
 
 Inputs:
 
-- `.cutiepie/docs/PRD.md`
-- `.cutiepie/docs/ARCHI.md`
+- `.gummy/docs/PRD.md`
+- `.gummy/docs/ARCHI.md`
 - story specs
 - story contracts
 - story ADRs

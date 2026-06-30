@@ -1,5 +1,5 @@
 [Previous assistant message]:
-Story specs and contracts are complete under .cutiepie/plans/story_001_auth/.
+Story specs and contracts are complete under .gummy/plans/story_001_auth/.
 
 Two execution options:
 1. Subagent-Driven (this session) - I dispatch fresh subagents per implementation phase, review between phases, fast iteration within this conversation

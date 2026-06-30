@@ -1,6 +1,6 @@
 ---
 name: preamble
-description: Use when starting or resuming work to generate context from Cutiepie memory, PRD, story specs, contracts, and git state.
+description: Use when starting or resuming work to generate context from Gummy memory, PRD, story specs, contracts, and git state.
 ---
 
 # Preamble
@@ -9,11 +9,11 @@ Use when hooks are unavailable or when manually resuming.
 
 Read:
 
-- latest `~/.cutiepie/memory/<project-slug>/PREAMBLE.md`
-- `.cutiepie/docs/PRD.md`
-- `.cutiepie/docs/ARCHI.md`
-- `.cutiepie/docs/CONFIG.md`
-- story folders under `.cutiepie/plans/`
+- latest `~/.gummy/memory/<project-slug>/PREAMBLE.md`
+- `.gummy/docs/PRD.md`
+- `.gummy/docs/ARCHI.md`
+- `.gummy/docs/CONFIG.md`
+- story folders under `.gummy/plans/`
 - recent commits and git status
 
 Summarize:

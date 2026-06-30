@@ -1,6 +1,6 @@
-# Installing Cutiepie
+# Installing Gummy
 
-Cutiepie can be installed as a native plugin in Codex, Claude Code, and OpenCode. For other hosts, compile the skills into the host's preferred instruction format.
+Gummy can be installed as a native plugin in Codex, Claude Code, and OpenCode. For other hosts, compile the skills into the host's preferred instruction format.
 
 ## Prerequisites
 
@@ -11,8 +11,8 @@ Cutiepie can be installed as a native plugin in Codex, Claude Code, and OpenCode
 Clone the repo first when using a local development install:
 
 ```bash
-git clone https://github.com/mattoh91/cutiepie.git ~/Repos/cutiepie
-cd ~/Repos/cutiepie
+git clone https://github.com/mattoh91/gummy.git ~/Repos/gummy
+cd ~/Repos/gummy
 ```
 
 If the repo is already cloned, use that absolute path in the commands below.
@@ -22,7 +22,7 @@ If the repo is already cloned, use that absolute path in the commands below.
 Install the local Codex plugin marketplace from the checkout:
 
 ```bash
-codex plugin marketplace add /absolute/path/to/cutiepie
+codex plugin marketplace add /absolute/path/to/gummy
 ```
 
 Restart Codex, open:
@@ -31,7 +31,7 @@ Restart Codex, open:
 /plugins
 ```
 
-Choose `Cutiepie Local`, install `Cutiepie`, then start a new thread.
+Choose `Gummy Local`, install `Gummy`, then start a new thread.
 
 For subagent workflows and hook-based state refresh, enable these features in `~/.codex/config.toml`:
 
@@ -45,23 +45,23 @@ For raw skill development without plugin install, symlink the skills directory i
 
 ```bash
 mkdir -p ~/.agents/skills
-ln -sfn /absolute/path/to/cutiepie/skills ~/.agents/skills/cutiepie
+ln -sfn /absolute/path/to/gummy/skills ~/.agents/skills/gummy
 ```
 
 Restart Codex after changing plugin or skill discovery state.
 
 ## Claude Code
 
-Add Cutiepie's Claude Code marketplace from this checkout:
+Add Gummy's Claude Code marketplace from this checkout:
 
 ```text
-/plugin marketplace add /absolute/path/to/cutiepie/.claude-plugin/marketplace.json
+/plugin marketplace add /absolute/path/to/gummy/.claude-plugin/marketplace.json
 ```
 
 Install the plugin:
 
 ```text
-/plugin install cutiepie@cutiepie-dev
+/plugin install gummy@gummy-dev
 ```
 
 Reload plugins or restart Claude Code:
@@ -74,39 +74,39 @@ Use `/plugin` to choose user, project, or local scope interactively when you do 
 
 ## OpenCode
 
-Add Cutiepie to the `plugin` array in your global or project `opencode.json`:
+Add Gummy to the `plugin` array in your global or project `opencode.json`:
 
 ```json
 {
-  "plugin": ["cutiepie@git+https://github.com/mattoh91/cutiepie.git"]
+  "plugin": ["gummy@git+https://github.com/mattoh91/gummy.git"]
 }
 ```
 
-Restart OpenCode. The plugin installs through Bun and registers the Cutiepie skills directory automatically.
+Restart OpenCode. The plugin installs through Bun and registers the Gummy skills directory automatically.
 
 ## Cursor, Copilot, And Other Hosts
 
 Use the compiler to generate host-native instruction files:
 
 ```bash
-python3 scripts/cutiepie-compile.py skills --agent cursor --output /path/to/project
-python3 scripts/cutiepie-compile.py skills --agent copilot --output /tmp/cutiepie-copilot
-python3 scripts/cutiepie-compile.py skills --agent claude --output /tmp/cutiepie-claude
-python3 scripts/cutiepie-compile.py skills --agent codex --output /tmp/cutiepie-codex
+python3 scripts/gummy-compile.py skills --agent cursor --output /path/to/project
+python3 scripts/gummy-compile.py skills --agent copilot --output /tmp/gummy-copilot
+python3 scripts/gummy-compile.py skills --agent claude --output /tmp/gummy-claude
+python3 scripts/gummy-compile.py skills --agent codex --output /tmp/gummy-codex
 ```
 
 Compiler outputs:
 
 - Claude/Copilot: `<output>/<skill>/SKILL.md`
 - Cursor: `<output>/.cursor/rules/<skill>.md`
-- Codex: `<output>/AGENTS.md` with replaceable Cutiepie markers
+- Codex: `<output>/AGENTS.md` with replaceable Gummy markers
 
 ## Verify
 
 Ask the host:
 
 ```text
-Use Cutiepie to scaffold this repo.
+Use Gummy to scaffold this repo.
 ```
 
 Or start with the explicit intake command:
@@ -118,7 +118,7 @@ Or start with the explicit intake command:
 For a local checkout, also run:
 
 ```bash
-scripts/check-cutiepie-state.sh .
+scripts/check-gummy-state.sh .
 tests/story-flow/test-story-flow-contract.sh
 ```
 
@@ -127,7 +127,7 @@ tests/story-flow/test-story-flow-contract.sh
 For local installs:
 
 ```bash
-cd /absolute/path/to/cutiepie
+cd /absolute/path/to/gummy
 git pull
 ```
 
@@ -138,17 +138,17 @@ Then restart the host or reload plugins. OpenCode git installs refresh on restar
 Codex:
 
 ```bash
-codex plugin marketplace remove cutiepie-local
-rm -f ~/.agents/skills/cutiepie
+codex plugin marketplace remove gummy-local
+rm -f ~/.agents/skills/gummy
 ```
 
 Claude Code:
 
 ```text
-/plugin uninstall cutiepie@cutiepie-dev
-/plugin marketplace remove cutiepie-dev
+/plugin uninstall gummy@gummy-dev
+/plugin marketplace remove gummy-dev
 ```
 
 OpenCode:
 
-Remove the Cutiepie entry from `opencode.json`, then restart OpenCode.
+Remove the Gummy entry from `opencode.json`, then restart OpenCode.

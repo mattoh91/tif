@@ -16,21 +16,21 @@ add a comment or reaction to the existing one instead.
 
 | Field | Value |
 |-------|-------|
-| Cutiepie version | |
+| Gummy version | |
 | Harness (Claude Code, Cursor, etc.) | |
 | Harness version | |
 | Model | |
 | OS + shell | |
 
-## Is this a Cutiepie issue or a platform issue?
-<!-- Cutiepie is a plugin. Some reported "bugs" are actually issues
+## Is this a Gummy issue or a platform issue?
+<!-- Gummy is a plugin. Some reported "bugs" are actually issues
      in the underlying platform or model. If you're not sure, try
-     reproducing without Cutiepie installed.
+     reproducing without Gummy installed.
 
-     If the problem persists without Cutiepie, file the issue with
+     If the problem persists without Gummy, file the issue with
      your platform instead. -->
 
-- [ ] I confirmed this issue does not occur without Cutiepie installed
+- [ ] I confirmed this issue does not occur without Gummy installed
 
 ## What happened?
 <!-- Be specific. "It doesn't work" is not a bug report. -->

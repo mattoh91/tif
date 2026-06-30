@@ -43,14 +43,14 @@ assert_contains() {
   fi
 }
 
-assert_file "$template/.cutiepie/docs/PRD.md" "scaffold includes PRD.md"
-assert_file "$template/.cutiepie/docs/ARCHI.md" "scaffold includes ARCHI.md"
-assert_file "$template/.cutiepie/docs/CONFIG.md" "scaffold includes CONFIG.md"
-assert_file "$template/.cutiepie/plans/story_001_initial_workflow/plan.md" "scaffold includes story plan"
-assert_file "$template/.cutiepie/plans/story_001_initial_workflow/ADR.md" "scaffold includes story ADR"
-assert_file "$template/.cutiepie/plans/story_001_initial_workflow/contracts.json" "scaffold includes story contracts"
-assert_file "$template/.cutiepie/plans/story_001_initial_workflow/specs/spec_001_initial_slice.md" "scaffold includes story spec"
-doc_count="$(find "$template/.cutiepie/docs" -maxdepth 1 -type f | wc -l | tr -d ' ')"
+assert_file "$template/.gummy/docs/PRD.md" "scaffold includes PRD.md"
+assert_file "$template/.gummy/docs/ARCHI.md" "scaffold includes ARCHI.md"
+assert_file "$template/.gummy/docs/CONFIG.md" "scaffold includes CONFIG.md"
+assert_absent "$template/.gummy/plans/story_001_initial_workflow/plan.md" "scaffold omits story plan"
+assert_file "$template/.gummy/plans/story_001_initial_workflow/ADR.md" "scaffold includes story ADR"
+assert_file "$template/.gummy/plans/story_001_initial_workflow/contracts.json" "scaffold includes story contracts"
+assert_file "$template/.gummy/plans/story_001_initial_workflow/specs/spec_001_initial_slice.md" "scaffold includes story spec"
+doc_count="$(find "$template/.gummy/docs" -maxdepth 1 -type f | wc -l | tr -d ' ')"
 if [ "$doc_count" -eq 3 ]; then
   printf '[PASS] scaffold docs contain only current top-level docs\n'
 else

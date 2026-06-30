@@ -1,6 +1,6 @@
 # Code Reviewer Prompt
 
-Review the implementation against the provided Cutiepie story spec.
+Review the implementation against the provided Gummy story spec.
 
 Check:
 

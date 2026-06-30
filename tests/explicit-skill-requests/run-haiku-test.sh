@@ -6,14 +6,14 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-source "$SCRIPT_DIR/../cutiepie-fixtures.sh"
+source "$SCRIPT_DIR/../gummy-fixtures.sh"
 
 TIMESTAMP=$(date +%s)
-OUTPUT_DIR="/tmp/cutiepie-tests/${TIMESTAMP}/explicit-skill-requests/haiku"
+OUTPUT_DIR="/tmp/gummy-tests/${TIMESTAMP}/explicit-skill-requests/haiku"
 mkdir -p "$OUTPUT_DIR"
 
 PROJECT_DIR="$OUTPUT_DIR/project"
-create_cutiepie_docs_fixture "$PROJECT_DIR"
+create_gummy_docs_fixture "$PROJECT_DIR"
 mkdir -p "$PROJECT_DIR/.claude"
 
 echo "=== Haiku Model Test with User CLAUDE.md ==="

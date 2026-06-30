@@ -1,3 +1,3 @@
-The story specs and contracts are done under .cutiepie/plans/story_001_auth/. Build the next incomplete spec.
+The story specs and contracts are done under .gummy/plans/story_001_auth/. Build the next incomplete spec.
 
 Do subagent-driven development on this - start with the first incomplete implementation phase, dispatch a subagent for the feature group, then we'll review.

@@ -1,6 +1,6 @@
 # Spec Reviewer Prompt
 
-Review whether the implementation satisfies the target Cutiepie story spec.
+Review whether the implementation satisfies the target Gummy story spec.
 
 Check:
 

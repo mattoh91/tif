@@ -1,13 +1,13 @@
 {
-  "name": "cutiepie",
+  "name": "gummy",
   "version": "5.0.7",
   "description": "A personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
   "author": {
     "name": "mattoh91",
     "url": "https://github.com/mattoh91"
   },
-  "homepage": "https://github.com/mattoh91/cutiepie",
-  "repository": "https://github.com/mattoh91/cutiepie",
+  "homepage": "https://github.com/mattoh91/gummy",
+  "repository": "https://github.com/mattoh91/gummy",
   "license": "MIT",
   "keywords": [
     "swe-harness",
@@ -27,9 +27,9 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Cutiepie",
+    "displayName": "Gummy",
     "shortDescription": "Structured SWE harness workflows for Codex and Claude Code",
-    "longDescription": "Use Cutiepie to guide agent work through project intake, PRD stories, story-local specs/contracts/ADRs, research enrichment, architecture artifacts, internal TDD, memory, debugging, multi-agent adapter dispatch, build/review workflows, documentation, cleanup, and scaffolded Brewery/GenAI Gateway client setup.",
+    "longDescription": "Use Gummy to guide agent work through project intake, PRD stories, story-local specs/contracts/ADRs, research enrichment, architecture artifacts, internal TDD, memory, debugging, multi-agent adapter dispatch, build/review workflows, documentation, cleanup, and scaffolded Brewery/GenAI Gateway client setup.",
     "developerName": "mattoh91",
     "category": "Coding",
     "capabilities": [
@@ -39,11 +39,11 @@
     ],
     "defaultPrompt": [
       "I've got an idea for something I'd like to build.",
-      "Let's scaffold a Cutiepie project workflow."
+      "Let's scaffold a Gummy project workflow."
     ],
     "brandColor": "#F59E0B",
-    "composerIcon": "./assets/cutepie.png",
-    "logo": "./assets/cutepie.png",
+    "composerIcon": "./assets/gummy.png",
+    "logo": "./assets/gummy.png",
     "screenshots": []
   }
 }

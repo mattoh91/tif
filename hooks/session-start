@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SessionStart hook for Cutiepie plugin
+# SessionStart hook for Gummy plugin
 
 set -euo pipefail
 
@@ -9,13 +9,13 @@ PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 # Check if legacy skills directory exists and build warning
 warning_message=""
-legacy_skills_dir="${HOME}/.config/cutiepie/skills"
+legacy_skills_dir="${HOME}/.config/gummy/skills"
 if [ -d "$legacy_skills_dir" ]; then
-    warning_message="\n\n<important-reminder>IN YOUR FIRST REPLY AFTER SEEING THIS MESSAGE YOU MUST TELL THE USER:⚠️ **WARNING:** Cutiepie now uses Claude Code's skills system. Custom skills in ~/.config/cutiepie/skills will not be read. Move custom skills to ~/.claude/skills instead. To make this message go away, remove ~/.config/cutiepie/skills</important-reminder>"
+    warning_message="\n\n<important-reminder>IN YOUR FIRST REPLY AFTER SEEING THIS MESSAGE YOU MUST TELL THE USER:⚠️ **WARNING:** Gummy now uses Claude Code's skills system. Custom skills in ~/.config/gummy/skills will not be read. Move custom skills to ~/.claude/skills instead. To make this message go away, remove ~/.config/gummy/skills</important-reminder>"
 fi
 
-# Read using-cutiepie content
-using_cutiepie_content=$(cat "${PLUGIN_ROOT}/skills/using-cutiepie/SKILL.md" 2>&1 || echo "Error reading using-cutiepie skill")
+# Read using-gummy content
+using_gummy_content=$(cat "${PLUGIN_ROOT}/skills/using-gummy/SKILL.md" 2>&1 || echo "Error reading using-gummy skill")
 
 project_slug() {
     local remote
@@ -45,12 +45,12 @@ append_if_exists() {
 }
 
 append_story_state() {
-    if [ ! -d ".cutiepie/plans" ]; then
+    if [ ! -d ".gummy/plans" ]; then
         return
     fi
 
-    printf '\n## Cutiepie Story Plans (.cutiepie/plans)\n\n'
-    find .cutiepie/plans -maxdepth 3 -type f \( -name 'plan.md' -o -name 'ADR.md' -o -name 'contracts.json' -o -name 'spec_*.md' \) 2>/dev/null \
+    printf '\n## Gummy Story State (.gummy/plans)\n\n'
+    find .gummy/plans -maxdepth 3 -type f \( -name 'ADR.md' -o -name 'contracts.json' -o -name 'spec_*.md' \) 2>/dev/null \
         | sort \
         | while IFS= read -r file; do
             printf '\n### %s\n\n' "$file"
@@ -62,15 +62,15 @@ append_story_state() {
         done
 }
 
-build_cutiepie_context() {
+build_gummy_context() {
     local slug memory_dir session_dir latest_session state_report
     slug="$(project_slug)"
-    memory_dir="${HOME}/.cutiepie/memory/${slug}"
+    memory_dir="${HOME}/.gummy/memory/${slug}"
     session_dir="${memory_dir}/SESSIONS"
-    state_report="$("${PLUGIN_ROOT}/scripts/check-cutiepie-state.sh" . 2>/dev/null || true)"
+    state_report="$("${PLUGIN_ROOT}/scripts/check-gummy-state.sh" . 2>/dev/null || true)"
 
     {
-        printf '<CUTIEPIE_PROJECT_CONTEXT>\n'
+        printf '<GUMMY_PROJECT_CONTEXT>\n'
         printf 'Project slug: %s\n' "$slug"
         printf 'Working directory: %s\n' "$(pwd)"
 
@@ -81,28 +81,28 @@ build_cutiepie_context() {
             git log --oneline -10 2>/dev/null || true
         fi
 
-        append_if_exists "Cutiepie Memory" "${memory_dir}/MEMORY.md" 120
-        append_if_exists "Cutiepie Failure Modes" "${memory_dir}/FAILURES.md" 120
+        append_if_exists "Gummy Memory" "${memory_dir}/MEMORY.md" 120
+        append_if_exists "Gummy Failure Modes" "${memory_dir}/FAILURES.md" 120
 
         if [ -d "$session_dir" ]; then
             latest_session="$(find "$session_dir" -type f -name '*.md' -mtime -7 2>/dev/null | sort | tail -1 || true)"
             if [ -n "$latest_session" ]; then
-                append_if_exists "Latest Cutiepie Session" "$latest_session" 80
+                append_if_exists "Latest Gummy Session" "$latest_session" 80
             fi
         fi
 
         if [ -n "$state_report" ]; then
-            printf '\n## Cutiepie State Contract\n\n'
+            printf '\n## Gummy State Contract\n\n'
             printf '%s\n' "$state_report"
         fi
 
-        append_if_exists "Cutiepie PRD (.cutiepie/docs/PRD.md)" ".cutiepie/docs/PRD.md" 140
-        append_if_exists "Cutiepie ARCHI (.cutiepie/docs/ARCHI.md)" ".cutiepie/docs/ARCHI.md" 160
-        append_if_exists "Cutiepie CONFIG (.cutiepie/docs/CONFIG.md)" ".cutiepie/docs/CONFIG.md" 120
-        append_if_exists "Cutiepie Repo Review (.cutiepie/docs/REPO_REVIEW.md)" ".cutiepie/docs/REPO_REVIEW.md" 120
+        append_if_exists "Gummy PRD (.gummy/docs/PRD.md)" ".gummy/docs/PRD.md" 140
+        append_if_exists "Gummy ARCHI (.gummy/docs/ARCHI.md)" ".gummy/docs/ARCHI.md" 160
+        append_if_exists "Gummy CONFIG (.gummy/docs/CONFIG.md)" ".gummy/docs/CONFIG.md" 120
+        append_if_exists "Gummy Repo Review (.gummy/docs/REPO_REVIEW.md)" ".gummy/docs/REPO_REVIEW.md" 120
         append_story_state
 
-        printf '\n</CUTIEPIE_PROJECT_CONTEXT>'
+        printf '\n</GUMMY_PROJECT_CONTEXT>'
     }
 }
 
@@ -119,11 +119,11 @@ escape_for_json() {
     printf '%s' "$s"
 }
 
-using_cutiepie_escaped=$(escape_for_json "$using_cutiepie_content")
+using_gummy_escaped=$(escape_for_json "$using_gummy_content")
 warning_escaped=$(escape_for_json "$warning_message")
-cutiepie_context_content="$(build_cutiepie_context 2>/dev/null || true)"
-cutiepie_context_escaped=$(escape_for_json "$cutiepie_context_content")
-session_context="<EXTREMELY_IMPORTANT>\nYou have Cutiepie, a cross-harness SWE workflow.\n\n**Below is the full content of your 'using-cutiepie' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_cutiepie_escaped}\n\n${warning_escaped}\n\n${cutiepie_context_escaped}\n</EXTREMELY_IMPORTANT>"
+gummy_context_content="$(build_gummy_context 2>/dev/null || true)"
+gummy_context_escaped=$(escape_for_json "$gummy_context_content")
+session_context="<EXTREMELY_IMPORTANT>\nYou have Gummy, a cross-harness SWE workflow.\n\n**Below is the full content of your 'using-gummy' skill - your introduction to using skills. For all other skills, use the 'Skill' tool:**\n\n${using_gummy_escaped}\n\n${warning_escaped}\n\n${gummy_context_escaped}\n</EXTREMELY_IMPORTANT>"
 
 # Output context injection as JSON. Claude Code and Codex both accept
 # hookSpecificOutput.additionalContext for SessionStart.

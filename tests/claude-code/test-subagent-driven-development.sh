@@ -11,9 +11,9 @@ assert_contains "$output" "subagent-driven-development\|Subagent-Driven Developm
 assert_contains "$output" "completed.*false\|specs.*contracts\|acceptance" "Mentions story spec state"
 
 output=$(run_claude "Before using subagent-driven-development, what state checker and story artifacts should be valid?" 30)
-assert_contains "$output" "check-cutiepie-state\|contracts.json\|spec_.*md\|ADR" "Mentions story state contract"
+assert_contains "$output" "check-gummy-state\|contracts.json\|spec_.*md\|ADR" "Mentions story state contract"
 
-output=$(run_claude "When can a Cutiepie story spec be marked completed=true?" 30)
+output=$(run_claude "When can a Gummy story spec be marked completed=true?" 30)
 assert_contains "$output" "acceptance.*pass\|passes.*true\|only.*after" "Requires acceptance checks to pass"
 
 echo "=== subagent-driven-development skill smoke tests passed ==="

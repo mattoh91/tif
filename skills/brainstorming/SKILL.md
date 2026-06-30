@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: Use when the user starts with an idea or asks what to build; routes Cutiepie planning through project intake, PRD stories, story specs, contract design, and approval.
+description: Use when the user starts with an idea or asks what to build; routes Gummy planning through project intake, PRD stories, story specs, contract design, and approval.
 ---
 
 # Brainstorming Ideas Into Story Specs
@@ -10,12 +10,12 @@ Do not implement code until the user approves the PRD stories, story specs, and 
 ## Workflow
 
 1. Use `project-intake` when project context is missing or stale.
-2. Use `prd-discovery` to write or update `.cutiepie/docs/PRD.md` with stories.
-3. Use `story-planner` to create one `.cutiepie/plans/story_<nnn>_<slug>/` folder per story.
+2. Use `prd-discovery` to write or update `.gummy/docs/PRD.md` with stories.
+3. Use `story-planner` to create one `.gummy/plans/story_<nnn>_<slug>/` folder per story.
 4. Draft story specs with `completed: false` and acceptance checks with `passes: false`.
 5. Use `research-enrichment` inside specs when libraries, modules, tools, ML algorithms, vector stores, databases, or frameworks affect implementation choices.
 6. Use `contract-designer` after specs are drafted.
-7. Run `scripts/check-cutiepie-state.sh .`.
+7. Run `scripts/check-gummy-state.sh .`.
 8. Ask the user to approve the story plans/specs/contracts before `/build`.
 
 ## Requirements

@@ -1,11 +1,11 @@
 {
-  "name": "cutiepie-local",
+  "name": "gummy-local",
   "interface": {
-    "displayName": "Cutiepie Local"
+    "displayName": "Gummy Local"
   },
   "plugins": [
     {
-      "name": "cutiepie",
+      "name": "gummy",
       "source": {
         "source": "local",
         "path": "./"

@@ -1,6 +1,6 @@
 # Svelte Todo List - Implementation Plan
 
-Execute this plan using the `cutiepie:subagent-driven-development` skill.
+Execute this plan using the `gummy:subagent-driven-development` skill.
 
 ## Context
 

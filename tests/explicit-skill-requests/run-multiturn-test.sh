@@ -9,15 +9,15 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-source "$SCRIPT_DIR/../cutiepie-fixtures.sh"
+source "$SCRIPT_DIR/../gummy-fixtures.sh"
 
 TIMESTAMP=$(date +%s)
-OUTPUT_DIR="/tmp/cutiepie-tests/${TIMESTAMP}/explicit-skill-requests/multiturn"
+OUTPUT_DIR="/tmp/gummy-tests/${TIMESTAMP}/explicit-skill-requests/multiturn"
 mkdir -p "$OUTPUT_DIR"
 
 # Create project directory (conversation is cwd-based)
 PROJECT_DIR="$OUTPUT_DIR/project"
-create_cutiepie_docs_fixture "$PROJECT_DIR"
+create_gummy_docs_fixture "$PROJECT_DIR"
 
 echo "=== Multi-Turn Explicit Skill Request Test ==="
 echo "Output dir: $OUTPUT_DIR"
@@ -43,7 +43,7 @@ echo ""
 # Turn 2: Continue with more planning detail
 echo ">>> Turn 2: Continuing planning..."
 TURN2_LOG="$OUTPUT_DIR/turn2.json"
-claude -p "Good analysis. I've already written .cutiepie/plans/story_001_auth/ specs and contracts. Now I'm ready to implement. What are my options for execution?" \
+claude -p "Good analysis. I've already written .gummy/plans/story_001_auth/ specs and contracts. Now I'm ready to implement. What are my options for execution?" \
     --continue \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \

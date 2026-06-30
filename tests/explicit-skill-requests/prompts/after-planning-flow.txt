@@ -1,4 +1,4 @@
-Great, the story plan, specs, and contracts are complete under .cutiepie/plans/story_001_auth/.
+Great, the story plan, specs, and contracts are complete under .gummy/plans/story_001_auth/.
 
 Here's a summary of what we designed:
 - F001: Add User Model with email/password fields

@@ -6,14 +6,14 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-source "$SCRIPT_DIR/../cutiepie-fixtures.sh"
+source "$SCRIPT_DIR/../gummy-fixtures.sh"
 
 TIMESTAMP=$(date +%s)
-OUTPUT_DIR="/tmp/cutiepie-tests/${TIMESTAMP}/explicit-skill-requests/claude-describes"
+OUTPUT_DIR="/tmp/gummy-tests/${TIMESTAMP}/explicit-skill-requests/claude-describes"
 mkdir -p "$OUTPUT_DIR"
 
 PROJECT_DIR="$OUTPUT_DIR/project"
-create_cutiepie_docs_fixture "$PROJECT_DIR"
+create_gummy_docs_fixture "$PROJECT_DIR"
 
 echo "=== Test: Claude Describes SDD First ==="
 echo "Output dir: $OUTPUT_DIR"
@@ -23,7 +23,7 @@ cd "$PROJECT_DIR"
 
 # Turn 1: Have Claude describe execution options including SDD
 echo ">>> Turn 1: Ask Claude to describe execution options..."
-claude -p "I have .cutiepie/plans/story_001_auth/ with specs and contracts ready. Tell me about my options for executing them, including what subagent-driven-development means and how it works." \
+claude -p "I have .gummy/plans/story_001_auth/ with specs and contracts ready. Tell me about my options for executing them, including what subagent-driven-development means and how it works." \
     --model haiku \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \

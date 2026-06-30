@@ -19,15 +19,15 @@ project_slug() {
   fi
 }
 
-has_cutiepie_file() {
+has_gummy_file() {
   local rel="$1"
-  [ -f ".cutiepie/docs/${rel}" ]
+  [ -f ".gummy/docs/${rel}" ]
 }
 
-first_cutiepie_file() {
+first_gummy_file() {
   local rel="$1"
-  if [ -f ".cutiepie/docs/${rel}" ]; then
-    printf '.cutiepie/docs/%s' "$rel"
+  if [ -f ".gummy/docs/${rel}" ]; then
+    printf '.gummy/docs/%s' "$rel"
   fi
 }
 
@@ -38,9 +38,78 @@ append_issue() {
   printf -- '- [%s] %s\n' "$severity" "$message" >> "$issues_tmp"
 }
 
+stage_learning_candidate() {
+  local issue_summary="$1"
+
+  [ -n "$issue_summary" ] || return 0
+
+  GUMMY_CANDIDATES_FILE="$candidates_file" \
+  GUMMY_CANDIDATE_DATE="$today" \
+  GUMMY_CANDIDATE_NOW="$now" \
+  GUMMY_CANDIDATE_SOURCE="$audit_file" \
+  GUMMY_CANDIDATE_EXCERPT="$issue_summary" \
+  GUMMY_CANDIDATE_VERIFY="scripts/check-gummy-state.sh ." \
+  node <<'NODE' || true
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const file = process.env.GUMMY_CANDIDATES_FILE;
+const excerpt = process.env.GUMMY_CANDIDATE_EXCERPT || '';
+const hash = crypto.createHash('sha1').update(excerpt).digest('hex').slice(0, 12);
+const id = `learn_${(process.env.GUMMY_CANDIDATE_DATE || '').replace(/-/g, '')}_${hash}`;
+const existing = fs.existsSync(file)
+  ? fs.readFileSync(file, 'utf8').split(/\r?\n/).filter(Boolean)
+  : [];
+
+if (existing.some((line) => {
+  try {
+    return JSON.parse(line).id === id;
+  } catch (_) {
+    return false;
+  }
+})) {
+  process.exit(0);
+}
+
+const riskFlags = [];
+if (/uncommitted changes|dirty/i.test(excerpt)) {
+  riskFlags.push('dirty_tree');
+}
+if (/possible-stale/i.test(excerpt)) {
+  riskFlags.push('stale_state');
+}
+if (/(invalid|missing|blocked)/i.test(excerpt)) {
+  riskFlags.push('invalid_state');
+}
+
+const candidate = {
+  id,
+  created_at: process.env.GUMMY_CANDIDATE_NOW,
+  source: {
+    type: 'state_audit',
+    path: process.env.GUMMY_CANDIDATE_SOURCE,
+    excerpt: excerpt.slice(0, 600),
+  },
+  target: 'memory',
+  scope: 'project',
+  proposal: `Review and resolve Gummy state findings: ${excerpt.replace(/\s+/g, ' ').slice(0, 280)}`,
+  risk_flags: riskFlags,
+  status: 'pending',
+  verification: {
+    command: process.env.GUMMY_CANDIDATE_VERIFY,
+    result: 'pending',
+  },
+};
+
+fs.mkdirSync(path.dirname(file), { recursive: true });
+fs.appendFileSync(file, `${JSON.stringify(candidate)}\n`);
+NODE
+}
+
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 slug="$(project_slug)"
-memory_dir="${HOME}/.cutiepie/memory/${slug}"
+memory_dir="${HOME}/.gummy/memory/${slug}"
 session_dir="${memory_dir}/SESSIONS"
 mkdir -p "$session_dir"
 
@@ -48,6 +117,7 @@ now="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 today="$(date -u +%Y-%m-%d)"
 audit_file="${memory_dir}/STATE_AUDIT.md"
 preamble_file="${memory_dir}/PREAMBLE.md"
+candidates_file="${memory_dir}/CANDIDATES.jsonl"
 session_file="${session_dir}/${today}.md"
 issues_tmp="$(mktemp)"
 validator_tmp="$(mktemp)"
@@ -62,22 +132,22 @@ changed_files="$({
 recent_commits="$(git log --oneline -8 2>/dev/null || true)"
 
 if [ ! -f "${memory_dir}/MEMORY.md" ]; then
-  printf '# Cutiepie Memory\n' > "${memory_dir}/MEMORY.md"
+  printf '# Gummy Memory\n' > "${memory_dir}/MEMORY.md"
 fi
 
 if [ ! -f "${memory_dir}/FAILURES.md" ]; then
-  printf '# Cutiepie Failure Modes\n' > "${memory_dir}/FAILURES.md"
+  printf '# Gummy Failure Modes\n' > "${memory_dir}/FAILURES.md"
 fi
 
 if [ -n "$git_status" ]; then
   append_issue "attention" "Working tree has uncommitted changes; review or commit before clearing context."
 fi
 
-if [ -x "${script_dir}/../scripts/check-cutiepie-state.sh" ]; then
-  "${script_dir}/../scripts/check-cutiepie-state.sh" . > "$validator_tmp" || true
+if [ -x "${script_dir}/../scripts/check-gummy-state.sh" ]; then
+  "${script_dir}/../scripts/check-gummy-state.sh" . > "$validator_tmp" || true
   while IFS= read -r validator_line; do
     case "$validator_line" in
-      "- [ok]"*)
+      "- [ok]"*|"- [info]"*)
         ;;
       "- ["*)
         issue_count=$((issue_count + 1))
@@ -89,36 +159,41 @@ fi
 
 if [ -n "$changed_files" ]; then
   if printf '%s\n' "$changed_files" | grep -Eq '(^|/)(src|app|lib|packages|cmd|internal|components|pages|routes|api|server|client|tests?)/|\.([cm]?[jt]sx?|py|go|rs|java|kt|rb|php|swift|cs|cpp|h|hpp)$'; then
-    if ! printf '%s\n' "$changed_files" | grep -Eq '(^|/)\.cutiepie/(docs|plans)/'; then
-      append_issue "possible-stale" "Code/test files changed without Cutiepie story/docs state in the current diff; check affected specs, contracts, ADR, architecture, and config."
+    if ! printf '%s\n' "$changed_files" | grep -Eq '(^|/)\.gummy/(docs|plans)/'; then
+      append_issue "possible-stale" "Code/test files changed without Gummy story/docs state in the current diff; check affected specs, contracts, ADR, architecture, and config."
     fi
   fi
 fi
 
-if has_cutiepie_file "CONFIG.md"; then
-  config_file="$(first_cutiepie_file "CONFIG.md")"
+if has_gummy_file "CONFIG.md"; then
+  config_file="$(first_gummy_file "CONFIG.md")"
   if ! grep -Eiq 'settings|config|hyperparameter|tunable|default|allowed|owner' "$config_file" 2>/dev/null; then
     append_issue "possible-stale" "${config_file} does not appear to document settings owners, defaults, or tunables."
   fi
 fi
 
-if has_cutiepie_file "ARCHI.md"; then
-  archi_file="$(first_cutiepie_file "ARCHI.md")"
+if has_gummy_file "ARCHI.md"; then
+  archi_file="$(first_gummy_file "ARCHI.md")"
   if ! grep -Eq '<mxfile|drawio|draw\.io|```mermaid|graph |flowchart |sequenceDiagram|C4Context|C4Container' "$archi_file" 2>/dev/null; then
     append_issue "possible-stale" "${archi_file} does not appear to contain a draw.io dataflow diagram or supported diagram source."
   fi
 fi
 
-if [ -d ".cutiepie/plans" ]; then
+if [ -d ".gummy/plans" ]; then
   while IFS= read -r story_adr; do
     if ! grep -Eiq 'decision|options|consequence|status' "$story_adr" 2>/dev/null; then
       append_issue "possible-stale" "${story_adr} does not appear to record decisions/options/consequences."
     fi
-  done < <(find .cutiepie/plans -maxdepth 2 -type f -name ADR.md 2>/dev/null | sort)
+  done < <(find .gummy/plans -maxdepth 2 -type f -name ADR.md 2>/dev/null | sort)
+fi
+
+if [ "$issue_count" -gt 0 ]; then
+  issue_summary="$(grep -Ev '^\- \[attention\] Working tree has uncommitted changes;' "$issues_tmp" 2>/dev/null | sed -n '1,8p' | tr '\n' ' ' | head -c 1200 || true)"
+  stage_learning_candidate "$issue_summary"
 fi
 
 {
-  printf '# Cutiepie State Audit\n\n'
+  printf '# Gummy State Audit\n\n'
   printf 'Generated: %s\n' "$now"
   printf 'Project: %s\n' "$slug"
   printf 'Working directory: %s\n\n' "$(pwd)"
@@ -146,10 +221,13 @@ fi
   else
     printf 'Unavailable.\n'
   fi
+  printf '\n## Learning Candidates\n\n'
+  printf 'Review pending candidates with `scripts/gummy-memory-review.sh`.\n'
+  printf 'Candidate file: `%s`\n' "$candidates_file"
 } > "$audit_file"
 
 {
-  printf '<cutiepie-preamble>\n'
+  printf '<gummy-preamble>\n'
   printf 'Project: %s\n' "$slug"
   printf 'Generated: %s\n' "$now"
   printf 'Current state: See %s\n' "$audit_file"
@@ -172,26 +250,28 @@ fi
     printf -- '- Unavailable.\n'
   fi
   printf 'Next session checklist:\n'
-  printf -- '- Read .cutiepie/docs/PRD.md for project mode, context, and stories.\n'
-  printf -- '- Read .cutiepie/plans/story_*/plan.md for story workflow.\n'
-  printf -- '- Read .cutiepie/plans/story_*/specs/spec_*.md for completed flags and acceptance checks.\n'
-  printf -- '- Read .cutiepie/plans/story_*/contracts.json for cross-spec schemas.\n'
-  printf -- '- Read .cutiepie/docs/CONFIG.md for env vars, settings owners, MCP setup, and tunables.\n'
+  printf -- '- Read .gummy/docs/PRD.md for project mode, context, and stories.\n'
+  printf -- '- Read .gummy/plans/story_*/ADR.md for decisions and workflow rationale.\n'
+  printf -- '- Read .gummy/plans/story_*/specs/spec_*.md for dependencies, completed flags, and acceptance checks.\n'
+  printf -- '- Read .gummy/plans/story_*/contracts.json for cross-spec schemas.\n'
+  printf -- '- Read .gummy/docs/CONFIG.md for env vars, settings owners, MCP setup, and tunables.\n'
   printf -- '- Read %s and update stale docs or memory before implementation.\n' "$audit_file"
+  printf -- '- Run scripts/gummy-memory-review.sh before promoting any staged learning candidates.\n'
   printf -- '- Do not mark a spec completed=true until all acceptance checks pass.\n'
-  printf '</cutiepie-preamble>\n'
+  printf '</gummy-preamble>\n'
 } > "$preamble_file"
 
 {
-  printf '\n## Cutiepie Update State — %s\n\n' "$now"
-  printf -- '- Event: %s\n' "${CUTIEPIE_HOOK_EVENT:-manual}"
+  printf '\n## Gummy Update State — %s\n\n' "$now"
+  printf -- '- Event: %s\n' "${GUMMY_HOOK_EVENT:-manual}"
   printf -- '- Audit: %s\n' "$audit_file"
   printf -- '- Preamble: %s\n' "$preamble_file"
+  printf -- '- Candidates: %s\n' "$candidates_file"
   printf -- '- Issues: %s\n' "$issue_count"
 } >> "$session_file"
 
 if [ "$silent" -eq 0 ]; then
-  printf 'Cutiepie state refreshed.\n'
+  printf 'Gummy state refreshed.\n'
   printf 'Audit: %s\n' "$audit_file"
   printf 'Preamble: %s\n' "$preamble_file"
   printf 'Issues: %s\n' "$issue_count"

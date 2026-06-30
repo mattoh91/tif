@@ -5,7 +5,7 @@ description: Use when implementing a story spec with focused failing tests befor
 
 # Test-Driven Development
 
-Cutiepie uses TDD inside each story spec implementation.
+Gummy uses TDD inside each story spec implementation.
 
 ## Loop
 

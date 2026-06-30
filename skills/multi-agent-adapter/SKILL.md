@@ -1,6 +1,6 @@
 ---
 name: multi-agent-adapter
-description: Use whenever Cutiepie dispatches subagents, reviewers, implementers, or parallel workers across Claude Code, Codex, Cursor, Copilot, Gemini, or unknown hosts.
+description: Use whenever Gummy dispatches subagents, reviewers, implementers, or parallel workers across Claude Code, Codex, Cursor, Copilot, Gemini, or unknown hosts.
 ---
 
 # Multi-Agent Adapter

@@ -1,5 +1,5 @@
 ---
-description: "Build the next Cutiepie story spec"
+description: "Build the next Gummy story spec"
 ---
 
-Use `cutiepie:build` to implement the next dependency-ready spec with `completed: false` from `.cutiepie/plans/story_*/specs/`.
+Use `gummy:build` to implement the next dependency-ready spec with `completed: false` from `.gummy/plans/story_*/specs/`.

@@ -1,6 +1,6 @@
 ---
 name: component-functional-testing
-description: Use to define or verify spec acceptance checks and component tests for Cutiepie story specs.
+description: Use to define or verify spec acceptance checks and component tests for Gummy story specs.
 ---
 
 # Component Functional Testing

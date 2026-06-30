@@ -9,14 +9,13 @@ Run this before cleanup and state refresh.
 
 ## Inputs
 
-- `.cutiepie/docs/PRD.md`
-- `.cutiepie/docs/ARCHI.md`
-- `.cutiepie/docs/CONFIG.md`
-- `.cutiepie/docs/REPO_REVIEW.md` when present
-- `.cutiepie/plans/story_*/plan.md`
-- `.cutiepie/plans/story_*/ADR.md`
-- `.cutiepie/plans/story_*/contracts.json`
-- `.cutiepie/plans/story_*/specs/spec_*.md`
+- `.gummy/docs/PRD.md`
+- `.gummy/docs/ARCHI.md`
+- `.gummy/docs/CONFIG.md`
+- `.gummy/docs/REPO_REVIEW.md` when present
+- `.gummy/plans/story_*/ADR.md`
+- `.gummy/plans/story_*/contracts.json`
+- `.gummy/plans/story_*/specs/spec_*.md`
 - recent implementation diff and test results
 
 ## Content Structure

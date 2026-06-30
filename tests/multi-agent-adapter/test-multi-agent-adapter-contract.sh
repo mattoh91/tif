@@ -5,8 +5,8 @@ script_dir="$(cd "$(dirname "$0")" && pwd)"
 repo_root="$(cd "$script_dir/../.." && pwd)"
 
 adapter="$repo_root/skills/multi-agent-adapter/SKILL.md"
-using_cutiepie="$repo_root/skills/using-cutiepie/SKILL.md"
-guidelines="$repo_root/docs/cutiepie/AGENTIC_ENGINEERING_GUIDELINES.md"
+using_method="$repo_root/skills/using-gummy/SKILL.md"
+guidelines="$repo_root/docs/gummy/AGENTIC_ENGINEERING_GUIDELINES.md"
 
 failures=0
 
@@ -48,12 +48,12 @@ assert_contains "$repo_root/skills/subagent-driven-spec-development/SKILL.md" "m
 assert_contains "$repo_root/skills/subagent-driven-development/SKILL.md" "multi-agent-adapter" "development compatibility skill routes dispatch through adapter"
 assert_contains "$repo_root/skills/requesting-code-review/SKILL.md" "multi-agent-adapter" "code review skill routes dispatch through adapter"
 assert_contains "$repo_root/skills/dispatching-parallel-agents/SKILL.md" "multi-agent-adapter" "parallel dispatch skill routes dispatch through adapter"
-assert_contains "$repo_root/skills/using-cutiepie/references/codex-tools.md" "multi-agent-adapter" "Codex tool mapping points to adapter"
+assert_contains "$repo_root/skills/using-gummy/references/codex-tools.md" "multi-agent-adapter" "Codex tool mapping points to adapter"
 assert_contains "$repo_root/README.md" "multi-agent-adapter" "README documents runtime adapter"
 
-assert_contains "$using_cutiepie" ".cutiepie/plans/story_<nnn>_<slug>/" "using-cutiepie declares story folder state"
-assert_contains "$using_cutiepie" "Spec frontmatter owns completion state" "using-cutiepie keeps completion state in specs"
-assert_contains "$using_cutiepie" '`contracts.json` owns cross-spec schemas' "using-cutiepie keeps contracts in story folder"
+assert_contains "$using_method" ".gummy/plans/story_<nnn>_<slug>/" "using-gummy declares story folder state"
+assert_contains "$using_method" "Spec frontmatter owns" "using-gummy keeps completion state in specs"
+assert_contains "$using_method" '`contracts.json` owns cross-spec schemas' "using-gummy keeps contracts in story folder"
 assert_contains "$guidelines" "A spec is complete only when" "engineering guidelines define spec completion"
 
 if [ "$failures" -gt 0 ]; then

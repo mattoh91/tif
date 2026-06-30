@@ -1,11 +1,11 @@
 # Implementer Prompt
 
-You are implementing one Cutiepie story spec.
+You are implementing one Gummy story spec.
 
 Inputs:
 
 - spec markdown and frontmatter
-- story plan
+- story ADR
 - story ADR
 - contracts.json
 - relevant architecture/config excerpts

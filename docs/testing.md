@@ -1,6 +1,6 @@
-# Testing Cutiepie Skills
+# Testing Gummy Skills
 
-This document describes how to test Cutiepie skills, particularly the integration tests for complex skills like `subagent-driven-development`.
+This document describes how to test Gummy skills, particularly the integration tests for complex skills like `subagent-driven-development`.
 
 ## Overview
 
@@ -33,9 +33,9 @@ cd tests/claude-code
 
 ### Requirements
 
-- Must run from the **cutiepie plugin directory** (not from temp directories)
+- Must run from the **Gummy plugin directory** (not from temp directories)
 - Claude Code must be installed and available as `claude` command
-- Local dev marketplace must be enabled: `"cutiepie@cutiepie-dev": true` in `~/.claude/settings.json`
+- Local dev marketplace must be enabled: `"gummy@gummy-dev": true` in `~/.claude/settings.json`
 
 ## Integration Test: subagent-driven-development
 
@@ -149,8 +149,8 @@ python3 tests/claude-code/analyze-token-usage.py ~/.claude/projects/<project-dir
 Session transcripts are stored in `~/.claude/projects/` with the working directory path encoded:
 
 ```bash
-# Example for /Users/jesse/Documents/GitHub/cutiepie/cutiepie
-SESSION_DIR="$HOME/.claude/projects/-Users-jesse-Documents-GitHub-cutiepie-cutiepie"
+# Example for /Users/jesse/Documents/GitHub/gummy/gummy
+SESSION_DIR="$HOME/.claude/projects/-Users-jesse-Documents-GitHub-gummy-gummy"
 
 # Find recent sessions
 ls -lt "$SESSION_DIR"/*.jsonl | head -5
@@ -182,8 +182,8 @@ ls -lt "$SESSION_DIR"/*.jsonl | head -5
 **Problem**: Skill not found when running headless tests
 
 **Solutions**:
-1. Ensure you're running FROM the cutiepie directory: `cd /path/to/cutiepie && tests/...`
-2. Check `~/.claude/settings.json` has `"cutiepie@cutiepie-dev": true` in `enabledPlugins`
+1. Ensure you're running FROM the Gummy directory: `cd /path/to/gummy && tests/...`
+2. Check `~/.claude/settings.json` has `"gummy@gummy-dev": true` in `enabledPlugins`
 3. Verify skill exists in `skills/` directory
 
 ### Permission Errors
@@ -258,7 +258,7 @@ python3 "$SCRIPT_DIR/analyze-token-usage.py" "$SESSION_FILE"
 1. **Always cleanup**: Use trap to cleanup temp directories
 2. **Parse transcripts**: Don't grep user-facing output - parse the `.jsonl` session file
 3. **Grant permissions**: Use `--permission-mode bypassPermissions` and `--add-dir`
-4. **Run from plugin dir**: Skills only load when running from the cutiepie directory
+4. **Run from plugin dir**: Skills only load when running from the Gummy directory
 5. **Show token usage**: Always include token analysis for cost visibility
 6. **Test real behavior**: Verify actual files created, tests passing, commits made
 

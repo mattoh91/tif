@@ -1,16 +1,16 @@
 ---
 name: subagent-driven-spec-development
-description: Use when implementing Cutiepie story specs with subagents, contracts, TDD, and acceptance-check verification.
+description: Use when implementing Gummy story specs with subagents, contracts, TDD, and acceptance-check verification.
 ---
 
 # Subagent-Driven Spec Development
 
-Implement specs from `.cutiepie/plans/story_*/specs/`.
+Implement specs from `.gummy/plans/story_*/specs/`.
 
 ## Workflow
 
-1. Run `scripts/check-cutiepie-state.sh .`.
-2. Read PRD, architecture, config, story plan, story ADR, contracts, and specs.
+1. Run `scripts/check-gummy-state.sh .`.
+2. Read PRD, architecture, config, story ADR, contracts, and specs.
 3. Select incomplete specs with complete dependencies.
 4. Use `multi-agent-adapter`.
 5. Dispatch parallel workers only for specs listed in compatible contract parallel groups and with non-overlapping file scopes.

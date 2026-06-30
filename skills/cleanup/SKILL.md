@@ -1,6 +1,6 @@
 ---
 name: cleanup
-description: Use at the end of a Cutiepie session after documentation to remove stale state, flag orphaned specs/contracts, run state validation, and prepare memory refresh.
+description: Use at the end of a Gummy session after documentation to remove stale state, flag orphaned specs/contracts, run state validation, and prepare memory refresh.
 ---
 
 # Cleanup
@@ -9,7 +9,7 @@ Run this after `documentation` and before `update-state`.
 
 ## Checks
 
-1. Run `scripts/check-cutiepie-state.sh .`.
+1. Run `scripts/check-gummy-state.sh .`.
 2. Check for story folders with no matching PRD story.
 3. Check for specs with `completed: true` and failing acceptance checks.
 4. Check for contracts not referenced by any spec.
@@ -24,7 +24,6 @@ Update only what is true:
 
 - Spec `completed: true` only after all acceptance checks pass.
 - Acceptance check `passes: true` only after the described verification was run.
-- Story `plan.md` workflow checkboxes only after the work happened.
 - Story `ADR.md` when decisions changed.
 - `CONFIG.md` when env vars, settings, timeouts, models, thresholds, or MCP setup changed.
 

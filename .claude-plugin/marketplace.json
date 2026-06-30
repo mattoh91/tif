@@ -1,12 +1,12 @@
 {
-  "name": "cutiepie-dev",
-  "description": "Development marketplace for the Cutiepie cross-harness SWE workflow plugin",
+  "name": "gummy-dev",
+  "description": "Development marketplace for the Gummy cross-harness SWE workflow plugin",
   "owner": {
     "name": "mattoh91"
   },
   "plugins": [
     {
-      "name": "cutiepie",
+      "name": "gummy",
       "description": "Personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
       "version": "5.0.7",
       "source": "./",

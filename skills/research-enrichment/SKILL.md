@@ -20,9 +20,17 @@ Use this when implementation choices affect simplicity or effectiveness:
 ## Workflow
 
 1. Identify the spec(s) whose implementation choice depends on research.
-2. Prefer primary docs, papers, official references, and major repos.
+2. Prefer primary docs, official references, major GitHub repositories, arXiv/primary papers, and security advisories.
 3. Compare the simplest viable options.
-4. Record the chosen option and rejected options in the story `ADR.md`.
+4. Record evidence in the story `ADR.md` or spec body:
+   - question
+   - sources with URLs and retrieval dates
+   - chosen option
+   - rejected options
+   - security notes
+   - verification plan
 5. Add concise research notes and implementation guidance to the spec body.
 6. Update contracts if the choice changes schemas or dependencies.
-7. Run `scripts/check-cutiepie-state.sh .`.
+7. Run `scripts/check-gummy-state.sh .`.
+
+Skip external research for trivial or purely local edits only when the ADR/spec records why research is unnecessary.

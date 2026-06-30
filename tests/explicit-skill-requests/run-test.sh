@@ -21,12 +21,12 @@ fi
 
 # Get the directory where this script lives
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Get the cutiepie plugin root (two levels up)
+# Get the Gummy plugin root (two levels up)
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-source "$SCRIPT_DIR/../cutiepie-fixtures.sh"
+source "$SCRIPT_DIR/../gummy-fixtures.sh"
 
 TIMESTAMP=$(date +%s)
-OUTPUT_DIR="/tmp/cutiepie-tests/${TIMESTAMP}/explicit-skill-requests/${SKILL_NAME}"
+OUTPUT_DIR="/tmp/gummy-tests/${TIMESTAMP}/explicit-skill-requests/${SKILL_NAME}"
 mkdir -p "$OUTPUT_DIR"
 
 # Read prompt from file
@@ -44,7 +44,7 @@ cp "$PROMPT_FILE" "$OUTPUT_DIR/prompt.txt"
 
 # Create a minimal project directory for the test
 PROJECT_DIR="$OUTPUT_DIR/project"
-create_cutiepie_docs_fixture "$PROJECT_DIR"
+create_gummy_docs_fixture "$PROJECT_DIR"
 
 # Run Claude with isolated environment
 LOG_FILE="$OUTPUT_DIR/claude-output.json"

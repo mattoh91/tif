@@ -11,10 +11,9 @@ This is a required post-spec planning gate. It is a skill, not a lifecycle hook,
 
 Read the story folder:
 
-- `plan.md`
 - `ADR.md`
 - `specs/spec_*.md`
-- relevant `.cutiepie/docs/PRD.md`, `ARCHI.md`, and `CONFIG.md`
+- relevant `.gummy/docs/PRD.md`, `ARCHI.md`, and `CONFIG.md`
 
 ## Workflow
 
@@ -25,7 +24,7 @@ Read the story folder:
 5. Confirm every consumed contract is provided by one spec or explicitly marked external.
 6. Confirm there are no extra, missing, or ambiguous inputs/outputs.
 7. Confirm dependency order and safe parallel groups.
-8. Run `scripts/check-cutiepie-state.sh .`.
+8. Run `scripts/check-gummy-state.sh .`.
 
 ## Contract Shape
 
@@ -33,7 +32,7 @@ Use this schema:
 
 ```json
 {
-  "schema_version": "cutiepie.contracts.v1",
+  "schema_version": "gummy.contracts.v1",
   "story_id": "story_001",
   "contracts": [
     {

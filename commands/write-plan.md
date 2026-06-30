@@ -1,5 +1,5 @@
 ---
-description: "Create or update Cutiepie story plans and specs"
+description: "Create or update Gummy story specs"
 ---
 
-Use `cutiepie:story-planner` to create or update `.cutiepie/plans/story_*/plan.md`, `ADR.md`, draft specs, then run `cutiepie:contract-designer`.
+Use `gummy:story-planner` to create or update `.gummy/plans/story_*/ADR.md` and draft specs, then run `gummy:contract-designer`.

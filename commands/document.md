@@ -1,5 +1,5 @@
 ---
-description: "Generate Cutiepie project documentation"
+description: "Generate Gummy project documentation"
 ---
 
-Use `cutiepie:documentation` to prepare local or approved Heineken GenAILab Confluence documentation.
+Use `gummy:documentation` to prepare local or approved Heineken GenAILab Confluence documentation.

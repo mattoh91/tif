@@ -1,2 +1,2 @@
-@./skills/using-cutiepie/SKILL.md
-@./skills/using-cutiepie/references/gemini-tools.md
+@./skills/using-gummy/SKILL.md
+@./skills/using-gummy/references/gemini-tools.md

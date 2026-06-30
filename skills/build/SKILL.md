@@ -1,19 +1,19 @@
 ---
 name: build
-description: Use when the user asks to build, deliver, implement, or continue the next Cutiepie story spec from .cutiepie/plans/story_*/specs/.
+description: Use when the user asks to build, deliver, implement, or continue the next Gummy story spec from .gummy/plans/story_*/specs/.
 ---
 
 # Build
 
-Use this as Cutiepie's delivery entrypoint.
+Use this as Gummy's delivery entrypoint.
 
 ## Workflow
 
-1. Run `scripts/check-cutiepie-state.sh .`; stop on missing, invalid, blocked, or stale contract state.
-2. Read `.cutiepie/docs/PRD.md`, `.cutiepie/docs/ARCHI.md`, `.cutiepie/docs/CONFIG.md`, and story folders under `.cutiepie/plans/`.
+1. Run `scripts/check-gummy-state.sh .`; stop on missing, invalid, blocked, or stale contract state.
+2. Read `.gummy/docs/PRD.md`, `.gummy/docs/ARCHI.md`, `.gummy/docs/CONFIG.md`, and story folders under `.gummy/plans/`.
 3. Select the next spec with `completed: false` whose dependencies are complete.
 4. Use `multi-agent-adapter` to decide whether the host can dispatch workers or must run inline.
-5. Provide each worker or inline task with the full spec, story `plan.md`, story `ADR.md`, `contracts.json`, allowed files, contract schemas, and gate commands.
+5. Provide each worker or inline task with the full spec, story `ADR.md`, `contracts.json`, allowed files, contract schemas, and gate commands.
 6. Implement with TDD:
    - write focused failing tests
    - implement the smallest useful change

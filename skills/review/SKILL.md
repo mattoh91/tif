@@ -1,6 +1,6 @@
 ---
 name: review
-description: Use when PR, branch, ticket, or code review feedback needs to be addressed against Cutiepie story specs.
+description: Use when PR, branch, ticket, or code review feedback needs to be addressed against Gummy story specs.
 ---
 
 # Review
@@ -11,8 +11,8 @@ Use review feedback without scope creep.
 
 - Current branch and git status
 - Review comments or PR/ticket source
-- `.cutiepie/docs/PRD.md`, `ARCHI.md`, and `CONFIG.md`
-- Relevant story `plan.md`, `ADR.md`, `contracts.json`, and specs
+- `.gummy/docs/PRD.md`, `ARCHI.md`, and `CONFIG.md`
+- Relevant story `ADR.md`, `contracts.json`, and specs
 
 ## Workflow
 

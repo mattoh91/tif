@@ -14,26 +14,26 @@ export XDG_CONFIG_HOME="$TEST_HOME/.config"
 export OPENCODE_CONFIG_DIR="$TEST_HOME/.config/opencode"
 
 # Standard install layout:
-#   $OPENCODE_CONFIG_DIR/cutiepie/             ← package root
-#   $OPENCODE_CONFIG_DIR/cutiepie/skills/      ← skills dir (../../skills from plugin)
-#   $OPENCODE_CONFIG_DIR/cutiepie/.opencode/plugins/cutiepie.js ← plugin file
-#   $OPENCODE_CONFIG_DIR/plugins/cutiepie.js   ← symlink OpenCode reads
+#   $OPENCODE_CONFIG_DIR/gummy/             ← package root
+#   $OPENCODE_CONFIG_DIR/gummy/skills/      ← skills dir (../../skills from plugin)
+#   $OPENCODE_CONFIG_DIR/gummy/.opencode/plugins/gummy.js ← plugin file
+#   $OPENCODE_CONFIG_DIR/plugins/gummy.js   ← symlink OpenCode reads
 
-CUTIEPIE_DIR="$OPENCODE_CONFIG_DIR/cutiepie"
-CUTIEPIE_SKILLS_DIR="$CUTIEPIE_DIR/skills"
-CUTIEPIE_PLUGIN_FILE="$CUTIEPIE_DIR/.opencode/plugins/cutiepie.js"
+GUMMY_DIR="$OPENCODE_CONFIG_DIR/gummy"
+GUMMY_SKILLS_DIR="$GUMMY_DIR/skills"
+GUMMY_PLUGIN_FILE="$GUMMY_DIR/.opencode/plugins/gummy.js"
 
 # Install skills
-mkdir -p "$CUTIEPIE_DIR"
-cp -r "$REPO_ROOT/skills" "$CUTIEPIE_DIR/"
+mkdir -p "$GUMMY_DIR"
+cp -r "$REPO_ROOT/skills" "$GUMMY_DIR/"
 
 # Install plugin
-mkdir -p "$(dirname "$CUTIEPIE_PLUGIN_FILE")"
-cp "$REPO_ROOT/.opencode/plugins/cutiepie.js" "$CUTIEPIE_PLUGIN_FILE"
+mkdir -p "$(dirname "$GUMMY_PLUGIN_FILE")"
+cp "$REPO_ROOT/.opencode/plugins/gummy.js" "$GUMMY_PLUGIN_FILE"
 
 # Register plugin via symlink (what OpenCode actually reads)
 mkdir -p "$OPENCODE_CONFIG_DIR/plugins"
-ln -sf "$CUTIEPIE_PLUGIN_FILE" "$OPENCODE_CONFIG_DIR/plugins/cutiepie.js"
+ln -sf "$GUMMY_PLUGIN_FILE" "$OPENCODE_CONFIG_DIR/plugins/gummy.js"
 
 # Create test skills in different locations for testing
 
@@ -67,10 +67,10 @@ EOF
 
 echo "Setup complete: $TEST_HOME"
 echo "OPENCODE_CONFIG_DIR:  $OPENCODE_CONFIG_DIR"
-echo "Cutiepie dir:      $CUTIEPIE_DIR"
-echo "Skills dir:           $CUTIEPIE_SKILLS_DIR"
-echo "Plugin file:          $CUTIEPIE_PLUGIN_FILE"
-echo "Plugin registered at: $OPENCODE_CONFIG_DIR/plugins/cutiepie.js"
+echo "Gummy dir:      $GUMMY_DIR"
+echo "Skills dir:           $GUMMY_SKILLS_DIR"
+echo "Plugin file:          $GUMMY_PLUGIN_FILE"
+echo "Plugin registered at: $OPENCODE_CONFIG_DIR/plugins/gummy.js"
 echo "Test project at:      $TEST_HOME/test-project"
 
 # Helper function for cleanup (call from tests or trap)
@@ -83,6 +83,6 @@ cleanup_test_env() {
 # Export for use in tests
 export -f cleanup_test_env
 export REPO_ROOT
-export CUTIEPIE_DIR
-export CUTIEPIE_SKILLS_DIR
-export CUTIEPIE_PLUGIN_FILE
+export GUMMY_DIR
+export GUMMY_SKILLS_DIR
+export GUMMY_PLUGIN_FILE

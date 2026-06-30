@@ -1,11 +1,10 @@
 # Story Spec Reviewer Prompt
 
-Review the Cutiepie story planning set.
+Review the Gummy story planning set.
 
 Inputs:
 
-- `.cutiepie/docs/PRD.md`
-- story `plan.md`
+- `.gummy/docs/PRD.md`
 - story `ADR.md`
 - story `contracts.json`
 - story specs

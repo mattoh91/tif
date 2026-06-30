@@ -1,6 +1,6 @@
 ---
 name: story-planner
-description: Use after PRD stories exist to create .cutiepie/plans/story_<nnn>_<slug>/ plan, ADR, draft specs, and then hand off to contract-designer.
+description: Use after PRD stories exist to create .gummy/plans/story_<nnn>_<slug>/ ADR, draft specs, and then hand off to contract-designer.
 ---
 
 # Story Planner
@@ -12,8 +12,7 @@ Create story-local planning folders from `PRD.md`.
 For each story:
 
 ```text
-.cutiepie/plans/story_001_short_slug/
-  plan.md
+.gummy/plans/story_001_short_slug/
   ADR.md
   contracts.json
   specs/
@@ -21,19 +20,7 @@ For each story:
     spec_002_component_or_flow.md
 ```
 
-Draft specs before designing contracts. `contracts.json` may start empty or placeholder only during drafting, but planning is not complete until `contract-designer` writes the real file and `scripts/check-cutiepie-state.sh .` passes.
-
-## Plan Requirements
-
-`plan.md` owns story workflow only:
-
-- story goal
-- spec sequence and safe parallel groups
-- research tasks
-- implementation order
-- documentation and cleanup closeout
-
-Do not duplicate spec completion state in prose. Spec completion lives in spec frontmatter.
+Draft specs before designing contracts. `contracts.json` may start empty or placeholder only during drafting, but planning is not complete until `contract-designer` writes the real file and `scripts/check-gummy-state.sh .` passes.
 
 ## ADR Requirements
 
@@ -41,12 +28,16 @@ Each story folder has one `ADR.md`.
 
 Record:
 
+- story goal and scope
+- implementation sequence when it is not obvious from spec dependencies
 - library/module/tool choices
 - algorithms and data structures
 - design patterns
 - contract-shape decisions
+- research tasks and conclusions
 - important rejected options
 - POC/MVP compromises
+- documentation and cleanup closeout notes
 
 ## Spec Frontmatter
 
