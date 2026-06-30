@@ -2,7 +2,7 @@
 story_id: story_007
 spec_id: spec_002
 title: Hand-authored draw.io architecture diagram pipeline
-completed: false
+completed: true
 depends_on:
   - spec_001
 contracts:
@@ -18,7 +18,7 @@ acceptance_checks:
       - "Step 1: Generate a deck for a project whose ARCHI.md describes a dataflow/component architecture."
       - "Step 2: Verify docs/ppt/architecture.drawio and docs/ppt/architecture.svg exist."
       - "Step 3: Verify the exported SVG contains the embedded mxGraphModel XML (node geometry and edge source/target)."
-    passes: false
+    passes: true
   - id: check_002
     category: functional
     description: The exported SVG is inlined into the deck and the deck stays self-contained.
@@ -26,7 +26,7 @@ acceptance_checks:
       - "Step 1: Open docs/ppt/deck.html with no network access."
       - "Step 2: Verify the architecture diagram renders inline (no external image or script fetch)."
       - "Step 3: Verify diagram nodes/edges in the artifact match the components named in ARCHI.md."
-    passes: false
+    passes: true
   - id: check_003
     category: functional
     description: Drift between ARCHI.md and the deck diagram is flagged at closeout.
@@ -34,7 +34,7 @@ acceptance_checks:
       - "Step 1: Modify ARCHI.md after a deck has been generated."
       - "Step 2: Run /finish."
       - "Step 3: Verify the harness reports that the deck diagram is stale relative to ARCHI.md and must be regenerated."
-    passes: false
+    passes: true
 ---
 
 # Hand-Authored draw.io Architecture Diagram Pipeline

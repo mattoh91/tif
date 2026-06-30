@@ -1,0 +1,9 @@
+{
+  "title": "Acme Support Agent",
+  "sections": [
+    {"id":"overview","title":"What it does","html":"<p>A ReAct agent that triages support tickets and drafts replies.</p>"},
+    {"id":"value","title":"Measurable value","html":"<ul><li>30% faster first response</li><li>22% lower handle cost</li></ul>"},
+    {"id":"architecture","title":"Architecture","svg":"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"200\" height=\"80\"><rect x=\"10\" y=\"10\" width=\"60\" height=\"30\"/><rect x=\"130\" y=\"10\" width=\"60\" height=\"30\"/></svg>"},
+    {"id":"components","title":"Components & research","html":"<p>Retriever: BM25, chosen over dense embeddings after latency/cost comparison.</p>"}
+  ]
+}

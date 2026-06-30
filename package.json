@@ -2,5 +2,8 @@
   "name": "gummy",
   "version": "5.0.7",
   "type": "module",
-  "main": ".opencode/plugins/gummy.js"
+  "main": ".opencode/plugins/gummy.js",
+  "scripts": {
+    "test:deck": "node --test tests/deck/*.test.mjs"
+  }
 }

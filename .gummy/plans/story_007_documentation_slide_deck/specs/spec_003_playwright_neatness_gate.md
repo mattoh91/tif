@@ -2,7 +2,7 @@
 story_id: story_007
 spec_id: spec_003
 title: Playwright diagram neatness verification gate
-completed: false
+completed: true
 depends_on:
   - spec_002
 contracts:
@@ -18,7 +18,7 @@ acceptance_checks:
       - "Step 1: Generate a deck with a deliberately clean diagram."
       - "Step 2: Run the neatness gate and verify it produces a structured report with accepted=true and no failed hard checks."
       - "Step 3: Verify the report's edge checks were derived from the embedded mxGraphModel source/target, not guessed from pixels."
-    passes: false
+    passes: true
   - id: check_002
     category: functional
     description: Hard-fail defects block deck acceptance.
@@ -26,7 +26,7 @@ acceptance_checks:
       - "Step 1: Inject an overlapping-shape, off-canvas, and mislanded-arrow defect into a test diagram."
       - "Step 2: Run the neatness gate."
       - "Step 3: Verify each hard check fails, accepted=false, and the deck is reported as not accepted."
-    passes: false
+    passes: true
   - id: check_003
     category: functional
     description: When Playwright or Node is unavailable, the gate degrades to skipped-and-reported rather than claiming a pass.
@@ -34,7 +34,7 @@ acceptance_checks:
       - "Step 1: Run deck generation in an environment without a Playwright runtime."
       - "Step 2: Verify the deck still renders and the report has skipped=true with a skipped_reason."
       - "Step 3: Verify the harness never reports the diagram as verified when the gate was skipped."
-    passes: false
+    passes: true
 ---
 
 # Playwright Diagram Neatness Verification Gate

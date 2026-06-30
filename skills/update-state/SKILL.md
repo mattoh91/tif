@@ -24,4 +24,6 @@ State refresh writes:
 - `~/.gummy/memory/<project-slug>/SESSIONS/<date>.md`
 - `~/.gummy/memory/<project-slug>/CANDIDATES.jsonl` when stale-state or closeout issues are detected
 
+When `docs/ppt/.drift.json` exists, run `node scripts/deck/drift.mjs check .gummy/docs/ARCHI.md docs/ppt/.drift.json` and report a stale slide-deck diagram as a closeout issue (regenerate with `/deck`).
+
 Run `documentation` and `cleanup` before state refresh when ending a session. Run `memory-review` before promoting any candidate into durable memory, skills, docs, or tests.

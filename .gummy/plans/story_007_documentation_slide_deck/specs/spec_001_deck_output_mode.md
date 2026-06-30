@@ -2,7 +2,7 @@
 story_id: story_007
 spec_id: spec_001
 title: Opt-in slide-deck output mode for documentation
-completed: false
+completed: true
 depends_on: []
 contracts:
   provides:
@@ -16,7 +16,7 @@ acceptance_checks:
       - "Step 1: Run /finish and /document on a sample project."
       - "Step 2: Verify no docs/ppt/ artifacts are produced and the canonical markdown documentation is unchanged in behavior."
       - "Step 3: Run /deck and verify docs/ppt/deck.html is produced."
-    passes: false
+    passes: true
   - id: check_002
     category: functional
     description: The rendered deck contains the required value-oriented sections sourced from gummy artifacts.
@@ -24,7 +24,7 @@ acceptance_checks:
       - "Step 1: Generate a deck for a project with PRD, ARCHI, ADR, contracts, and specs present."
       - "Step 2: Verify the deck includes a narrative of what the app does, a measurable-value section, and a per-component breakdown with the research behind each part."
       - "Step 3: Verify each section's content traces back to a .gummy/ source artifact."
-    passes: false
+    passes: true
   - id: check_003
     category: style
     description: The deck is styled via ui-ux-pro-max and is self-contained.
@@ -32,7 +32,7 @@ acceptance_checks:
       - "Step 1: Open docs/ppt/deck.html from a clean checkout with no network."
       - "Step 2: Verify styling renders without external CSS/JS fetches and the embedded architecture SVG is visible."
       - "Step 3: Verify the deck theme/layout was produced through ui-ux-pro-max guidance."
-    passes: false
+    passes: true
 ---
 
 # Opt-In Slide-Deck Output Mode
