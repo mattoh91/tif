@@ -366,15 +366,6 @@ if (!exists(plansDir)) {
     const contractsFile = path.join(storyDir, 'contracts.json');
     const specsDir = path.join(storyDir, 'specs');
 
-    if (!exists(adrFile)) {
-      emit('missing', `${storyName} is missing ADR.md.`);
-    } else {
-      const adr = read(adrFile);
-      if (!/Status:/i.test(adr) || !/Decision:/i.test(adr)) {
-        emit('invalid', `${adrFile} must include Status and Decision sections.`);
-      }
-    }
-
     if (!exists(specsDir)) {
       emit('missing', `${storyName} is missing specs directory.`);
       continue;
@@ -405,10 +396,28 @@ if (!exists(plansDir)) {
       }
     }
 
+    // Story weight: 'spike' only when every spec opts in; absent weight = 'full'
+    // (backward compatible). Spike stories may omit ADR.md and contracts.json.
+    const storyWeight = specsById.size > 0 &&
+      [...specsById.values()].every((m) => m.weight === 'spike') ? 'spike' : 'full';
+
+    if (!exists(adrFile)) {
+      if (storyWeight !== 'spike') {
+        emit('missing', `${storyName} is missing ADR.md.`);
+      }
+    } else {
+      const adr = read(adrFile);
+      if (!/Status:/i.test(adr) || !/Decision:/i.test(adr)) {
+        emit('invalid', `${adrFile} must include Status and Decision sections.`);
+      }
+    }
+
     validateAcyclic(specsById, storyName);
 
     if (!exists(contractsFile)) {
-      emit('missing', `${storyName} has specs but is missing contracts.json; run contract-designer before build.`);
+      if (storyWeight !== 'spike') {
+        emit('missing', `${storyName} has specs but is missing contracts.json; run contract-designer before build.`);
+      }
     } else {
       validateContracts(contractsFile, storyId, specsById, storyDir);
     }

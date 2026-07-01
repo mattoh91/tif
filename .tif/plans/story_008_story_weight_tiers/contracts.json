@@ -1,0 +1,23 @@
+{
+  "schema_version": "tif.contracts.v1",
+  "story_id": "story_008",
+  "contracts": [
+    {
+      "id": "tif.story.weight",
+      "provider": "spec_001",
+      "consumers": ["spec_002"],
+      "schema": {
+        "type": "object",
+        "required": ["field", "values", "default", "story_rule", "spike_relaxations"],
+        "properties": {
+          "field": { "type": "string" },
+          "values": { "type": "array", "items": { "type": "string" } },
+          "default": { "type": "string" },
+          "story_rule": { "type": "string" },
+          "spike_relaxations": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  ],
+  "parallel_groups": [["spec_001"], ["spec_002"]]
+}
