@@ -22,6 +22,8 @@ For each story:
 
 Draft specs before designing contracts. `contracts.json` may start empty or placeholder only during drafting, but planning is not complete until `contract-designer` writes the real file and `scripts/check-tif-state.sh .` passes.
 
+**Right-size to the story's weight (see `using-tif` → Story Weight).** At `spike` weight, emit the lean shape: one spec with `weight: spike` in its frontmatter and inline acceptance checks, **no ADR.md, no contracts.json** (the state checker relaxes both) — hand off straight to build. The full output shape above applies at `full` weight, where ADR and cross-spec contracts earn their keep. Infer weight from `project_mode` + story shape and state it; do not force a spike through full ceremony.
+
 ## ADR Requirements
 
 Each story folder has one `ADR.md`.

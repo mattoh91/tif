@@ -68,3 +68,17 @@ cycle="$tmpdir/cycle"
 create_tif_docs_fixture "$cycle"
 perl -0pi -e 's/depends_on: \[\]/depends_on:\n  - spec_002/' "$cycle/.tif/plans/story_001_auth_system/specs/spec_001_registration.md"
 assert_fails "$cycle" "cyclic spec dependencies fail"
+
+# --- weight: spike relaxation (story_008) ---
+
+spike_lean="$tmpdir/spike-lean"
+create_tif_docs_fixture "$spike_lean"
+spike_story="$spike_lean/.tif/plans/story_001_auth_system"
+perl -0pi -e 's/^completed: (true|false)$/completed: $1\nweight: spike/m' "$spike_story"/specs/spec_*.md
+rm -f "$spike_story/ADR.md" "$spike_story/contracts.json"
+assert_passes "$spike_lean" "spike-weight story omits ADR.md and contracts.json"
+
+full_needs_adr="$tmpdir/full-needs-adr"
+create_tif_docs_fixture "$full_needs_adr"
+rm -f "$full_needs_adr/.tif/plans/story_001_auth_system/ADR.md"
+assert_fails "$full_needs_adr" "full-weight story still requires ADR.md"

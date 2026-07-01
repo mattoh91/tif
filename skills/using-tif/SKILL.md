@@ -55,6 +55,7 @@ story_id: story_001
 spec_id: spec_001
 title: Short title
 completed: false
+weight: full        # full (default) | spike — omit for full
 depends_on: []
 contracts:
   provides: []
@@ -72,6 +73,23 @@ acceptance_checks:
 ```
 
 Spec bodies should include implementation notes, research when tools/libraries/frameworks are involved, design patterns/algorithms/data structures where useful, TDD unit-test plan, and natural-language integration/e2e expectations.
+
+## Story Weight (scope commensurate with effort)
+
+Each story has a weight so planning ceremony matches the deliverable:
+
+- `full` (default): ADR.md and contracts.json required; multi-spec, cross-spec contracts. Earns its keep when there are real tradeoffs, cross-component schemas, or parallel work.
+- `spike`: a de-risking / prove-the-loop slice. Typically one spec. ADR.md and contracts.json are **optional** (`check-tif-state.sh` relaxes both). Goal is a learning, not a polished subsystem.
+
+Weight lives in spec frontmatter (`weight: spike`); a story is `spike` only when **every** spec opts in. Absent = `full` (backward compatible).
+
+**Auto-default, don't hand-assign.** When a story is created (`/socrates`), infer weight and state it in one line; the user only intervenes to override:
+
+- Default from `project_mode`: `POC → spike`, `MVP → full`.
+- Nudge to `spike` when the story is a single spec with no cross-spec `provides`/`consumes` and no research triggers (external service, security, novel algorithm), or the story says "prove/spike/validate".
+- Nudge to `full` when specs share contracts, security/data-loss is in scope, or research is required.
+
+`/plato` emits proportional artifacts: at `spike`, one spec with inline acceptance checks, no ADR, omitted/empty contracts, straight to build; at `full`, the normal ADR + specs + contracts. A trusted-automation setting may skip the one-line confirm.
 
 ## Heineken Projects
 
