@@ -85,7 +85,7 @@ If project context is Heineken:
 
 ## Skill Routing
 
-- New repo/session: `project-intake`
+- New repo/session: `project-intake` (via `/onboard`, alias `/intake`)
 - New idea/story: `brainstorming`, which routes through `prd-discovery`, `story-planner`, and `contract-designer`
 - Requirements phase: `/socrates`, backed by `brainstorming` and `prd-discovery`
 - Design phase: `/plato`, backed by `research-enrichment`, `solution-architect`, `story-planner`, and `contract-designer`

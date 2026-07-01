@@ -82,7 +82,7 @@ flowchart TD
 /finish     documentation, cleanup, update-state, memory candidate review
 /memory-review approve/reject staged self-improvement candidates
 
-/intake      classify greenfield/brownfield and personal/Heineken context
+/onboard     classify greenfield/brownfield and personal/Heineken context (alias: /intake)
 /brainstorm  create/update PRD stories, story specs, and contracts
 /contracts   design or validate story contracts
 /build       implement the next dependency-ready incomplete spec

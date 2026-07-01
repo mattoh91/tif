@@ -109,10 +109,10 @@ Ask the host:
 Use Gummy to scaffold this repo.
 ```
 
-Or start with the explicit intake command:
+Or start with the explicit onboarding command (`/intake` still works as an alias):
 
 ```text
-/intake
+/onboard
 ```
 
 For a local checkout, also run:
