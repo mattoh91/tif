@@ -1,11 +1,11 @@
-# Gummy Release Notes
+# Tif Release Notes
 
 ## Unreleased
 
 ### Slide Deck Output (`/deck`)
 
 - **New `/deck` command** (story_007) renders an opt-in, self-contained
-  `docs/ppt/deck.html` presentation from `.gummy/` artifacts: narrative,
+  `docs/ppt/deck.html` presentation from `.tif/` artifacts: narrative,
   measurable value, architecture, and per-component research. `/finish` and
   `/document` never generate a deck on their own.
 - **Hand-authored draw.io diagrams** over Mermaid — exported to SVG with the
@@ -24,19 +24,19 @@
 - Added the project-agnostic `langfuse-agent-instrumentation` skill (typed
   observation `as_type`, evaluator-binding input/output/metadata discipline,
   per-generation cost tagging, client-side vs Managed Evaluator split). Routed
-  via `using-gummy`; supplements the official `langfuse` skill.
+  via `using-tif`; supplements the official `langfuse` skill.
 
 ## v5.0.7 (2026-03-31)
 
 ### GitHub Copilot CLI Support
 
-- **SessionStart context injection** — Copilot CLI v1.0.11 added support for `additionalContext` in sessionStart hook output. The session-start hook now detects the `COPILOT_CLI` environment variable and emits the SDK-standard `{ "additionalContext": "..." }` format, giving Copilot CLI users the full Gummy bootstrap at session start. (Original fix by @culinablaz in PR #910)
+- **SessionStart context injection** — Copilot CLI v1.0.11 added support for `additionalContext` in sessionStart hook output. The session-start hook now detects the `COPILOT_CLI` environment variable and emits the SDK-standard `{ "additionalContext": "..." }` format, giving Copilot CLI users the full Tif bootstrap at session start. (Original fix by @culinablaz in PR #910)
 - **Tool mapping** — added `references/copilot-tools.md` with the full Claude Code to Copilot CLI tool equivalence table
-- **Skill and README updates** — added Copilot CLI to the `using-gummy` skill's platform instructions and README installation section
+- **Skill and README updates** — added Copilot CLI to the `using-tif` skill's platform instructions and README installation section
 
 ### OpenCode Fixes
 
-- **Skills path consistency** — the bootstrap text no longer advertises a misleading `configDir/skills/gummy/` path that didn't match the runtime path. The agent should use the native `skill` tool, not navigate to files by path. Tests now use consistent paths derived from a single source of truth. (#847, #916)
+- **Skills path consistency** — the bootstrap text no longer advertises a misleading `configDir/skills/tif/` path that didn't match the runtime path. The agent should use the native `skill` tool, not navigate to files by path. Tests now use consistent paths derived from a single source of truth. (#847, #916)
 - **Bootstrap as user message** — moved bootstrap injection from `experimental.chat.system.transform` to `experimental.chat.messages.transform`, prepending to the first user message instead of adding a system message. Avoids token bloat from system messages repeated every turn (#750) and fixes compatibility with Qwen and other models that break on multiple system messages (#894).
 
 ## v5.0.6 (2026-03-24)
@@ -91,7 +91,7 @@ Dramatically reduces token usage and speeds up spec and plan reviews by eliminat
 ### OpenCode
 
 - **One-line plugin install** — OpenCode plugin now auto-registers the skills directory via a `config` hook. No symlinks or `skills.paths` config needed. Install is just adding one line to `opencode.json`. (PR #753)
-- **Added `package.json`** so OpenCode can install Gummy as an npm package from git.
+- **Added `package.json`** so OpenCode can install Tif as an npm package from git.
 
 ### Bug Fixes
 
@@ -149,8 +149,8 @@ Dramatically reduces token usage and speeds up spec and plan reviews by eliminat
 **Gemini CLI extension**
 
 - Native Gemini CLI extension support via `gemini-extension.json` and `GEMINI.md` at repo root
-- `GEMINI.md` @imports `using-gummy` skill and tool mapping table at session start
-- Gemini CLI tool mapping reference (`skills/using-gummy/references/gemini-tools.md`) — translates Claude Code tool names (Read, Write, Edit, Bash, etc.) to Gemini CLI equivalents (read_file, write_file, replace, etc.)
+- `GEMINI.md` @imports `using-tif` skill and tool mapping table at session start
+- Gemini CLI tool mapping reference (`skills/using-tif/references/gemini-tools.md`) — translates Claude Code tool names (Read, Write, Edit, Bash, etc.) to Gemini CLI equivalents (read_file, write_file, replace, etc.)
 - Documents Gemini CLI limitations: no subagent support, skills fall back to `executing-plans`
 - Extension root at repo root for cross-platform compatibility (avoids Windows symlink issues)
 - Install instructions added to README
@@ -228,15 +228,15 @@ Dramatically reduces token usage and speeds up spec and plan reviews by eliminat
 
 **Specs and plans directory restructured**
 
-- Specs (brainstorming output) now save to `docs/gummy/specs/YYYY-MM-DD-<topic>-design.md`
-- Plans (writing-plans output) now save to `docs/gummy/plans/YYYY-MM-DD-<feature-name>.md`
+- Specs (brainstorming output) now save to `docs/tif/specs/YYYY-MM-DD-<topic>-design.md`
+- Plans (writing-plans output) now save to `docs/tif/plans/YYYY-MM-DD-<feature-name>.md`
 - User preferences for spec/plan locations override these defaults
 - All internal skill references, test files, and example paths updated to match
 - Migration: move existing files from `docs/plans/` to new locations if desired
 
 **Subagent-driven development mandatory on capable harnesses**
 
-Writing-plans no longer offers a choice between subagent-driven and executing-plans. On harnesses with subagent support (Claude Code, Codex), subagent-driven-development is required. Executing-plans is reserved for harnesses without subagent capability, and now tells the user that Gummy works better on a subagent-capable platform.
+Writing-plans no longer offers a choice between subagent-driven and executing-plans. On harnesses with subagent support (Claude Code, Codex), subagent-driven-development is required. Executing-plans is reserved for harnesses without subagent capability, and now tells the user that Tif works better on a subagent-capable platform.
 
 **Executing-plans no longer batches**
 
@@ -252,7 +252,7 @@ Removed the "execute 3 tasks then stop for review" pattern. Plans now execute co
 
 Optional browser-based companion for brainstorming sessions. When a topic would benefit from visuals, the brainstorming skill offers to show mockups, diagrams, comparisons, and other content in a browser window alongside terminal conversation.
 
-- `lib/brainstorm-server/` — WebSocket server with browser helper library, session management scripts, and dark/light themed frame template ("Gummy Brainstorming" with GitHub link)
+- `lib/brainstorm-server/` — WebSocket server with browser helper library, session management scripts, and dark/light themed frame template ("Tif Brainstorming" with GitHub link)
 - `skills/brainstorming/visual-companion.md` — Progressive disclosure guide for server workflow, screen authoring, and feedback collection
 - Brainstorming skill adds a visual companion decision point to its process flow: after exploring project context, the skill evaluates whether upcoming questions involve visual content and offers the companion in its own message
 - Per-question decision: even after accepting, each question is evaluated for whether browser or terminal is more appropriate
@@ -268,7 +268,7 @@ Automated review loops for spec and plan documents using subagent dispatch:
 - Writing-plans includes chunk-based plan review loop after each section
 - Review loops repeat until approved or escalate after 5 iterations
 - End-to-end tests in `tests/claude-code/test-document-review-system.sh`
-- Design spec and implementation plan in `docs/gummy/`
+- Design spec and implementation plan in `docs/tif/`
 
 **Architecture guidance across the skill pipeline**
 
@@ -290,17 +290,17 @@ Design-for-isolation and file-size-awareness guidance added to brainstorming, wr
 
 **Instruction priority hierarchy**
 
-Added explicit priority ordering to using-gummy:
+Added explicit priority ordering to using-tif:
 
 1. User's explicit instructions (CLAUDE.md, AGENTS.md, direct requests) — highest priority
-2. Gummy skills — override default system behavior
+2. Tif skills — override default system behavior
 3. Default system prompt — lowest priority
 
 If CLAUDE.md or AGENTS.md says "don't use TDD" and a skill says "always use TDD," the user's instructions win.
 
 **SUBAGENT-STOP gate**
 
-Added `<SUBAGENT-STOP>` block to using-gummy. Subagents dispatched for specific tasks now skip the skill instead of activating the 1% rule and invoking full skill workflows.
+Added `<SUBAGENT-STOP>` block to using-tif. Subagents dispatched for specific tasks now skip the skill instead of activating the 1% rule and invoking full skill workflows.
 
 **Multi-platform improvements**
 
@@ -322,7 +322,7 @@ Added `<SUBAGENT-STOP>` block to using-gummy. Subagents dispatched for specific 
 
 **Cursor support**
 
-Gummy now works with Cursor's plugin system. Includes a `.cursor-plugin/plugin.json` manifest and Cursor-specific installation instructions in the README. The SessionStart hook output now includes an `additional_context` field alongside the existing `hookSpecificOutput.additionalContext` for Cursor hook compatibility.
+Tif now works with Cursor's plugin system. Includes a `.cursor-plugin/plugin.json` manifest and Cursor-specific installation instructions in the README. The SessionStart hook output now includes an `additional_context` field alongside the existing `hookSpecificOutput.additionalContext` for Cursor hook compatibility.
 
 ### Fixed
 
@@ -340,7 +340,7 @@ This fixes SessionStart failures on Windows with spaces in paths, missing WSL, `
 
 ## v4.3.0 (2026-02-12)
 
-This fix should dramatically improve Gummy skills compliance and should reduce the chances of Claude entering its native plan mode unintentionally.
+This fix should dramatically improve Tif skills compliance and should reduce the chances of Claude entering its native plan mode unintentionally.
 
 ### Changed
 
@@ -354,7 +354,7 @@ Models were skipping the design phase and jumping straight to implementation ski
 - Anti-pattern callout for "this is too simple to need a design" — the exact rationalization models use to skip the process
 - Design section sizing based on section complexity, not project complexity
 
-**Using-gummy workflow graph intercepts EnterPlanMode**
+**Using-tif workflow graph intercepts EnterPlanMode**
 
 Added an `EnterPlanMode` intercept to the skill flow graph. When the model is about to enter Claude's native plan mode, it checks whether brainstorming has happened and routes through the brainstorming skill instead. Plan mode is never entered.
 
@@ -362,7 +362,7 @@ Added an `EnterPlanMode` intercept to the skill flow graph. When the model is ab
 
 **SessionStart hook now runs synchronously**
 
-Changed `async: true` to `async: false` in hooks.json. When async, the hook could fail to complete before the model's first turn, meaning using-gummy instructions weren't in context for the first message.
+Changed `async: true` to `async: false` in hooks.json. When async, the hook could fail to complete before the model's first turn, meaning using-tif instructions weren't in context for the first message.
 
 ## v4.2.0 (2026-02-05)
 
@@ -370,7 +370,7 @@ Changed `async: true` to `async: false` in hooks.json. When async, the hook coul
 
 **Codex: Replaced bootstrap CLI with native skill discovery**
 
-The `gummy-codex` bootstrap CLI, Windows `.cmd` wrapper, and related bootstrap content file have been removed. Codex now uses native skill discovery via `~/.agents/skills/gummy/` symlink, so the old `use_skill`/`find_skills` CLI tools are no longer needed.
+The `tif-codex` bootstrap CLI, Windows `.cmd` wrapper, and related bootstrap content file have been removed. Codex now uses native skill discovery via `~/.agents/skills/tif/` symlink, so the old `use_skill`/`find_skills` CLI tools are no longer needed.
 
 Installation is now just clone + symlink (documented in INSTALL.md). No Node.js dependency required. The old `~/.codex/skills/` path is deprecated.
 
@@ -384,7 +384,7 @@ Fix: hooks.json now calls session-start.sh directly. Claude Code 2.1.x handles t
 
 **Windows: SessionStart hook runs async to prevent terminal freeze (#404, #413, #414, #419)**
 
-The synchronous SessionStart hook blocked the TUI from entering raw mode on Windows, freezing all keyboard input. Running the hook async prevents the freeze while still injecting Gummy context.
+The synchronous SessionStart hook blocked the TUI from entering raw mode on Windows, freezing all keyboard input. Running the hook async prevents the freeze while still injecting Tif context.
 
 **Windows: Fixed O(n^2) `escape_for_json` performance**
 
@@ -392,7 +392,7 @@ The character-by-character loop using `${input:$i:1}` was O(n^2) in bash due to 
 
 **Codex: Fixed Windows/PowerShell invocation (#285, #243)**
 
-- Windows doesn't respect shebangs, so directly invoking the extensionless `gummy-codex` script triggered an "Open with" dialog. All invocations now prefixed with `node`.
+- Windows doesn't respect shebangs, so directly invoking the extensionless `tif-codex` script triggered an "Open with" dialog. All invocations now prefixed with `node`.
 - Fixed `~/` path expansion on Windows — PowerShell doesn't expand `~` when passed as an argument to `node`. Changed to `$HOME` which expands correctly in both bash and PowerShell.
 
 **Codex: Fixed path resolution in installer**
@@ -456,9 +456,9 @@ Changes:
 
 **OpenCode: Switched to native skills system**
 
-Gummy for OpenCode now uses OpenCode's native `skill` tool instead of custom `use_skill`/`find_skills` tools. This is a cleaner integration that works with OpenCode's built-in skill discovery.
+Tif for OpenCode now uses OpenCode's native `skill` tool instead of custom `use_skill`/`find_skills` tools. This is a cleaner integration that works with OpenCode's built-in skill discovery.
 
-**Migration required:** Skills must be symlinked to `~/.config/opencode/skills/gummy/` (see updated installation docs).
+**Migration required:** Skills must be symlinked to `~/.config/opencode/skills/tif/` (see updated installation docs).
 
 ### Fixes
 
@@ -484,7 +484,7 @@ Fix: hooks.json now calls session-start.sh directly. Claude Code 2.1.x handles t
 
 ### Improvements
 
-**Strengthened using-gummy skill for explicit skill requests**
+**Strengthened using-tif skill for explicit skill requests**
 
 Addressed a failure mode where Claude would skip invoking a skill even when the user explicitly requested it by name (e.g., "subagent-driven-development, please"). Claude would think "I know what that means" and start working directly instead of loading the skill.
 
@@ -506,7 +506,7 @@ New test suite in `tests/explicit-skill-requests/` that verifies Claude correctl
 
 Added `disable-model-invocation: true` to all three slash commands (`/brainstorm`, `/execute-plan`, `/write-plan`). Claude can no longer invoke these commands via the Skill tool—they're restricted to manual user invocation only.
 
-The underlying skills (`gummy:brainstorming`, `gummy:executing-plans`, `gummy:writing-plans`) remain available for Claude to invoke autonomously. This change prevents confusion when Claude would invoke a command that just redirects to a skill anyway.
+The underlying skills (`tif:brainstorming`, `tif:executing-plans`, `tif:writing-plans`) remain available for Claude to invoke autonomously. This change prevents confusion when Claude would invoke a command that just redirects to a skill anyway.
 
 ## v4.0.1 (2025-12-23)
 
@@ -514,11 +514,11 @@ The underlying skills (`gummy:brainstorming`, `gummy:executing-plans`, `gummy:wr
 
 **Clarified how to access skills in Claude Code**
 
-Fixed a confusing pattern where Claude would invoke a skill via the Skill tool, then try to Read the skill file separately. The `using-gummy` skill now explicitly states that the Skill tool loads skill content directly—no need to read files.
+Fixed a confusing pattern where Claude would invoke a skill via the Skill tool, then try to Read the skill file separately. The `using-tif` skill now explicitly states that the Skill tool loads skill content directly—no need to read files.
 
-- Added "How to Access Skills" section to `using-gummy`
+- Added "How to Access Skills" section to `using-tif`
 - Changed "read the skill" → "invoke the skill" in instructions
-- Updated slash commands to use fully qualified skill names (e.g., `gummy:brainstorming`)
+- Updated slash commands to use fully qualified skill names (e.g., `tif:brainstorming`)
 
 **Added GitHub thread reply guidance to receiving-code-review** (h/t @ralphbean)
 
@@ -590,7 +590,7 @@ Rewrote key skills using DOT/GraphViz flowcharts as the authoritative process de
 
 **The Description Trap** (documented in `writing-skills`): Discovered that skill descriptions override flowchart content when descriptions contain workflow summaries. Claude follows the short description instead of reading the detailed flowchart. Fix: descriptions must be trigger-only ("Use when X") with no process details.
 
-**Skill priority in using-gummy**
+**Skill priority in using-tif**
 
 When multiple skills apply, process skills (brainstorming, debugging) now explicitly come before implementation skills. "Build X" triggers brainstorming first, then domain skills.
 
@@ -609,7 +609,7 @@ Description changed to imperative: "You MUST use this before any creative work�
 ### Other Improvements
 
 - **render-graphs.js** - Tool to extract DOT diagrams from skills and render to SVG
-- **Rationalizations table** in using-gummy - Scannable format including new entries: "I need more context first", "Let me explore first", "This feels productive"
+- **Rationalizations table** in using-tif - Scannable format including new entries: "I need more context first", "Let me explore first", "This feels productive"
 - **docs/testing.md** - Guide to testing skills with Claude Code integration tests
 
 ---
@@ -631,7 +631,7 @@ Description changed to imperative: "You MUST use this before any creative work�
 
 - **OpenCode Bootstrap Refactor**: Switched from `chat.message` hook to `session.created` event for bootstrap injection
   - Bootstrap now injects at session creation via `session.prompt()` with `noReply: true`
-  - Explicitly tells the model that using-gummy is already loaded to prevent redundant skill loading
+  - Explicitly tells the model that using-tif is already loaded to prevent redundant skill loading
   - Consolidated bootstrap content generation into shared `getBootstrapContent()` helper
   - Cleaner single-implementation approach (removed fallback pattern)
 
@@ -646,7 +646,7 @@ Description changed to imperative: "You MUST use this before any creative work�
   - Message insertion pattern for skill persistence across context compaction
   - Automatic context injection via chat.message hook
   - Auto re-injection on session.compacted events
-  - Three-tier skill priority: project > personal > Gummy
+  - Three-tier skill priority: project > personal > Tif
   - Project-local skills support (`.opencode/skills/`)
   - Shared core module (`lib/skills-core.js`) for code reuse with Codex
   - Automated test suite with proper isolation (`tests/opencode/`)
@@ -671,7 +671,7 @@ Description changed to imperative: "You MUST use this before any creative work�
 
 ### Improvements
 
-- Optimized Gummy bootstrap to eliminate redundant skill execution. The `using-gummy` skill content is now provided directly in session context, with clear guidance to use the Skill tool only for other skills. This reduces overhead and prevents the confusing loop where agents would execute `using-gummy` manually despite already having the content from session start.
+- Optimized Tif bootstrap to eliminate redundant skill execution. The `using-tif` skill content is now provided directly in session context, with clear guidance to use the Skill tool only for other skills. This reduces overhead and prevents the confusing loop where agents would execute `using-tif` manually despite already having the content from session start.
 
 ## v3.4.0 (2025-10-30)
 
@@ -695,10 +695,10 @@ Description changed to imperative: "You MUST use this before any creative work�
 ### New Features
 
 **Experimental Codex Support**
-- Added unified `gummy-codex` script with bootstrap/use-skill/find-skills commands
+- Added unified `tif-codex` script with bootstrap/use-skill/find-skills commands
 - Cross-platform Node.js implementation (works on Windows, macOS, Linux)
-- Namespaced skills: `gummy:skill-name` for Gummy skills, `skill-name` for personal
-- Personal skills override Gummy skills when names match
+- Namespaced skills: `tif:skill-name` for Tif skills, `skill-name` for personal
+- Personal skills override Tif skills when names match
 - Clean skill display: shows name/description without raw frontmatter
 - Helpful context: shows supporting files directory for each skill
 - Tool mapping for Codex: TodoWrite→update_plan, subagents→manual fallback, etc.
@@ -709,20 +709,20 @@ Description changed to imperative: "You MUST use this before any creative work�
 - Single unified script instead of separate tools
 - Tool substitution system for Codex-specific equivalents
 - Simplified subagent handling (manual work instead of delegation)
-- Updated terminology: "Gummy skills" instead of "Core skills"
+- Updated terminology: "Tif skills" instead of "Core skills"
 
 ### Files Added
 - `.codex/INSTALL.md` - Installation guide for Codex users
-- `.codex/gummy-bootstrap.md` - Bootstrap instructions with Codex adaptations
-- `.codex/gummy-codex` - Unified Node.js executable with all functionality
+- `.codex/tif-bootstrap.md` - Bootstrap instructions with Codex adaptations
+- `.codex/tif-codex` - Unified Node.js executable with all functionality
 
-**Note:** Codex support is experimental. The integration provides core Gummy functionality but may require refinement based on user feedback.
+**Note:** Codex support is experimental. The integration provides core Tif functionality but may require refinement based on user feedback.
 
 ## v3.2.3 (2025-10-23)
 
 ### Improvements
 
-**Updated using-gummy skill to use Skill tool instead of Read tool**
+**Updated using-tif skill to use Skill tool instead of Read tool**
 - Changed skill invocation instructions from Read tool to Skill tool
 - Updated description: "using Read tool" → "using Skill tool"
 - Updated step 3: "Use the Read tool" → "Use the Skill tool to read and run"
@@ -731,13 +731,13 @@ Description changed to imperative: "You MUST use this before any creative work�
 The Skill tool is the proper mechanism for invoking skills in Claude Code. This update corrects the bootstrap instructions to guide agents toward the correct tool.
 
 ### Files Changed
-- Updated: `skills/using-gummy/SKILL.md` - Changed tool references from Read to Skill
+- Updated: `skills/using-tif/SKILL.md` - Changed tool references from Read to Skill
 
 ## v3.2.2 (2025-10-21)
 
 ### Improvements
 
-**Strengthened using-gummy skill against agent rationalization**
+**Strengthened using-tif skill against agent rationalization**
 - Added EXTREMELY-IMPORTANT block with absolute language about mandatory skill checking
   - "If even 1% chance a skill applies, you MUST read it"
   - "You do not have a choice. You cannot rationalize your way out."
@@ -753,23 +753,23 @@ The Skill tool is the proper mechanism for invoking skills in Claude Code. This 
 These changes address observed agent behavior where they rationalize around skill usage despite clear instructions. The forceful language and pre-emptive counter-arguments aim to make non-compliance harder.
 
 ### Files Changed
-- Updated: `skills/using-gummy/SKILL.md` - Added three layers of enforcement to prevent skill-skipping rationalization
+- Updated: `skills/using-tif/SKILL.md` - Added three layers of enforcement to prevent skill-skipping rationalization
 
 ## v3.2.1 (2025-10-20)
 
 ### New Features
 
 **Code reviewer agent now included in plugin**
-- Added `gummy:code-reviewer` agent to plugin's `agents/` directory
+- Added `tif:code-reviewer` agent to plugin's `agents/` directory
 - Agent provides systematic code review against plans and coding standards
 - Previously required users to have personal agent configuration
-- All skill references updated to use namespaced `gummy:code-reviewer`
+- All skill references updated to use namespaced `tif:code-reviewer`
 - Fixes #55
 
 ### Files Changed
 - New: `agents/code-reviewer.md` - Agent definition with review checklist and output format
-- Updated: `skills/requesting-code-review/SKILL.md` - References to `gummy:code-reviewer`
-- Updated: `skills/subagent-driven-development/SKILL.md` - References to `gummy:code-reviewer`
+- Updated: `skills/requesting-code-review/SKILL.md` - References to `tif:code-reviewer`
+- Updated: `skills/subagent-driven-development/SKILL.md` - References to `tif:code-reviewer`
 
 ## v3.2.0 (2025-10-18)
 
@@ -785,8 +785,8 @@ These changes address observed agent behavior where they rationalize around skil
 ### Breaking Changes
 
 **Skill reference namespace standardization**
-- All internal skill references now use `gummy:` namespace prefix
-- Updated format: `gummy:test-driven-development` (previously just `test-driven-development`)
+- All internal skill references now use `tif:` namespace prefix
+- Updated format: `tif:test-driven-development` (previously just `test-driven-development`)
 - Affects all REQUIRED SUB-SKILL, RECOMMENDED SUB-SKILL, and REQUIRED BACKGROUND references
 - Aligns with how skills are invoked using the Skill tool
 - Files updated: brainstorming, executing-plans, subagent-driven-development, systematic-debugging, testing-skills-with-subagents, writing-plans, writing-skills
@@ -802,7 +802,7 @@ These changes address observed agent behavior where they rationalize around skil
 
 ### Bug Fixes
 
-- **Fixed command syntax in README** (#44) - Updated all command references to use correct namespaced syntax (`/gummy:brainstorm` instead of `/brainstorm`). Plugin-provided commands are automatically namespaced by Claude Code to avoid conflicts between plugins.
+- **Fixed command syntax in README** (#44) - Updated all command references to use correct namespaced syntax (`/tif:brainstorm` instead of `/brainstorm`). Plugin-provided commands are automatically namespaced by Claude Code to avoid conflicts between plugins.
 
 ## v3.1.0 (2025-10-17)
 
@@ -885,13 +885,13 @@ We now use Anthropic's first-party skills system!
 
 ---
 
-# Gummy v2.0.0 Release Notes
+# Tif v2.0.0 Release Notes
 
 ## Overview
 
-Gummy v2.0 makes skills more accessible, maintainable, and community-driven through a major architectural shift.
+Tif v2.0 makes skills more accessible, maintainable, and community-driven through a major architectural shift.
 
-The headline change is **skills repository separation**: all skills, scripts, and documentation have moved from the plugin into a dedicated repository ([mattoh91/gummy-skills](https://github.com/mattoh91/gummy-skills)). This transforms Gummy from a monolithic plugin into a lightweight shim that manages a local clone of the skills repository. Skills auto-update on session start. Users fork and contribute improvements via standard git workflows. The skills library versions independently from the plugin.
+The headline change is **skills repository separation**: all skills, scripts, and documentation have moved from the plugin into a dedicated repository ([mattoh91/tif-skills](https://github.com/mattoh91/tif-skills)). This transforms Tif from a monolithic plugin into a lightweight shim that manages a local clone of the skills repository. Skills auto-update on session start. Users fork and contribute improvements via standard git workflows. The skills library versions independently from the plugin.
 
 Beyond infrastructure, this release adds nine new skills focused on problem-solving, research, and architecture. We rewrote the core **using-skills** documentation with imperative tone and clearer structure, making it easier for Claude to understand when and how to use skills. **find-skills** now outputs paths you can paste directly into the Read tool, eliminating friction in the skills discovery workflow.
 
@@ -901,11 +901,11 @@ Users experience seamless operation: the plugin handles cloning, forking, and up
 
 ### Skills Repository Separation
 
-**The biggest change:** Skills no longer live in the plugin. They've been moved to a separate repository at [mattoh91/gummy-skills](https://github.com/mattoh91/gummy-skills).
+**The biggest change:** Skills no longer live in the plugin. They've been moved to a separate repository at [mattoh91/tif-skills](https://github.com/mattoh91/tif-skills).
 
 **What this means for you:**
 
-- **First install:** Plugin automatically clones skills to `~/.config/gummy/skills/`
+- **First install:** Plugin automatically clones skills to `~/.config/tif/skills/`
 - **Forking:** During setup, you'll be offered the option to fork the skills repo (if `gh` is installed)
 - **Updates:** Skills auto-update on session start (fast-forward when possible)
 - **Contributing:** Work on branches, commit locally, submit PRs to upstream
@@ -914,21 +914,21 @@ Users experience seamless operation: the plugin handles cloning, forking, and up
 **Migration:**
 
 If you have an existing installation:
-1. Your old `~/.config/gummy/.git` will be backed up to `~/.config/gummy/.git.bak`
-2. Old skills will be backed up to `~/.config/gummy/skills.bak`
-3. Fresh clone of mattoh91/gummy-skills will be created at `~/.config/gummy/skills/`
+1. Your old `~/.config/tif/.git` will be backed up to `~/.config/tif/.git.bak`
+2. Old skills will be backed up to `~/.config/tif/skills.bak`
+3. Fresh clone of mattoh91/tif-skills will be created at `~/.config/tif/skills/`
 
 ### Removed Features
 
-- **Personal Gummy overlay system** - Replaced with git branch workflow
-- **setup-personal-gummy hook** - Replaced by initialize-skills.sh
+- **Personal Tif overlay system** - Replaced with git branch workflow
+- **setup-personal-tif hook** - Replaced by initialize-skills.sh
 
 ## New Features
 
 ### Skills Repository Infrastructure
 
 **Automatic Clone & Setup** (`lib/initialize-skills.sh`)
-- Clones mattoh91/gummy-skills on first run
+- Clones mattoh91/tif-skills on first run
 - Offers fork creation if GitHub CLI is installed
 - Sets up upstream/origin remotes correctly
 - Handles migration from old installation
@@ -999,21 +999,21 @@ If you have an existing installation:
 - Moved "skills behind" warning to end of output
 
 **Environment Variables**
-- `GUMMY_SKILLS_ROOT` set to `~/.config/gummy/skills`
+- `TIF_SKILLS_ROOT` set to `~/.config/tif/skills`
 - Used consistently throughout all paths
 
 ## Bug Fixes
 
 - Fixed duplicate upstream remote addition when forking
 - Fixed find-skills double "skills/" prefix in output
-- Removed obsolete setup-personal-gummy call from session-start
+- Removed obsolete setup-personal-tif call from session-start
 - Fixed path references throughout hooks and commands
 
 ## Documentation
 
 ### README
 - Updated for new skills repository architecture
-- Prominent link to gummy-skills repo
+- Prominent link to tif-skills repo
 - Updated auto-update description
 - Fixed skill names and references
 - Updated Meta skills list
@@ -1033,15 +1033,15 @@ If you have an existing installation:
 - `.claude-plugin/marketplace.json` - Local testing config
 
 **Removed:**
-- `skills/` directory (82 files) - Now in mattoh91/gummy-skills
-- `scripts/` directory - Now in mattoh91/gummy-skills/skills/using-skills/
-- `hooks/setup-personal-gummy.sh` - Obsolete
+- `skills/` directory (82 files) - Now in mattoh91/tif-skills
+- `scripts/` directory - Now in mattoh91/tif-skills/skills/using-skills/
+- `hooks/setup-personal-tif.sh` - Obsolete
 
 **Modified:**
-- `hooks/session-start.sh` - Use skills from ~/.config/gummy/skills
-- `commands/brainstorm.md` - Updated paths to GUMMY_SKILLS_ROOT
-- `commands/write-plan.md` - Updated paths to GUMMY_SKILLS_ROOT
-- `commands/execute-plan.md` - Updated paths to GUMMY_SKILLS_ROOT
+- `hooks/session-start.sh` - Use skills from ~/.config/tif/skills
+- `commands/brainstorm.md` - Updated paths to TIF_SKILLS_ROOT
+- `commands/write-plan.md` - Updated paths to TIF_SKILLS_ROOT
+- `commands/execute-plan.md` - Updated paths to TIF_SKILLS_ROOT
 - `README.md` - Complete rewrite for new architecture
 
 ### Commit History
@@ -1049,7 +1049,7 @@ If you have an existing installation:
 This release includes:
 - 20+ commits for skills repository separation
 - PR #1: Amplifier-inspired problem-solving and research skills
-- PR #2: Personal Gummy overlay system (later replaced)
+- PR #2: Personal Tif overlay system (later replaced)
 - Multiple skill refinements and documentation improvements
 
 ## Upgrade Instructions
@@ -1058,8 +1058,8 @@ This release includes:
 
 ```bash
 # In Claude Code
-/plugin marketplace add mattoh91/gummy-marketplace
-/plugin install gummy@gummy-marketplace
+/plugin marketplace add mattoh91/tif-marketplace
+/plugin install tif@tif-marketplace
 ```
 
 The plugin handles everything automatically.
@@ -1068,12 +1068,12 @@ The plugin handles everything automatically.
 
 1. **Backup your personal skills** (if you have any):
    ```bash
-   cp -r ~/.config/gummy/skills ~/gummy-skills-backup
+   cp -r ~/.config/tif/skills ~/tif-skills-backup
    ```
 
 2. **Update the plugin:**
    ```bash
-   /plugin update gummy
+   /plugin update tif
    ```
 
 3. **On next session start:**
@@ -1097,7 +1097,7 @@ The plugin handles everything automatically.
 
 ### For Contributors
 
-- Skills repository is now at https://github.com/mattoh91/gummy-skills
+- Skills repository is now at https://github.com/mattoh91/tif-skills
 - Fork → Branch → PR workflow
 - See skills/meta/writing-skills/SKILL.md for TDD approach to documentation
 
@@ -1113,6 +1113,6 @@ None at this time.
 
 ---
 
-**Full Changelog:** https://github.com/mattoh91/gummy/compare/dd013f6...main
-**Skills Repository:** https://github.com/mattoh91/gummy-skills
-**Issues:** https://github.com/mattoh91/gummy/issues
+**Full Changelog:** https://github.com/mattoh91/tif/compare/dd013f6...main
+**Skills Repository:** https://github.com/mattoh91/tif-skills
+**Issues:** https://github.com/mattoh91/tif/issues

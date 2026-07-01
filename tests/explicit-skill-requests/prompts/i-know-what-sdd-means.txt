@@ -1,4 +1,4 @@
-I have my story specs and contracts ready under .gummy/plans/story_001_auth/.
+I have my story specs and contracts ready under .tif/plans/story_001_auth/.
 
 I want to use subagent-driven-development to execute it. That means:
 - Dispatch fresh subagents for dependency-ready specs with non-overlapping contracts

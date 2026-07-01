@@ -1,15 +1,15 @@
 ---
 name: project-intake
-description: Use at the start of a new Gummy project or fresh repo session to detect greenfield/brownfield and personal/Heineken context before planning.
+description: Use at the start of a new Tif project or fresh repo session to detect greenfield/brownfield and personal/Heineken context before planning.
 ---
 
 # Project Intake
 
-Run this before PRD/story planning when the repo has not already been classified in `.gummy/docs/PRD.md` frontmatter.
+Run this before PRD/story planning when the repo has not already been classified in `.tif/docs/PRD.md` frontmatter.
 
 ## Intake Principle
 
-Detect before asking. Do not ask what the repo, PRD frontmatter, config, git remote, package files, CI, docs, or existing Gummy state already answer.
+Detect before asking. Do not ask what the repo, PRD frontmatter, config, git remote, package files, CI, docs, or existing Tif state already answer.
 
 Ask only decision-forcing questions:
 
@@ -44,7 +44,7 @@ For brownfield projects, do a repo code review before planning:
 - existing docs and stale-state risks
 - risky areas and missing tests
 
-Write the brownfield summary to `.gummy/docs/REPO_REVIEW.md` and update `.gummy/docs/ARCHI.md` with a high-level dataflow or layer diagram.
+Write the brownfield summary to `.tif/docs/REPO_REVIEW.md` and update `.tif/docs/ARCHI.md` with a high-level dataflow or layer diagram.
 
 After the review, ask only if the answer affects planning:
 
@@ -81,14 +81,14 @@ Should this start in POC or MVP mode? I will default to POC unless you want MVP.
 If setup scope is unclear:
 
 ```text
-For this repo, should I enable Gummy story/spec/contracts workflow, dev scaffold checks, and Heineken integrations/docs where relevant?
+For this repo, should I enable Tif story/spec/contracts workflow, dev scaffold checks, and Heineken integrations/docs where relevant?
 ```
 
 Only after Heineken is confirmed:
 
 ```text
 Which GenAILab Confluence parent page or section should docs land under?
-Which Jira project, issue type, labels, or board should Gummy use?
+Which Jira project, issue type, labels, or board should Tif use?
 Should I bootstrap the Brewery / GenAI Gateway client now?
 ```
 
@@ -109,7 +109,7 @@ Use `project_context: heineken` only after user confirmation or strong repo evid
 For Heineken projects:
 
 1. Bootstrap the Brewery / GenAI Gateway client for Python projects when relevant, using `skills/scaffolding-repo/references/brewery-client.py`.
-2. Document `GENAI_API_KEY` in `.gummy/docs/CONFIG.md`.
+2. Document `GENAI_API_KEY` in `.tif/docs/CONFIG.md`.
 3. Set up or document Atlassian MCP for Jira/Confluence access according to the active host's MCP configuration surface.
 4. Ask which Jira project, issue type, labels, or board should be used only when Jira linkage is part of the requested workflow.
 5. Ask the user which GenAILab Confluence parent/page should receive project documentation.

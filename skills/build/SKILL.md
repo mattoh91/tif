@@ -1,16 +1,16 @@
 ---
 name: build
-description: Use when the user asks to build, deliver, implement, or continue the next Gummy story spec from .gummy/plans/story_*/specs/.
+description: Use when the user asks to build, deliver, implement, or continue the next Tif story spec from .tif/plans/story_*/specs/.
 ---
 
 # Build
 
-Use this as Gummy's delivery entrypoint.
+Use this as Tif's delivery entrypoint.
 
 ## Workflow
 
-1. Run `scripts/check-gummy-state.sh .`; stop on missing, invalid, blocked, or stale contract state.
-2. Read `.gummy/docs/PRD.md`, `.gummy/docs/ARCHI.md`, `.gummy/docs/CONFIG.md`, and story folders under `.gummy/plans/`.
+1. Run `scripts/check-tif-state.sh .`; stop on missing, invalid, blocked, or stale contract state.
+2. Read `.tif/docs/PRD.md`, `.tif/docs/ARCHI.md`, `.tif/docs/CONFIG.md`, and story folders under `.tif/plans/`.
 3. Select the next spec with `completed: false` whose dependencies are complete.
 4. Use `multi-agent-adapter` to decide whether the host can dispatch workers or must run inline.
 5. Provide each worker or inline task with the full spec, story `ADR.md`, `contracts.json`, allowed files, contract schemas, and gate commands.

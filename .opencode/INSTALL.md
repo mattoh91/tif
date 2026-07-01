@@ -1,4 +1,4 @@
-# Installing Gummy for OpenCode
+# Installing Tif for OpenCode
 
 ## Prerequisites
 
@@ -6,31 +6,31 @@
 
 ## Installation
 
-Add Gummy to the `plugin` array in your `opencode.json` (global or project-level):
+Add Tif to the `plugin` array in your `opencode.json` (global or project-level):
 
 ```json
 {
-  "plugin": ["gummy@git+https://github.com/mattoh91/gummy.git"]
+  "plugin": ["tif@git+https://github.com/mattoh91/tif.git"]
 }
 ```
 
 Restart OpenCode. That's it — the plugin auto-installs and registers all skills.
 
-Verify by asking: "Tell me about Gummy"
+Verify by asking: "Tell me about Tif"
 
 ## Migrating from the old symlink-based install
 
-If you previously installed Gummy using `git clone` and symlinks, remove the old setup:
+If you previously installed Tif using `git clone` and symlinks, remove the old setup:
 
 ```bash
 # Remove old symlinks
-rm -f ~/.config/opencode/plugins/gummy.js
-rm -rf ~/.config/opencode/skills/gummy
+rm -f ~/.config/opencode/plugins/tif.js
+rm -rf ~/.config/opencode/skills/tif
 
 # Optionally remove the cloned repo
-rm -rf ~/.config/opencode/gummy
+rm -rf ~/.config/opencode/tif
 
-# Remove skills.paths from opencode.json if you added one for Gummy
+# Remove skills.paths from opencode.json if you added one for Tif
 ```
 
 Then follow the installation steps above.
@@ -41,18 +41,18 @@ Use OpenCode's native `skill` tool:
 
 ```
 use skill tool to list skills
-use skill tool to load gummy/brainstorming
+use skill tool to load tif/brainstorming
 ```
 
 ## Updating
 
-Gummy updates automatically when you restart OpenCode.
+Tif updates automatically when you restart OpenCode.
 
 To pin a specific version:
 
 ```json
 {
-  "plugin": ["gummy@git+https://github.com/mattoh91/gummy.git#v5.0.3"]
+  "plugin": ["tif@git+https://github.com/mattoh91/tif.git#v5.0.3"]
 }
 ```
 
@@ -60,7 +60,7 @@ To pin a specific version:
 
 ### Plugin not loading
 
-1. Check logs: `opencode run --print-logs "hello" 2>&1 | grep -i gummy`
+1. Check logs: `opencode run --print-logs "hello" 2>&1 | grep -i tif`
 2. Verify the plugin line in your `opencode.json`
 3. Make sure you're running a recent version of OpenCode
 
@@ -79,5 +79,5 @@ When skills reference Claude Code tools:
 
 ## Getting Help
 
-- Report issues: https://github.com/mattoh91/gummy/issues
-- Full documentation: https://github.com/mattoh91/gummy/blob/main/docs/README.opencode.md
+- Report issues: https://github.com/mattoh91/tif/issues
+- Full documentation: https://github.com/mattoh91/tif/blob/main/docs/README.opencode.md

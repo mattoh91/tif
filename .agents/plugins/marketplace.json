@@ -1,11 +1,11 @@
 {
-  "name": "gummy-local",
+  "name": "tif-local",
   "interface": {
-    "displayName": "Gummy Local"
+    "displayName": "Tif Local"
   },
   "plugins": [
     {
-      "name": "gummy",
+      "name": "tif",
       "source": {
         "source": "local",
         "path": "./"

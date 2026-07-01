@@ -192,12 +192,12 @@ EOF
 
     cat > "$repo/.codex-plugin/plugin.json" <<EOF
 {
-  "name": "gummy",
+  "name": "tif",
   "version": "$MANIFEST_VERSION"
 }
 EOF
 
-    printf 'png fixture\n' > "$repo/assets/gummy.png"
+    printf 'png fixture\n' > "$repo/assets/tif.png"
 
     cat > "$repo/skills/example/SKILL.md" <<'EOF'
 # Example Skill
@@ -214,7 +214,7 @@ EOF
     git -C "$repo" add \
         .codex-plugin/plugin.json \
         .gitignore \
-        assets/gummy.png \
+        assets/tif.png \
         package.json \
         scripts/sync-to-codex-plugin.sh \
         skills/example/SKILL.md
@@ -226,15 +226,15 @@ EOF
 write_destination_fixture() {
     local repo="$1"
 
-    mkdir -p "$repo/plugins/gummy/skills/example"
-    printf 'fixture keep\n' > "$repo/plugins/gummy/.fixture-keep"
-    cat > "$repo/plugins/gummy/skills/example/SKILL.md" <<'EOF'
+    mkdir -p "$repo/plugins/tif/skills/example"
+    printf 'fixture keep\n' > "$repo/plugins/tif/.fixture-keep"
+    cat > "$repo/plugins/tif/skills/example/SKILL.md" <<'EOF'
 # Example Skill
 
 Fixture content.
 EOF
-    git -C "$repo" add plugins/gummy/.fixture-keep
-    git -C "$repo" add plugins/gummy/skills/example/SKILL.md
+    git -C "$repo" add plugins/tif/.fixture-keep
+    git -C "$repo" add plugins/tif/skills/example/SKILL.md
 
     commit_fixture "$repo" "Initial destination fixture"
 }
@@ -242,7 +242,7 @@ EOF
 dirty_tracked_destination_skill() {
     local repo="$1"
 
-    cat > "$repo/plugins/gummy/skills/example/SKILL.md" <<'EOF'
+    cat > "$repo/plugins/tif/skills/example/SKILL.md" <<'EOF'
 # Example Skill
 
 Locally modified fixture content.
@@ -253,33 +253,33 @@ write_synced_destination_fixture() {
     local repo="$1"
 
     mkdir -p \
-        "$repo/plugins/gummy/.codex-plugin" \
-        "$repo/plugins/gummy/.private-journal" \
-        "$repo/plugins/gummy/assets" \
-        "$repo/plugins/gummy/skills/example"
+        "$repo/plugins/tif/.codex-plugin" \
+        "$repo/plugins/tif/.private-journal" \
+        "$repo/plugins/tif/assets" \
+        "$repo/plugins/tif/skills/example"
 
-    cat > "$repo/plugins/gummy/.codex-plugin/plugin.json" <<EOF
+    cat > "$repo/plugins/tif/.codex-plugin/plugin.json" <<EOF
 {
-  "name": "gummy",
+  "name": "tif",
   "version": "$MANIFEST_VERSION"
 }
 EOF
 
-    printf 'png fixture\n' > "$repo/plugins/gummy/assets/gummy.png"
+    printf 'png fixture\n' > "$repo/plugins/tif/assets/tif.png"
 
-    cat > "$repo/plugins/gummy/skills/example/SKILL.md" <<'EOF'
+    cat > "$repo/plugins/tif/skills/example/SKILL.md" <<'EOF'
 # Example Skill
 
 Fixture content.
 EOF
 
-    printf 'tracked keep\n' > "$repo/plugins/gummy/.private-journal/keep.txt"
+    printf 'tracked keep\n' > "$repo/plugins/tif/.private-journal/keep.txt"
 
     git -C "$repo" add \
-        plugins/gummy/.codex-plugin/plugin.json \
-        plugins/gummy/assets/gummy.png \
-        plugins/gummy/skills/example/SKILL.md \
-        plugins/gummy/.private-journal/keep.txt
+        plugins/tif/.codex-plugin/plugin.json \
+        plugins/tif/assets/tif.png \
+        plugins/tif/skills/example/SKILL.md \
+        plugins/tif/.private-journal/keep.txt
 
     commit_fixture "$repo" "Initial synced destination fixture"
 }
@@ -287,10 +287,10 @@ EOF
 write_stale_ignored_destination_fixture() {
     local repo="$1"
 
-    mkdir -p "$repo/plugins/gummy/.private-journal"
-    printf 'fixture keep\n' > "$repo/plugins/gummy/.fixture-keep"
-    printf 'stale ignored leak\n' > "$repo/plugins/gummy/.private-journal/leak.txt"
-    git -C "$repo" add plugins/gummy/.fixture-keep
+    mkdir -p "$repo/plugins/tif/.private-journal"
+    printf 'fixture keep\n' > "$repo/plugins/tif/.fixture-keep"
+    printf 'stale ignored leak\n' > "$repo/plugins/tif/.private-journal/leak.txt"
+    git -C "$repo" add plugins/tif/.fixture-keep
 
     commit_fixture "$repo" "Initial stale ignored destination fixture"
 }
@@ -479,7 +479,7 @@ main() {
     script_source="$(cat "$upstream/scripts/sync-to-codex-plugin.sh")"
     preview_section="$(printf '%s\n' "$preview_output" | sed -n '/^=== Preview (rsync --dry-run) ===$/,/^=== End preview ===$/p')"
     stale_preview_section="$(printf '%s\n' "$stale_preview_output" | sed -n '/^=== Preview (rsync --dry-run) ===$/,/^=== End preview ===$/p')"
-    dirty_skill_path="$dirty_apply_dest/plugins/gummy/skills/example/SKILL.md"
+    dirty_skill_path="$dirty_apply_dest/plugins/tif/skills/example/SKILL.md"
 
     echo ""
     echo "Preview assertions..."
@@ -487,15 +487,15 @@ main() {
     assert_contains "$preview_output" "Version:  $MANIFEST_VERSION" "Preview uses manifest version"
     assert_not_contains "$preview_output" "Version:  $PACKAGE_VERSION" "Preview does not use package.json version"
     assert_contains "$preview_section" ".codex-plugin/plugin.json" "Preview includes manifest path"
-    assert_contains "$preview_section" "assets/gummy.png" "Preview includes mascot PNG asset"
+    assert_contains "$preview_section" "assets/tif.png" "Preview includes mascot PNG asset"
     assert_contains "$preview_section" ".private-journal/keep.txt" "Preview includes tracked ignored file"
     assert_not_contains "$preview_section" ".private-journal/leak.txt" "Preview excludes ignored untracked file"
     assert_not_contains "$preview_section" "ignored-cache/" "Preview excludes pure ignored directories"
     assert_not_contains "$preview_output" "Overlay file (.codex-plugin/plugin.json) will be regenerated" "Preview omits overlay regeneration note"
-    assert_not_contains "$preview_output" "Assets (gummy.png) will be seeded from" "Preview omits assets seeding note"
+    assert_not_contains "$preview_output" "Assets (tif.png) will be seeded from" "Preview omits assets seeding note"
     assert_contains "$preview_section" "skills/example/SKILL.md" "Preview reflects dirty tracked destination file"
     assert_current_branch "$dest" "$dest_branch" "Preview leaves destination checkout on its original branch"
-    assert_branch_absent "$dest" "sync/gummy-*" "Preview does not create sync branch in destination checkout"
+    assert_branch_absent "$dest" "sync/tif-*" "Preview does not create sync branch in destination checkout"
 
     echo ""
     echo "Mixed-directory assertions..."
@@ -511,26 +511,26 @@ main() {
     echo ""
     echo "Bootstrap assertions..."
     assert_equals "$bootstrap_status" "0" "Bootstrap preview exits successfully"
-    assert_contains "$bootstrap_output" "Mode:     BOOTSTRAP (creating plugins/gummy when absent)" "Bootstrap preview describes directory creation"
+    assert_contains "$bootstrap_output" "Mode:     BOOTSTRAP (creating plugins/tif when absent)" "Bootstrap preview describes directory creation"
     assert_not_contains "$bootstrap_output" "Assets:" "Bootstrap preview omits external assets path"
     assert_contains "$bootstrap_output" "Dry run only. Nothing was changed or pushed." "Bootstrap preview remains dry-run only"
-    assert_path_absent "$bootstrap_dest/plugins/gummy" "Bootstrap preview does not create destination plugin directory"
+    assert_path_absent "$bootstrap_dest/plugins/tif" "Bootstrap preview does not create destination plugin directory"
     assert_current_branch "$bootstrap_dest" "$bootstrap_dest_branch" "Bootstrap preview leaves destination checkout on its original branch"
-    assert_branch_absent "$bootstrap_dest" "bootstrap/gummy-*" "Bootstrap preview does not create bootstrap branch in destination checkout"
+    assert_branch_absent "$bootstrap_dest" "bootstrap/tif-*" "Bootstrap preview does not create bootstrap branch in destination checkout"
 
     echo ""
     echo "Apply assertions..."
     assert_equals "$dirty_apply_status" "1" "Dirty local apply exits with failure"
-    assert_contains "$dirty_apply_output" "ERROR: local checkout has uncommitted changes under 'plugins/gummy'" "Dirty local apply reports protected destination path"
+    assert_contains "$dirty_apply_output" "ERROR: local checkout has uncommitted changes under 'plugins/tif'" "Dirty local apply reports protected destination path"
     assert_current_branch "$dirty_apply_dest" "$dirty_apply_dest_branch" "Dirty local apply leaves destination checkout on its original branch"
-    assert_branch_absent "$dirty_apply_dest" "sync/gummy-*" "Dirty local apply does not create sync branch in destination checkout"
+    assert_branch_absent "$dirty_apply_dest" "sync/tif-*" "Dirty local apply does not create sync branch in destination checkout"
     assert_file_equals "$dirty_skill_path" "# Example Skill
 
 Locally modified fixture content." "Dirty local apply preserves tracked working-tree file content"
     assert_equals "$noop_apply_status" "0" "Clean no-op local apply exits successfully"
     assert_contains "$noop_apply_output" "No changes — embedded plugin was already in sync with source" "Clean no-op local apply reports no changes"
     assert_current_branch "$noop_apply_dest" "$noop_apply_dest_branch" "Clean no-op local apply leaves destination checkout on its original branch"
-    assert_branch_absent "$noop_apply_dest" "sync/gummy-*" "Clean no-op local apply does not create sync branch in destination checkout"
+    assert_branch_absent "$noop_apply_dest" "sync/tif-*" "Clean no-op local apply does not create sync branch in destination checkout"
 
     echo ""
     echo "Missing manifest assertions..."

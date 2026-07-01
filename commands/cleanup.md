@@ -1,5 +1,5 @@
 ---
-description: "Clean stale Gummy state before session close"
+description: "Clean stale Tif state before session close"
 ---
 
-Use `gummy:cleanup` to detect stale contracts, orphaned story state, and unsafe cleanup candidates before `update-state`.
+Use `tif:cleanup` to detect stale contracts, orphaned story state, and unsafe cleanup candidates before `update-state`.

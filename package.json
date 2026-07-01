@@ -1,8 +1,8 @@
 {
-  "name": "gummy",
+  "name": "tif",
   "version": "5.0.7",
   "type": "module",
-  "main": ".opencode/plugins/gummy.js",
+  "main": ".opencode/plugins/tif.js",
   "scripts": {
     "test:deck": "node --test tests/deck/*.test.mjs"
   }

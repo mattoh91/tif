@@ -1,8 +1,8 @@
-# Gummy
+# Tif
 
-Gummy is a personal SWE harness for Claude Code, Codex, Cursor, Copilot, Gemini, and similar agent hosts. It turns a user idea into PRD stories, story-local specs, contracts, implementation, documentation, cleanup, and approval-gated memory refresh.
+Tif is a personal SWE harness for Claude Code, Codex, Cursor, Copilot, Gemini, and similar agent hosts. It turns a user idea into PRD stories, story-local specs, contracts, implementation, documentation, cleanup, and approval-gated memory refresh.
 
-Gummy is intentionally story-scoped. It does not use a separate global feature list or global implementation plan.
+Tif is intentionally story-scoped. It does not use a separate global feature list or global implementation plan.
 
 ## Installation
 
@@ -12,27 +12,27 @@ Quick paths:
 
 ```bash
 # Codex local plugin install
-codex plugin marketplace add /absolute/path/to/gummy
+codex plugin marketplace add /absolute/path/to/tif
 ```
 
 OpenCode:
 
 ```json
-{ "plugin": ["gummy@git+https://github.com/mattoh91/gummy.git"] }
+{ "plugin": ["tif@git+https://github.com/mattoh91/tif.git"] }
 ```
 
 Claude Code:
 
 ```text
-/plugin marketplace add /absolute/path/to/gummy/.claude-plugin/marketplace.json
-/plugin install gummy@gummy-dev
+/plugin marketplace add /absolute/path/to/tif/.claude-plugin/marketplace.json
+/plugin install tif@tif-dev
 /reload-plugins
 ```
 
 For Cursor, Copilot, and other hosts, generate host-native instruction files:
 
 ```bash
-python3 scripts/gummy-compile.py skills --all --output /tmp/gummy-skills
+python3 scripts/tif-compile.py skills --all --output /tmp/tif-skills
 ```
 
 ## Core Contract
@@ -40,12 +40,12 @@ python3 scripts/gummy-compile.py skills --all --output /tmp/gummy-skills
 Active state lives here:
 
 ```text
-.gummy/docs/
+.tif/docs/
   PRD.md
   ARCHI.md
   CONFIG.md
 
-.gummy/plans/story_<nnn>_<slug>/
+.tif/plans/story_<nnn>_<slug>/
   ADR.md
   contracts.json
   specs/
@@ -62,7 +62,7 @@ flowchart TD
     B --> C["PRD stories"]
     C --> D["/plato: research, ADR, specs"]
     D --> E["contracts.json"]
-    E --> F["check-gummy-state"]
+    E --> F["check-tif-state"]
     F --> G{"User approves?"}
     G -->|yes| H["/aristotle"]
     H --> I["TDD per spec"]
@@ -98,7 +98,7 @@ The older commands remain useful as expert shortcuts. The philosophical flow is 
 
 ## Project Intake
 
-Gummy detects:
+Tif detects:
 
 - `greenfield` vs `brownfield`
 - `personal` vs `heineken`
@@ -106,7 +106,7 @@ Gummy detects:
 
 Brownfield projects get repo review and architecture baseline. Heineken projects get Brewery / GenAI Gateway setup when relevant, Atlassian MCP setup guidance, and Confluence documentation flow with explicit user approval before publish.
 
-Intake is adaptive: Gummy inspects first, then asks only unresolved decision questions such as POC vs MVP mode, whether brownfield conventions are binding, and which GenAILab/Jira targets to use for confirmed Heineken projects.
+Intake is adaptive: Tif inspects first, then asks only unresolved decision questions such as POC vs MVP mode, whether brownfield conventions are binding, and which GenAILab/Jira targets to use for confirmed Heineken projects.
 
 `multi-agent-adapter` normalizes Claude Code tasks, Codex workers, and inline fallback so the same story-spec task packet can run across hosts.
 
@@ -146,36 +146,36 @@ acceptance_checks:
 Run:
 
 ```bash
-scripts/check-gummy-state.sh .
+scripts/check-tif-state.sh .
 ```
 
 The checker validates docs, story folders, specs, dependencies, contract references, and completion flags.
 
 ## Memory Review
 
-Hooks and `/finish` may stage learning candidates in `~/.gummy/memory/<project-slug>/CANDIDATES.jsonl`. Review them with:
+Hooks and `/finish` may stage learning candidates in `~/.tif/memory/<project-slug>/CANDIDATES.jsonl`. Review them with:
 
 ```bash
-scripts/gummy-memory-review.sh
-scripts/gummy-memory-review.sh --approve <candidate-id>
-scripts/gummy-memory-review.sh --reject <candidate-id>
+scripts/tif-memory-review.sh
+scripts/tif-memory-review.sh --approve <candidate-id>
+scripts/tif-memory-review.sh --reject <candidate-id>
 ```
 
-Promotion is explicit. Gummy should not silently mutate durable memory, skills, docs, or tests.
+Promotion is explicit. Tif should not silently mutate durable memory, skills, docs, or tests.
 
 ## Skill Compiler
 
-Compile Gummy skills into agent-native formats:
+Compile Tif skills into agent-native formats:
 
 ```bash
-python3 scripts/gummy-compile.py skills --all --output /tmp/gummy-skills
+python3 scripts/tif-compile.py skills --all --output /tmp/tif-skills
 ```
 
 Outputs:
 
 - Claude/Copilot: `<output>/<skill>/SKILL.md`
 - Cursor: `<output>/.cursor/rules/<skill>.md`
-- Codex: `<output>/AGENTS.md` with replaceable Gummy markers
+- Codex: `<output>/AGENTS.md` with replaceable Tif markers
 
 ## Verification
 
@@ -183,14 +183,14 @@ Useful checks:
 
 ```bash
 node -e "for (const f of ['.agents/plugins/marketplace.json','package.json','.claude-plugin/plugin.json','.claude-plugin/marketplace.json','.codex-plugin/plugin.json','gemini-extension.json','.version-bump.json','hooks/hooks.json']) JSON.parse(require('fs').readFileSync(f,'utf8'))"
-bash -n hooks/session-start hooks/pre-compact hooks/session-end hooks/codex-stop hooks/update-state scripts/check-gummy-state.sh scripts/check-gummy-story-state.sh scripts/sync-to-codex-plugin.sh scripts/gummy-memory-review.sh
-python3 scripts/gummy-compile.py skills --agent codex --output "$(mktemp -d)"
-tests/gummy-state/test-check-gummy-state.sh
+bash -n hooks/session-start hooks/pre-compact hooks/session-end hooks/codex-stop hooks/update-state scripts/check-tif-state.sh scripts/check-tif-story-state.sh scripts/sync-to-codex-plugin.sh scripts/tif-memory-review.sh
+python3 scripts/tif-compile.py skills --agent codex --output "$(mktemp -d)"
+tests/tif-state/test-check-tif-state.sh
 tests/scaffolding-repo/test-scaffold-contract.sh
-tests/gummy-compile/test-gummy-compile.sh
+tests/tif-compile/test-tif-compile.sh
 tests/multi-agent-adapter/test-multi-agent-adapter-contract.sh
 tests/story-flow/test-story-flow-contract.sh
-tests/memory-review/test-gummy-memory-review.sh
+tests/memory-review/test-tif-memory-review.sh
 tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
 ```
 

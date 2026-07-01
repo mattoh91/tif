@@ -26,10 +26,10 @@ trap "cleanup_test_project $TEST_PROJECT" EXIT
 cd "$TEST_PROJECT"
 
 # Create directory structure
-mkdir -p .gummy/docs
+mkdir -p .tif/docs
 
 # Create a spec document WITH INTENTIONAL ERRORS for the reviewer to catch
-cat > .gummy/docs/PRD.md <<'EOF'
+cat > .tif/docs/PRD.md <<'EOF'
 # Test Feature PRD
 
 ## Overview
@@ -80,7 +80,7 @@ PROMPT="You are testing the spec document reviewer.
 
 Read the spec-document-reviewer-prompt.md template in skills/brainstorming/ to understand the review format.
 
-Then review the spec at $TEST_PROJECT/.gummy/docs/PRD.md using the criteria from that template.
+Then review the spec at $TEST_PROJECT/.tif/docs/PRD.md using the criteria from that template.
 
 Look for:
 - TODOs, placeholders, 'TBD', incomplete sections

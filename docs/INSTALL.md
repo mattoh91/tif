@@ -1,6 +1,6 @@
-# Installing Gummy
+# Installing Tif
 
-Gummy can be installed as a native plugin in Codex, Claude Code, and OpenCode. For other hosts, compile the skills into the host's preferred instruction format.
+Tif can be installed as a native plugin in Codex, Claude Code, and OpenCode. For other hosts, compile the skills into the host's preferred instruction format.
 
 ## Prerequisites
 
@@ -11,8 +11,8 @@ Gummy can be installed as a native plugin in Codex, Claude Code, and OpenCode. F
 Clone the repo first when using a local development install:
 
 ```bash
-git clone https://github.com/mattoh91/gummy.git ~/Repos/gummy
-cd ~/Repos/gummy
+git clone https://github.com/mattoh91/tif.git ~/Repos/tif
+cd ~/Repos/tif
 ```
 
 If the repo is already cloned, use that absolute path in the commands below.
@@ -22,7 +22,7 @@ If the repo is already cloned, use that absolute path in the commands below.
 Install the local Codex plugin marketplace from the checkout:
 
 ```bash
-codex plugin marketplace add /absolute/path/to/gummy
+codex plugin marketplace add /absolute/path/to/tif
 ```
 
 Restart Codex, open:
@@ -31,7 +31,7 @@ Restart Codex, open:
 /plugins
 ```
 
-Choose `Gummy Local`, install `Gummy`, then start a new thread.
+Choose `Tif Local`, install `Tif`, then start a new thread.
 
 For subagent workflows and hook-based state refresh, enable these features in `~/.codex/config.toml`:
 
@@ -45,23 +45,23 @@ For raw skill development without plugin install, symlink the skills directory i
 
 ```bash
 mkdir -p ~/.agents/skills
-ln -sfn /absolute/path/to/gummy/skills ~/.agents/skills/gummy
+ln -sfn /absolute/path/to/tif/skills ~/.agents/skills/tif
 ```
 
 Restart Codex after changing plugin or skill discovery state.
 
 ## Claude Code
 
-Add Gummy's Claude Code marketplace from this checkout:
+Add Tif's Claude Code marketplace from this checkout:
 
 ```text
-/plugin marketplace add /absolute/path/to/gummy/.claude-plugin/marketplace.json
+/plugin marketplace add /absolute/path/to/tif/.claude-plugin/marketplace.json
 ```
 
 Install the plugin:
 
 ```text
-/plugin install gummy@gummy-dev
+/plugin install tif@tif-dev
 ```
 
 Reload plugins or restart Claude Code:
@@ -74,39 +74,39 @@ Use `/plugin` to choose user, project, or local scope interactively when you do 
 
 ## OpenCode
 
-Add Gummy to the `plugin` array in your global or project `opencode.json`:
+Add Tif to the `plugin` array in your global or project `opencode.json`:
 
 ```json
 {
-  "plugin": ["gummy@git+https://github.com/mattoh91/gummy.git"]
+  "plugin": ["tif@git+https://github.com/mattoh91/tif.git"]
 }
 ```
 
-Restart OpenCode. The plugin installs through Bun and registers the Gummy skills directory automatically.
+Restart OpenCode. The plugin installs through Bun and registers the Tif skills directory automatically.
 
 ## Cursor, Copilot, And Other Hosts
 
 Use the compiler to generate host-native instruction files:
 
 ```bash
-python3 scripts/gummy-compile.py skills --agent cursor --output /path/to/project
-python3 scripts/gummy-compile.py skills --agent copilot --output /tmp/gummy-copilot
-python3 scripts/gummy-compile.py skills --agent claude --output /tmp/gummy-claude
-python3 scripts/gummy-compile.py skills --agent codex --output /tmp/gummy-codex
+python3 scripts/tif-compile.py skills --agent cursor --output /path/to/project
+python3 scripts/tif-compile.py skills --agent copilot --output /tmp/tif-copilot
+python3 scripts/tif-compile.py skills --agent claude --output /tmp/tif-claude
+python3 scripts/tif-compile.py skills --agent codex --output /tmp/tif-codex
 ```
 
 Compiler outputs:
 
 - Claude/Copilot: `<output>/<skill>/SKILL.md`
 - Cursor: `<output>/.cursor/rules/<skill>.md`
-- Codex: `<output>/AGENTS.md` with replaceable Gummy markers
+- Codex: `<output>/AGENTS.md` with replaceable Tif markers
 
 ## Verify
 
 Ask the host:
 
 ```text
-Use Gummy to scaffold this repo.
+Use Tif to scaffold this repo.
 ```
 
 Or start with the explicit onboarding command (`/intake` still works as an alias):
@@ -118,14 +118,14 @@ Or start with the explicit onboarding command (`/intake` still works as an alias
 For a local checkout, also run:
 
 ```bash
-scripts/check-gummy-state.sh .
+scripts/check-tif-state.sh .
 tests/story-flow/test-story-flow-contract.sh
 ```
 
 ## Slide Deck (optional)
 
 The `/deck` command renders a self-contained `docs/ppt/deck.html` presentation
-from your `.gummy/` artifacts, embedding a hand-authored draw.io architecture
+from your `.tif/` artifacts, embedding a hand-authored draw.io architecture
 SVG. It is opt-in: `/finish` and `/document` never generate a deck.
 
 Requirements:
@@ -152,7 +152,7 @@ npm run test:deck
 For local installs:
 
 ```bash
-cd /absolute/path/to/gummy
+cd /absolute/path/to/tif
 git pull
 ```
 
@@ -163,17 +163,17 @@ Then restart the host or reload plugins. OpenCode git installs refresh on restar
 Codex:
 
 ```bash
-codex plugin marketplace remove gummy-local
-rm -f ~/.agents/skills/gummy
+codex plugin marketplace remove tif-local
+rm -f ~/.agents/skills/tif
 ```
 
 Claude Code:
 
 ```text
-/plugin uninstall gummy@gummy-dev
-/plugin marketplace remove gummy-dev
+/plugin uninstall tif@tif-dev
+/plugin marketplace remove tif-dev
 ```
 
 OpenCode:
 
-Remove the Gummy entry from `opencode.json`, then restart OpenCode.
+Remove the Tif entry from `opencode.json`, then restart OpenCode.

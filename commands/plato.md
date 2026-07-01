@@ -1,5 +1,5 @@
 ---
-description: "Research and design a Gummy story"
+description: "Research and design a Tif story"
 ---
 
-Use `gummy:research-enrichment`, `gummy:solution-architect`, `gummy:story-planner`, and `gummy:contract-designer` for research-driven design. Record current evidence, selected/rejected options, security notes, ADR decisions, specs, contracts, and then run `scripts/check-gummy-state.sh .` before asking for implementation approval.
+Use `tif:research-enrichment`, `tif:solution-architect`, `tif:story-planner`, and `tif:contract-designer` for research-driven design. Record current evidence, selected/rejected options, security notes, ADR decisions, specs, contracts, and then run `scripts/check-tif-state.sh .` before asking for implementation approval.

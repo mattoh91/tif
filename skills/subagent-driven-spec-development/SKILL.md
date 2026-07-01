@@ -1,15 +1,15 @@
 ---
 name: subagent-driven-spec-development
-description: Use when implementing Gummy story specs with subagents, contracts, TDD, and acceptance-check verification.
+description: Use when implementing Tif story specs with subagents, contracts, TDD, and acceptance-check verification.
 ---
 
 # Subagent-Driven Spec Development
 
-Implement specs from `.gummy/plans/story_*/specs/`.
+Implement specs from `.tif/plans/story_*/specs/`.
 
 ## Workflow
 
-1. Run `scripts/check-gummy-state.sh .`.
+1. Run `scripts/check-tif-state.sh .`.
 2. Read PRD, architecture, config, story ADR, contracts, and specs.
 3. Select incomplete specs with complete dependencies.
 4. Use `multi-agent-adapter`.

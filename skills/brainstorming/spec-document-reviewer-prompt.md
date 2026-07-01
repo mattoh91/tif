@@ -1,10 +1,10 @@
 # Story Spec Reviewer Prompt
 
-Review the Gummy story planning set.
+Review the Tif story planning set.
 
 Inputs:
 
-- `.gummy/docs/PRD.md`
+- `.tif/docs/PRD.md`
 - story `ADR.md`
 - story `contracts.json`
 - story specs

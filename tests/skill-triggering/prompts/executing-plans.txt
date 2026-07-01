@@ -1,1 +1,1 @@
-I have Gummy story specs under .gummy/plans/story_001_auth/specs/ with contracts.json ready. Please implement the next incomplete spec.
+I have Tif story specs under .tif/plans/story_001_auth/specs/ with contracts.json ready. Please implement the next incomplete spec.

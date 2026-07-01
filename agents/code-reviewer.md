@@ -20,7 +20,7 @@ When reviewing completed work, you will:
    - Check for proper error handling, type safety, and defensive programming
    - Evaluate code organization, naming conventions, and maintainability
    - Assess test coverage and quality of test implementations
-   - For Gummy component work, verify there is an automated component acceptance gate and that it passed
+   - For Tif component work, verify there is an automated component acceptance gate and that it passed
    - Confirm the gate matches the FRD epic/component and exercises a real boundary: DTO/data contract, API scenario, e2e/user-flow automation, or equivalent harness check
    - Look for potential security vulnerabilities or performance issues
 
@@ -34,7 +34,7 @@ When reviewing completed work, you will:
    - Verify that code includes appropriate comments and documentation
    - Check that file headers, function documentation, and inline comments are present and accurate
    - Ensure adherence to project-specific coding standards and conventions
-   - For Gummy projects, check that `.gummy/FRD.md` or `docs/gummy/FRD.md` progress and relevant caveats/memory notes are updated when a component is completed
+   - For Tif projects, check that `.tif/FRD.md` or `docs/tif/FRD.md` progress and relevant caveats/memory notes are updated when a component is completed
 
 5. **Issue Identification and Recommendations**:
    - Clearly categorize issues as: Critical (must fix), Important (should fix), or Suggestions (nice to have)

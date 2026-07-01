@@ -1,5 +1,5 @@
 ---
-description: "Close out a Gummy session"
+description: "Close out a Tif session"
 ---
 
-Use `gummy:documentation`, then `gummy:cleanup`, then `gummy:update-state`, and finally `gummy:memory-review` if learning candidates were staged. Do not promote memory, skill, doc, or test improvements without explicit user approval.
+Use `tif:documentation`, then `tif:cleanup`, then `tif:update-state`, and finally `tif:memory-review` if learning candidates were staged. Do not promote memory, skill, doc, or test improvements without explicit user approval.

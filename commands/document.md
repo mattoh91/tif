@@ -1,5 +1,5 @@
 ---
-description: "Generate Gummy project documentation"
+description: "Generate Tif project documentation"
 ---
 
-Use `gummy:documentation` to prepare local or approved Heineken GenAILab Confluence documentation.
+Use `tif:documentation` to prepare local or approved Heineken GenAILab Confluence documentation.

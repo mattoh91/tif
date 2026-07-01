@@ -1,2 +1,2 @@
-@./skills/using-gummy/SKILL.md
-@./skills/using-gummy/references/gemini-tools.md
+@./skills/using-tif/SKILL.md
+@./skills/using-tif/references/gemini-tools.md

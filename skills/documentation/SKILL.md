@@ -9,13 +9,13 @@ Run this before cleanup and state refresh.
 
 ## Inputs
 
-- `.gummy/docs/PRD.md`
-- `.gummy/docs/ARCHI.md`
-- `.gummy/docs/CONFIG.md`
-- `.gummy/docs/REPO_REVIEW.md` when present
-- `.gummy/plans/story_*/ADR.md`
-- `.gummy/plans/story_*/contracts.json`
-- `.gummy/plans/story_*/specs/spec_*.md`
+- `.tif/docs/PRD.md`
+- `.tif/docs/ARCHI.md`
+- `.tif/docs/CONFIG.md`
+- `.tif/docs/REPO_REVIEW.md` when present
+- `.tif/plans/story_*/ADR.md`
+- `.tif/plans/story_*/contracts.json`
+- `.tif/plans/story_*/specs/spec_*.md`
 - recent implementation diff and test results
 
 ## Content Structure
@@ -69,7 +69,7 @@ Output directory: `docs/ppt/` (derived, regenerable) — `architecture.drawio`,
 
 Steps:
 
-1. Build a deck content model (JSON) by synthesizing from `.gummy/` artifacts.
+1. Build a deck content model (JSON) by synthesizing from `.tif/` artifacts.
    The model is `{ title, sections: [...] }`; required section ids:
 
    | Section id | Content | Source |
@@ -89,7 +89,7 @@ Steps:
 
 3. Render with `node scripts/deck/build-deck.mjs <model.json> docs/ppt/deck.html`.
    The deck is self-contained (inline CSS/SVG, no external fetches). Apply
-   `gummy:ui-ux-pro-max` guidance for theme, layout, and typography.
+   `tif:ui-ux-pro-max` guidance for theme, layout, and typography.
 
 4. Run the neatness gate:
    `node scripts/deck/verify-deck.mjs docs/ppt/deck.html` (story_007 spec_003).

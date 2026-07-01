@@ -9,9 +9,9 @@ Design the simplest architecture that satisfies the PRD stories and story specs.
 
 ## Workflow
 
-1. Read `.gummy/docs/PRD.md`, `.gummy/docs/ARCHI.md`, `.gummy/docs/CONFIG.md`, and story folders.
-2. For brownfield repos, read or create `.gummy/docs/REPO_REVIEW.md`.
-3. Update `.gummy/docs/ARCHI.md` with a high-level dataflow or layer diagram.
+1. Read `.tif/docs/PRD.md`, `.tif/docs/ARCHI.md`, `.tif/docs/CONFIG.md`, and story folders.
+2. For brownfield repos, read or create `.tif/docs/REPO_REVIEW.md`.
+3. Update `.tif/docs/ARCHI.md` with a high-level dataflow or layer diagram.
 4. Use C4 L1/L2 only when actors, external systems, or deployable containers need clarity.
 5. Use sequence diagrams for only the most important flows.
 6. Record story-specific decisions in the story `ADR.md`.

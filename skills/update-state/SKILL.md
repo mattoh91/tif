@@ -1,6 +1,6 @@
 ---
 name: update-state
-description: Use to refresh Gummy memory and preamble from PRD, story specs, contracts, git status, and state validation.
+description: Use to refresh Tif memory and preamble from PRD, story specs, contracts, git status, and state validation.
 ---
 
 # Update State
@@ -9,21 +9,21 @@ Run `hooks/update-state` or `hooks/update-state --hook`.
 
 State refresh reads:
 
-- `.gummy/docs/PRD.md`
-- `.gummy/docs/ARCHI.md`
-- `.gummy/docs/CONFIG.md`
-- `.gummy/plans/story_*/ADR.md`
-- `.gummy/plans/story_*/contracts.json`
-- `.gummy/plans/story_*/specs/spec_*.md`
+- `.tif/docs/PRD.md`
+- `.tif/docs/ARCHI.md`
+- `.tif/docs/CONFIG.md`
+- `.tif/plans/story_*/ADR.md`
+- `.tif/plans/story_*/contracts.json`
+- `.tif/plans/story_*/specs/spec_*.md`
 - git status and recent commits
 
 State refresh writes:
 
-- `~/.gummy/memory/<project-slug>/STATE_AUDIT.md`
-- `~/.gummy/memory/<project-slug>/PREAMBLE.md`
-- `~/.gummy/memory/<project-slug>/SESSIONS/<date>.md`
-- `~/.gummy/memory/<project-slug>/CANDIDATES.jsonl` when stale-state or closeout issues are detected
+- `~/.tif/memory/<project-slug>/STATE_AUDIT.md`
+- `~/.tif/memory/<project-slug>/PREAMBLE.md`
+- `~/.tif/memory/<project-slug>/SESSIONS/<date>.md`
+- `~/.tif/memory/<project-slug>/CANDIDATES.jsonl` when stale-state or closeout issues are detected
 
-When `docs/ppt/.drift.json` exists, run `node scripts/deck/drift.mjs check .gummy/docs/ARCHI.md docs/ppt/.drift.json` and report a stale slide-deck diagram as a closeout issue (regenerate with `/deck`).
+When `docs/ppt/.drift.json` exists, run `node scripts/deck/drift.mjs check .tif/docs/ARCHI.md docs/ppt/.drift.json` and report a stale slide-deck diagram as a closeout issue (regenerate with `/deck`).
 
 Run `documentation` and `cleanup` before state refresh when ending a session. Run `memory-review` before promoting any candidate into durable memory, skills, docs, or tests.

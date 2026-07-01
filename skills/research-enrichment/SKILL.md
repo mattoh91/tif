@@ -31,6 +31,6 @@ Use this when implementation choices affect simplicity or effectiveness:
    - verification plan
 5. Add concise research notes and implementation guidance to the spec body.
 6. Update contracts if the choice changes schemas or dependencies.
-7. Run `scripts/check-gummy-state.sh .`.
+7. Run `scripts/check-tif-state.sh .`.
 
 Skip external research for trivial or purely local edits only when the ADR/spec records why research is unnecessary.

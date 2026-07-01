@@ -1,11 +1,11 @@
 ---
 name: prd-discovery
-description: Use when starting or updating a Gummy project; gathers problem statement and stories before story planning.
+description: Use when starting or updating a Tif project; gathers problem statement and stories before story planning.
 ---
 
 # PRD Discovery
 
-Create or update `.gummy/docs/PRD.md`.
+Create or update `.tif/docs/PRD.md`.
 
 ## Required Frontmatter
 

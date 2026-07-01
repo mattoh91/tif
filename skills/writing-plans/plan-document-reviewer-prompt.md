@@ -1,6 +1,6 @@
 # Story Planning Reviewer Prompt
 
-Review a story-local Gummy planning set.
+Review a story-local Tif planning set.
 
 Inputs:
 

@@ -1,15 +1,15 @@
 ---
 name: subagent-driven-development
-description: Compatibility entrypoint for implementing Gummy story specs with workers or inline fallback.
+description: Compatibility entrypoint for implementing Tif story specs with workers or inline fallback.
 ---
 
 # Subagent-Driven Development
 
-This skill now executes story specs from `.gummy/plans/story_*/specs/`.
+This skill now executes story specs from `.tif/plans/story_*/specs/`.
 
 ## Workflow
 
-1. Run `scripts/check-gummy-state.sh .`.
+1. Run `scripts/check-tif-state.sh .`.
 2. Read the PRD, architecture, config, story `ADR.md`, `contracts.json`, and specs.
 3. Select incomplete specs whose dependencies are complete.
 4. Use `multi-agent-adapter` for all worker dispatch decisions.

@@ -12,7 +12,7 @@ const cleanSvg = await readFile(fx('clean-diagram.svg'), 'utf8');
 const overlapSvg = await readFile(fx('overlap-diagram.svg'), 'utf8');
 
 async function deckWith(svg) {
-  const dir = await mkdtemp(join(tmpdir(), 'gummy-verify-'));
+  const dir = await mkdtemp(join(tmpdir(), 'tif-verify-'));
   const path = join(dir, 'deck.html');
   const html = buildDeckHtml({
     title: 'T',

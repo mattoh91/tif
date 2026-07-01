@@ -2,7 +2,7 @@
 # Helper functions for Claude Code skill tests
 
 TEST_HELPERS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$TEST_HELPERS_DIR/../gummy-fixtures.sh"
+source "$TEST_HELPERS_DIR/../tif-fixtures.sh"
 
 # Run Claude Code with a prompt and capture output
 # Usage: run_claude "prompt text" [timeout_seconds] [allowed_tools]
@@ -141,12 +141,12 @@ cleanup_test_project() {
     fi
 }
 
-# Create a canonical Gummy spec set for testing.
+# Create a canonical Tif spec set for testing.
 # Usage: create_test_plan "$project_dir" "$plan_name"
 create_test_plan() {
     local project_dir="$1"
-    create_gummy_docs_fixture "$project_dir"
-    echo "$project_dir/.gummy/plans/story_001_auth_system/ADR.md"
+    create_tif_docs_fixture "$project_dir"
+    echo "$project_dir/.tif/plans/story_001_auth_system/ADR.md"
 }
 
 # Export functions for use in tests
@@ -158,5 +158,5 @@ export -f assert_order
 export -f create_test_project
 export -f cleanup_test_project
 export -f run_with_timeout
-export -f create_gummy_docs_fixture
+export -f create_tif_docs_fixture
 export -f create_test_plan

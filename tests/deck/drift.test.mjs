@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { writeDriftRef, checkDrift } from '../../scripts/deck/drift.mjs';
 
 async function fixture() {
-  const dir = await mkdtemp(join(tmpdir(), 'gummy-drift-'));
+  const dir = await mkdtemp(join(tmpdir(), 'tif-drift-'));
   const archi = join(dir, 'ARCHI.md');
   const ref = join(dir, '.drift.json');
   await writeFile(archi, '# Arch\nClient -> API\n');

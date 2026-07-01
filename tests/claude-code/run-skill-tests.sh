@@ -4,7 +4,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-source "$SCRIPT_DIR/../gummy-fixtures.sh"
+source "$SCRIPT_DIR/../tif-fixtures.sh"
 cd "$SCRIPT_DIR"
 
 echo "========================================"

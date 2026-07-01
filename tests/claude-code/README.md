@@ -1,6 +1,6 @@
 # Claude Code Skills Tests
 
-Automated tests for Gummy skills using Claude Code CLI.
+Automated tests for Tif skills using Claude Code CLI.
 
 ## Overview
 
@@ -9,7 +9,7 @@ This test suite verifies that skills are loaded correctly and Claude follows the
 ## Requirements
 
 - Claude Code CLI installed and in PATH (`claude --version` should work)
-- Local Gummy plugin installed (see main README for installation)
+- Local Tif plugin installed (see main README for installation)
 
 ## Running Tests
 
@@ -48,7 +48,7 @@ Common functions for skills testing:
 - `assert_count output pattern count name` - Verify exact count
 - `assert_order output pattern_a pattern_b name` - Verify order
 - `create_test_project` - Create temp test directory
-- `create_test_plan project_dir` - Create sample `.gummy/docs` spec set
+- `create_test_plan project_dir` - Create sample `.tif/docs` spec set
 
 ### Test Files
 
@@ -97,7 +97,7 @@ Tests skill content and requirements (~2 minutes):
 #### test-subagent-driven-development-integration.sh
 Full workflow execution test (~10-30 minutes):
 - Creates real test project with Node.js setup
-- Creates `.gummy/plans/story_001_auth_system/` story specs and contracts
+- Creates `.tif/plans/story_001_auth_system/` story specs and contracts
 - Executes plan using subagent-driven-development
 - Verifies actual behaviors:
   - Plan read once at start (not per task)

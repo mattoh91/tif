@@ -1,12 +1,12 @@
 {
-  "name": "gummy",
+  "name": "tif",
   "description": "Personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
   "version": "5.0.7",
   "author": {
     "name": "mattoh91"
   },
-  "homepage": "https://github.com/mattoh91/gummy",
-  "repository": "https://github.com/mattoh91/gummy",
+  "homepage": "https://github.com/mattoh91/tif",
+  "repository": "https://github.com/mattoh91/tif",
   "license": "MIT",
   "keywords": [
     "skills",

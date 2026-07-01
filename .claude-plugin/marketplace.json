@@ -1,12 +1,12 @@
 {
-  "name": "gummy-dev",
-  "description": "Development marketplace for the Gummy cross-harness SWE workflow plugin",
+  "name": "tif-dev",
+  "description": "Development marketplace for the Tif cross-harness SWE workflow plugin",
   "owner": {
     "name": "mattoh91"
   },
   "plugins": [
     {
-      "name": "gummy",
+      "name": "tif",
       "description": "Personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
       "version": "5.0.7",
       "source": "./",

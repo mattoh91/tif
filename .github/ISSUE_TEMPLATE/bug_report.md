@@ -16,21 +16,21 @@ add a comment or reaction to the existing one instead.
 
 | Field | Value |
 |-------|-------|
-| Gummy version | |
+| Tif version | |
 | Harness (Claude Code, Cursor, etc.) | |
 | Harness version | |
 | Model | |
 | OS + shell | |
 
-## Is this a Gummy issue or a platform issue?
-<!-- Gummy is a plugin. Some reported "bugs" are actually issues
+## Is this a Tif issue or a platform issue?
+<!-- Tif is a plugin. Some reported "bugs" are actually issues
      in the underlying platform or model. If you're not sure, try
-     reproducing without Gummy installed.
+     reproducing without Tif installed.
 
-     If the problem persists without Gummy, file the issue with
+     If the problem persists without Tif, file the issue with
      your platform instead. -->
 
-- [ ] I confirmed this issue does not occur without Gummy installed
+- [ ] I confirmed this issue does not occur without Tif installed
 
 ## What happened?
 <!-- Be specific. "It doesn't work" is not a bug report. -->

@@ -1,6 +1,6 @@
 // Assemble a self-contained presentation deck (docs/ppt/deck.html) from a
 // content model. Mechanical and deterministic: the agent supplies the model
-// (narrative/value/component prose synthesised from .gummy artifacts) and a
+// (narrative/value/component prose synthesised from .tif artifacts) and a
 // pre-embedded architecture SVG; this module only lays it out.
 //
 // Used by the /deck command (see commands/deck.md and skills/documentation).

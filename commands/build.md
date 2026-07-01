@@ -1,5 +1,5 @@
 ---
-description: "Build the next Gummy story spec"
+description: "Build the next Tif story spec"
 ---
 
-Use `gummy:build` to implement the next dependency-ready spec with `completed: false` from `.gummy/plans/story_*/specs/`.
+Use `tif:build` to implement the next dependency-ready spec with `completed: false` from `.tif/plans/story_*/specs/`.

@@ -1,6 +1,6 @@
 # Implementer Prompt
 
-You are implementing one Gummy story spec.
+You are implementing one Tif story spec.
 
 Inputs:
 

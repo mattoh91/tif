@@ -1,6 +1,6 @@
 ---
 name: component-functional-testing
-description: Use to define or verify spec acceptance checks and component tests for Gummy story specs.
+description: Use to define or verify spec acceptance checks and component tests for Tif story specs.
 ---
 
 # Component Functional Testing

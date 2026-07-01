@@ -1,0 +1,194 @@
+{
+  "schema_version": "tif.contracts.v1",
+  "story_id": "story_006",
+  "contracts": [
+    {
+      "id": "tif.artifact_authority.matrix",
+      "provider": "spec_001",
+      "consumers": ["spec_002", "spec_003", "spec_005", "spec_006"],
+      "schema": {
+        "type": "object",
+        "required": ["artifacts"],
+        "properties": {
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["path_pattern", "authority", "trim"],
+              "properties": {
+                "path_pattern": { "type": "string" },
+                "authority": { "type": "string" },
+                "trim": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "tif.trinity.workflow",
+      "provider": "spec_002",
+      "consumers": ["spec_003", "spec_004", "spec_005", "spec_006"],
+      "schema": {
+        "type": "object",
+        "required": ["phases"],
+        "properties": {
+          "phases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "command", "responsibility", "outputs"],
+              "properties": {
+                "name": { "type": "string" },
+                "command": { "type": "string" },
+                "responsibility": { "type": "string" },
+                "outputs": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "tif.research.evidence_record",
+      "provider": "spec_003",
+      "consumers": ["spec_004", "spec_005"],
+      "schema": {
+        "type": "object",
+        "required": ["question", "sources", "decision", "verification_plan"],
+        "properties": {
+          "question": { "type": "string" },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["title", "url", "source_type", "retrieved_on"],
+              "properties": {
+                "title": { "type": "string" },
+                "url": { "type": "string" },
+                "source_type": { "type": "string" },
+                "retrieved_on": { "type": "string" }
+              }
+            }
+          },
+          "decision": { "type": "string" },
+          "rejected_options": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "security_notes": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "verification_plan": { "type": "string" }
+        }
+      }
+    },
+    {
+      "id": "tif.validation.gate_schema",
+      "provider": "spec_004",
+      "consumers": ["spec_005"],
+      "schema": {
+        "type": "object",
+        "required": ["test_first", "focused_tests", "acceptance_checks", "e2e_required_when"],
+        "properties": {
+          "test_first": { "type": "boolean" },
+          "focused_tests": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "acceptance_checks": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "e2e_required_when": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "id": "tif.learning.candidate_schema",
+      "provider": "spec_005",
+      "consumers": ["spec_006"],
+      "schema": {
+        "type": "object",
+        "required": ["id", "created_at", "source", "target", "scope", "proposal", "risk_flags", "status", "verification"],
+        "properties": {
+          "id": { "type": "string" },
+          "created_at": { "type": "string" },
+          "source": {
+            "type": "object",
+            "required": ["type", "path", "excerpt"],
+            "properties": {
+              "type": { "type": "string" },
+              "path": { "type": "string" },
+              "excerpt": { "type": "string" }
+            }
+          },
+          "target": { "type": "string" },
+          "scope": { "type": "string" },
+          "proposal": { "type": "string" },
+          "risk_flags": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "status": { "type": "string" },
+          "verification": {
+            "type": "object",
+            "required": ["command", "result"],
+            "properties": {
+              "command": { "type": "string" },
+              "result": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "tif.rename.migration_plan",
+      "provider": "spec_006",
+      "consumers": [],
+      "schema": {
+        "type": "object",
+        "required": ["selected_name", "old_namespace", "new_namespace", "surfaces", "compatibility_policy"],
+        "properties": {
+          "selected_name": { "type": "string" },
+          "old_namespace": { "type": "string" },
+          "new_namespace": { "type": "string" },
+          "surfaces": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "compatibility_policy": { "type": "string" }
+        }
+      }
+    }
+  ],
+  "external_contracts": [
+    {
+      "id": "external.github_and_arxiv.sources",
+      "description": "Current public evidence from GitHub repositories, arXiv papers, official docs, and security advisories when research-dependent design choices are made."
+    },
+    {
+      "id": "external.hermes_agent.memory_design",
+      "description": "HERMES Agent public repository and documentation for optional memory-backed prerequisite retrieval in an agent loop."
+    },
+    {
+      "id": "external.memory_poisoning.research",
+      "description": "Security research on persistent memory poisoning and indirect instruction risks for agents."
+    }
+  ],
+  "parallel_groups": [
+    ["spec_001"],
+    ["spec_002"],
+    ["spec_003"],
+    ["spec_004"],
+    ["spec_005"],
+    ["spec_006"]
+  ]
+}

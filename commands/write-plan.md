@@ -1,5 +1,5 @@
 ---
-description: "Create or update Gummy story specs"
+description: "Create or update Tif story specs"
 ---
 
-Use `gummy:story-planner` to create or update `.gummy/plans/story_*/ADR.md` and draft specs, then run `gummy:contract-designer`.
+Use `tif:story-planner` to create or update `.tif/plans/story_*/ADR.md` and draft specs, then run `tif:contract-designer`.

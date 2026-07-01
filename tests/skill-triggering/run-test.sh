@@ -19,12 +19,12 @@ fi
 
 # Get the directory where this script lives (should be tests/skill-triggering)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# Get the Gummy plugin root (two levels up from tests/skill-triggering)
+# Get the Tif plugin root (two levels up from tests/skill-triggering)
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-source "$SCRIPT_DIR/../gummy-fixtures.sh"
+source "$SCRIPT_DIR/../tif-fixtures.sh"
 
 TIMESTAMP=$(date +%s)
-OUTPUT_DIR="/tmp/gummy-tests/${TIMESTAMP}/skill-triggering/${SKILL_NAME}"
+OUTPUT_DIR="/tmp/tif-tests/${TIMESTAMP}/skill-triggering/${SKILL_NAME}"
 mkdir -p "$OUTPUT_DIR"
 
 # Read prompt from file

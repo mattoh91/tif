@@ -1,5 +1,5 @@
 ---
-description: "Scaffold Gummy project structure"
+description: "Scaffold Tif project structure"
 ---
 
-Use the `gummy:scaffolding-repo` skill to scaffold or repair the repository baseline. Do not overwrite existing meaningful files without confirming with the user.
+Use the `tif:scaffolding-repo` skill to scaffold or repair the repository baseline. Do not overwrite existing meaningful files without confirming with the user.

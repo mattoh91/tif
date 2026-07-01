@@ -5,7 +5,7 @@ description: Use when implementing a story spec with focused failing tests befor
 
 # Test-Driven Development
 
-Gummy uses TDD inside each story spec implementation.
+Tif uses TDD inside each story spec implementation.
 
 ## Loop
 
