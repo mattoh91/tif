@@ -1,6 +1,28 @@
 # Tif Release Notes
 
-## Unreleased
+## v5.1.0 (2026-07-01)
+
+### Harness Renamed Gummy → Tif
+
+- Full namespace rename across manifests, commands, hooks, skills, docs, scripts,
+  tests, the `.tif/` state root, the `~/.tif/` memory root, `using-tif`, and
+  `check-tif-state.sh`. Naming lineage: Cutiepie → Gummy → Tif.
+
+### Story Weight Tiers (`weight: spike | full`)
+
+- **Scope planning ceremony to the deliverable** (story_008). A spec-frontmatter
+  `weight` field (default `full`, backward compatible); a story is `spike` only
+  when every spec opts in.
+- At `spike` weight, `check-tif-state.sh` makes `ADR.md` and `contracts.json`
+  **optional** (still validated when present) — a prove-the-loop slice can be a
+  single spec file. Full weight is unchanged.
+- Weight is auto-inferred (`POC → spike`, `MVP → full`, nudged by story shape)
+  and stated for one-line override, not hand-assigned. `project_mode` sets the
+  default but does not cap ceremony — a POC with a real decision still gets its ADR.
+
+### `/intake` Renamed `/onboard`
+
+- The onboarding command is now `/onboard`; `/intake` remains a compatibility alias.
 
 ### Slide Deck Output (`/deck`)
 

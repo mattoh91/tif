@@ -1,6 +1,6 @@
 {
   "name": "tif",
-  "version": "5.0.7",
+  "version": "5.1.0",
   "type": "module",
   "main": ".opencode/plugins/tif.js",
   "scripts": {
