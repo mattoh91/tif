@@ -79,7 +79,7 @@ Spec bodies should include implementation notes, research when tools/libraries/f
 Each story has a weight so planning ceremony matches the deliverable:
 
 - `full` (default): ADR.md and contracts.json required; multi-spec, cross-spec contracts. Earns its keep when there are real tradeoffs, cross-component schemas, or parallel work.
-- `spike`: a de-risking / prove-the-loop slice. Typically one spec. ADR.md and contracts.json are **optional** (`check-tif-state.sh` relaxes both). Goal is a learning, not a polished subsystem.
+- `spike`: a de-risking / prove-the-loop slice. Typically one spec. ADR.md and contracts.json are **optional, not forbidden** (`check-tif-state.sh` relaxes both). Goal is a learning, not a polished subsystem. Spike controls what's *required*, not what's *allowed* — if a spike makes a load-bearing decision (a POC often does), write the ADR for it; you're just no longer forced to when there's nothing to record.
 
 Weight lives in spec frontmatter (`weight: spike`); a story is `spike` only when **every** spec opts in. Absent = `full` (backward compatible).
 
@@ -89,7 +89,7 @@ Weight lives in spec frontmatter (`weight: spike`); a story is `spike` only when
 - Nudge to `spike` when the story is a single spec with no cross-spec `provides`/`consumes` and no research triggers (external service, security, novel algorithm), or the story says "prove/spike/validate".
 - Nudge to `full` when specs share contracts, security/data-loss is in scope, or research is required.
 
-`/plato` emits proportional artifacts: at `spike`, one spec with inline acceptance checks, no ADR, omitted/empty contracts, straight to build; at `full`, the normal ADR + specs + contracts. A trusted-automation setting may skip the one-line confirm.
+`/plato` emits proportional artifacts: at `spike`, one spec with inline acceptance checks and contracts omitted, plus an ADR only when a real decision surfaces; at `full`, the normal ADR + specs + contracts. `project_mode` sets the default weight but does not cap ceremony — a POC with a genuine tradeoff still gets its ADR. A trusted-automation setting may skip the one-line confirm.
 
 ## Heineken Projects
 
