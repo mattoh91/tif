@@ -1,14 +1,16 @@
-# Superpowers for Codex
+# Tif for Codex
 
-Guide for using Superpowers with OpenAI Codex via native skill discovery.
+Guide for using Tif with OpenAI Codex via local plugin installation.
 
 ## Quick Install
 
-Tell Codex:
+From a local checkout:
 
+```bash
+codex plugin marketplace add /absolute/path/to/tif
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.codex/INSTALL.md
-```
+
+Restart Codex, open `/plugins`, choose `Tif Local`, install `Tif`, then start a new thread.
 
 ## Manual Installation
 
@@ -21,21 +23,35 @@ Fetch and follow instructions from https://raw.githubusercontent.com/obra/superp
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/obra/superpowers.git ~/.codex/superpowers
+   git clone https://github.com/mattoh91/tif.git ~/.codex/tif
    ```
 
-2. Create the skills symlink:
+2. Add the local plugin marketplace:
+   ```bash
+   codex plugin marketplace add ~/.codex/tif
+   ```
+
+3. Restart Codex, open `/plugins`, choose `Tif Local`, and install `Tif`.
+
+### Direct Skill Symlink
+
+For raw skill development without installing the plugin:
+
    ```bash
    mkdir -p ~/.agents/skills
-   ln -s ~/.codex/superpowers/skills ~/.agents/skills/superpowers
+   ln -sfn ~/.codex/tif/skills ~/.agents/skills/tif
    ```
 
-3. Restart Codex.
+Restart Codex after changing the symlink.
 
-4. **For subagent skills** (optional): Skills like `dispatching-parallel-agents` and `subagent-driven-development` require Codex's multi-agent feature. Add to your Codex config:
+### Subagents and Hooks
+
+For subagent skills and hook-based state refresh, enable these features in `~/.codex/config.toml`:
+
    ```toml
    [features]
    multi_agent = true
+   hooks = true
    ```
 
 ### Windows
@@ -44,25 +60,27 @@ Use a junction instead of a symlink (works without Developer Mode):
 
 ```powershell
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.agents\skills"
-cmd /c mklink /J "$env:USERPROFILE\.agents\skills\superpowers" "$env:USERPROFILE\.codex\superpowers\skills"
+cmd /c mklink /J "$env:USERPROFILE\.agents\skills\tif" "$env:USERPROFILE\.codex\tif\skills"
 ```
 
 ## How It Works
 
-Codex has native skill discovery — it scans `~/.agents/skills/` at startup, parses SKILL.md frontmatter, and loads skills on demand. Superpowers skills are made visible through a single symlink:
+Codex installs Tif through the local marketplace in `.agents/plugins/marketplace.json`, which points at this checkout and reads `.codex-plugin/plugin.json`.
+
+The direct symlink fallback uses Codex skill discovery, which scans `~/.agents/skills/` at startup, parses SKILL.md frontmatter, and loads skills on demand:
 
 ```
-~/.agents/skills/superpowers/ → ~/.codex/superpowers/skills/
+~/.agents/skills/tif/ → ~/.codex/tif/skills/
 ```
 
-The `using-superpowers` skill is discovered automatically and enforces skill usage discipline — no additional configuration needed.
+The `using-tif` skill is discovered automatically in either path and enforces skill usage discipline.
 
 ## Usage
 
 Skills are discovered automatically. Codex activates them when:
 - You mention a skill by name (e.g., "use brainstorming")
 - The task matches a skill's description
-- The `using-superpowers` skill directs Codex to use one
+- The `using-tif` skill directs Codex to use one
 
 ### Personal Skills
 
@@ -90,30 +108,38 @@ The `description` field is how Codex decides when to activate a skill automatica
 ## Updating
 
 ```bash
-cd ~/.codex/superpowers && git pull
+cd ~/.codex/tif && git pull
 ```
 
-Skills update instantly through the symlink.
+Restart Codex after updating a plugin install. Direct symlink installs see file changes immediately, but Codex still needs a restart for discovery changes.
 
 ## Uninstalling
 
+Plugin install:
+
 ```bash
-rm ~/.agents/skills/superpowers
+codex plugin marketplace remove tif-local
+```
+
+Direct symlink install:
+
+```bash
+rm ~/.agents/skills/tif
 ```
 
 **Windows (PowerShell):**
 ```powershell
-Remove-Item "$env:USERPROFILE\.agents\skills\superpowers"
+Remove-Item "$env:USERPROFILE\.agents\skills\tif"
 ```
 
-Optionally delete the clone: `rm -rf ~/.codex/superpowers` (Windows: `Remove-Item -Recurse -Force "$env:USERPROFILE\.codex\superpowers"`).
+Optionally delete the clone: `rm -rf ~/.codex/tif` (Windows: `Remove-Item -Recurse -Force "$env:USERPROFILE\.codex\tif"`).
 
 ## Troubleshooting
 
 ### Skills not showing up
 
-1. Verify the symlink: `ls -la ~/.agents/skills/superpowers`
-2. Check skills exist: `ls ~/.codex/superpowers/skills`
+1. Verify the symlink: `ls -la ~/.agents/skills/tif`
+2. Check skills exist: `ls ~/.codex/tif/skills`
 3. Restart Codex — skills are discovered at startup
 
 ### Windows junction issues
@@ -122,5 +148,5 @@ Junctions normally work without special permissions. If creation fails, try runn
 
 ## Getting Help
 
-- Report issues: https://github.com/obra/superpowers/issues
-- Main documentation: https://github.com/obra/superpowers
+- Report issues: https://github.com/mattoh91/tif/issues
+- Main documentation: https://github.com/mattoh91/tif

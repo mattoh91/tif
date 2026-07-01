@@ -1,0 +1,278 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mode="${1:-}"
+silent=0
+if [ "$mode" = "--hook" ]; then
+  silent=1
+fi
+
+project_slug() {
+  local remote
+  remote="$(git remote get-url origin 2>/dev/null || true)"
+  if [ -n "$remote" ]; then
+    printf '%s' "$remote" \
+      | sed -E 's#^[a-zA-Z]+://##; s#^git@##; s#:#/#; s#\.git$##; s#[^A-Za-z0-9._/-]+#-#g; s#[/]+#-#g' \
+      | tr '[:upper:]' '[:lower:]'
+  else
+    basename "$(pwd)" | tr '[:upper:]' '[:lower:]' | sed -E 's#[^a-z0-9._-]+#-#g'
+  fi
+}
+
+has_tif_file() {
+  local rel="$1"
+  [ -f ".tif/docs/${rel}" ]
+}
+
+first_tif_file() {
+  local rel="$1"
+  if [ -f ".tif/docs/${rel}" ]; then
+    printf '.tif/docs/%s' "$rel"
+  fi
+}
+
+append_issue() {
+  local severity="$1"
+  local message="$2"
+  issue_count=$((issue_count + 1))
+  printf -- '- [%s] %s\n' "$severity" "$message" >> "$issues_tmp"
+}
+
+stage_learning_candidate() {
+  local issue_summary="$1"
+
+  [ -n "$issue_summary" ] || return 0
+
+  TIF_CANDIDATES_FILE="$candidates_file" \
+  TIF_CANDIDATE_DATE="$today" \
+  TIF_CANDIDATE_NOW="$now" \
+  TIF_CANDIDATE_SOURCE="$audit_file" \
+  TIF_CANDIDATE_EXCERPT="$issue_summary" \
+  TIF_CANDIDATE_VERIFY="scripts/check-tif-state.sh ." \
+  node <<'NODE' || true
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const file = process.env.TIF_CANDIDATES_FILE;
+const excerpt = process.env.TIF_CANDIDATE_EXCERPT || '';
+const hash = crypto.createHash('sha1').update(excerpt).digest('hex').slice(0, 12);
+const id = `learn_${(process.env.TIF_CANDIDATE_DATE || '').replace(/-/g, '')}_${hash}`;
+const existing = fs.existsSync(file)
+  ? fs.readFileSync(file, 'utf8').split(/\r?\n/).filter(Boolean)
+  : [];
+
+if (existing.some((line) => {
+  try {
+    return JSON.parse(line).id === id;
+  } catch (_) {
+    return false;
+  }
+})) {
+  process.exit(0);
+}
+
+const riskFlags = [];
+if (/uncommitted changes|dirty/i.test(excerpt)) {
+  riskFlags.push('dirty_tree');
+}
+if (/possible-stale/i.test(excerpt)) {
+  riskFlags.push('stale_state');
+}
+if (/(invalid|missing|blocked)/i.test(excerpt)) {
+  riskFlags.push('invalid_state');
+}
+
+const candidate = {
+  id,
+  created_at: process.env.TIF_CANDIDATE_NOW,
+  source: {
+    type: 'state_audit',
+    path: process.env.TIF_CANDIDATE_SOURCE,
+    excerpt: excerpt.slice(0, 600),
+  },
+  target: 'memory',
+  scope: 'project',
+  proposal: `Review and resolve Tif state findings: ${excerpt.replace(/\s+/g, ' ').slice(0, 280)}`,
+  risk_flags: riskFlags,
+  status: 'pending',
+  verification: {
+    command: process.env.TIF_CANDIDATE_VERIFY,
+    result: 'pending',
+  },
+};
+
+fs.mkdirSync(path.dirname(file), { recursive: true });
+fs.appendFileSync(file, `${JSON.stringify(candidate)}\n`);
+NODE
+}
+
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+slug="$(project_slug)"
+memory_dir="${HOME}/.tif/memory/${slug}"
+session_dir="${memory_dir}/SESSIONS"
+mkdir -p "$session_dir"
+
+now="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+today="$(date -u +%Y-%m-%d)"
+audit_file="${memory_dir}/STATE_AUDIT.md"
+preamble_file="${memory_dir}/PREAMBLE.md"
+candidates_file="${memory_dir}/CANDIDATES.jsonl"
+session_file="${session_dir}/${today}.md"
+issues_tmp="$(mktemp)"
+validator_tmp="$(mktemp)"
+trap 'rm -f "$issues_tmp" "$validator_tmp"' EXIT
+issue_count=0
+
+git_status="$(git status --short 2>/dev/null || true)"
+changed_files="$({
+  git diff --name-only HEAD 2>/dev/null || true
+  git ls-files --others --exclude-standard 2>/dev/null || true
+} | sort -u)"
+recent_commits="$(git log --oneline -8 2>/dev/null || true)"
+
+if [ ! -f "${memory_dir}/MEMORY.md" ]; then
+  printf '# Tif Memory\n' > "${memory_dir}/MEMORY.md"
+fi
+
+if [ ! -f "${memory_dir}/FAILURES.md" ]; then
+  printf '# Tif Failure Modes\n' > "${memory_dir}/FAILURES.md"
+fi
+
+if [ -n "$git_status" ]; then
+  append_issue "attention" "Working tree has uncommitted changes; review or commit before clearing context."
+fi
+
+if [ -x "${script_dir}/../scripts/check-tif-state.sh" ]; then
+  "${script_dir}/../scripts/check-tif-state.sh" . > "$validator_tmp" || true
+  while IFS= read -r validator_line; do
+    case "$validator_line" in
+      "- [ok]"*|"- [info]"*)
+        ;;
+      "- ["*)
+        issue_count=$((issue_count + 1))
+        printf '%s\n' "$validator_line" >> "$issues_tmp"
+        ;;
+    esac
+  done < "$validator_tmp"
+fi
+
+if [ -n "$changed_files" ]; then
+  if printf '%s\n' "$changed_files" | grep -Eq '(^|/)(src|app|lib|packages|cmd|internal|components|pages|routes|api|server|client|tests?)/|\.([cm]?[jt]sx?|py|go|rs|java|kt|rb|php|swift|cs|cpp|h|hpp)$'; then
+    if ! printf '%s\n' "$changed_files" | grep -Eq '(^|/)\.tif/(docs|plans)/'; then
+      append_issue "possible-stale" "Code/test files changed without Tif story/docs state in the current diff; check affected specs, contracts, ADR, architecture, and config."
+    fi
+  fi
+fi
+
+if has_tif_file "CONFIG.md"; then
+  config_file="$(first_tif_file "CONFIG.md")"
+  if ! grep -Eiq 'settings|config|hyperparameter|tunable|default|allowed|owner' "$config_file" 2>/dev/null; then
+    append_issue "possible-stale" "${config_file} does not appear to document settings owners, defaults, or tunables."
+  fi
+fi
+
+if has_tif_file "ARCHI.md"; then
+  archi_file="$(first_tif_file "ARCHI.md")"
+  if ! grep -Eq '<mxfile|drawio|draw\.io|```mermaid|graph |flowchart |sequenceDiagram|C4Context|C4Container' "$archi_file" 2>/dev/null; then
+    append_issue "possible-stale" "${archi_file} does not appear to contain a draw.io dataflow diagram or supported diagram source."
+  fi
+fi
+
+if [ -d ".tif/plans" ]; then
+  while IFS= read -r story_adr; do
+    if ! grep -Eiq 'decision|options|consequence|status' "$story_adr" 2>/dev/null; then
+      append_issue "possible-stale" "${story_adr} does not appear to record decisions/options/consequences."
+    fi
+  done < <(find .tif/plans -maxdepth 2 -type f -name ADR.md 2>/dev/null | sort)
+fi
+
+if [ "$issue_count" -gt 0 ]; then
+  issue_summary="$(grep -Ev '^\- \[attention\] Working tree has uncommitted changes;' "$issues_tmp" 2>/dev/null | sed -n '1,8p' | tr '\n' ' ' | head -c 1200 || true)"
+  stage_learning_candidate "$issue_summary"
+fi
+
+{
+  printf '# Tif State Audit\n\n'
+  printf 'Generated: %s\n' "$now"
+  printf 'Project: %s\n' "$slug"
+  printf 'Working directory: %s\n\n' "$(pwd)"
+  printf '## Issues\n\n'
+  if [ "$issue_count" -eq 0 ]; then
+    printf -- '- [ok] No obvious stale-state issues detected by static checks.\n'
+  else
+    cat "$issues_tmp"
+  fi
+  printf '\n## Git Status\n\n'
+  if [ -n "$git_status" ]; then
+    printf '```text\n%s\n```\n' "$git_status"
+  else
+    printf 'Clean.\n'
+  fi
+  printf '\n## Changed Files\n\n'
+  if [ -n "$changed_files" ]; then
+    printf '```text\n%s\n```\n' "$changed_files"
+  else
+    printf 'None relative to HEAD.\n'
+  fi
+  printf '\n## Recent Commits\n\n'
+  if [ -n "$recent_commits" ]; then
+    printf '```text\n%s\n```\n' "$recent_commits"
+  else
+    printf 'Unavailable.\n'
+  fi
+  printf '\n## Learning Candidates\n\n'
+  printf 'Review pending candidates with `scripts/tif-memory-review.sh`.\n'
+  printf 'Candidate file: `%s`\n' "$candidates_file"
+} > "$audit_file"
+
+{
+  printf '<tif-preamble>\n'
+  printf 'Project: %s\n' "$slug"
+  printf 'Generated: %s\n' "$now"
+  printf 'Current state: See %s\n' "$audit_file"
+  printf 'Working tree: '
+  if [ -n "$git_status" ]; then
+    printf 'dirty; inspect git status before continuing.\n'
+  else
+    printf 'clean.\n'
+  fi
+  printf 'State issues:\n'
+  if [ "$issue_count" -eq 0 ]; then
+    printf -- '- No obvious stale-state issues detected by static checks.\n'
+  else
+    cat "$issues_tmp"
+  fi
+  printf 'Recent commits:\n'
+  if [ -n "$recent_commits" ]; then
+    printf '%s\n' "$recent_commits" | sed 's/^/- /'
+  else
+    printf -- '- Unavailable.\n'
+  fi
+  printf 'Next session checklist:\n'
+  printf -- '- Read .tif/docs/PRD.md for project mode, context, and stories.\n'
+  printf -- '- Read .tif/plans/story_*/ADR.md for decisions and workflow rationale.\n'
+  printf -- '- Read .tif/plans/story_*/specs/spec_*.md for dependencies, completed flags, and acceptance checks.\n'
+  printf -- '- Read .tif/plans/story_*/contracts.json for cross-spec schemas.\n'
+  printf -- '- Read .tif/docs/CONFIG.md for env vars, settings owners, MCP setup, and tunables.\n'
+  printf -- '- Read %s and update stale docs or memory before implementation.\n' "$audit_file"
+  printf -- '- Run scripts/tif-memory-review.sh before promoting any staged learning candidates.\n'
+  printf -- '- Do not mark a spec completed=true until all acceptance checks pass.\n'
+  printf '</tif-preamble>\n'
+} > "$preamble_file"
+
+{
+  printf '\n## Tif Update State — %s\n\n' "$now"
+  printf -- '- Event: %s\n' "${TIF_HOOK_EVENT:-manual}"
+  printf -- '- Audit: %s\n' "$audit_file"
+  printf -- '- Preamble: %s\n' "$preamble_file"
+  printf -- '- Candidates: %s\n' "$candidates_file"
+  printf -- '- Issues: %s\n' "$issue_count"
+} >> "$session_file"
+
+if [ "$silent" -eq 0 ]; then
+  printf 'Tif state refreshed.\n'
+  printf 'Audit: %s\n' "$audit_file"
+  printf 'Preamble: %s\n' "$preamble_file"
+  printf 'Issues: %s\n' "$issue_count"
+fi

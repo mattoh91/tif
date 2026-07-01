@@ -1,5 +1,5 @@
 ---
-description: "Deprecated - use the superpowers:brainstorming skill instead"
+description: "Plan a Tif project or story"
 ---
 
-Tell your human partner that this command is deprecated and will be removed in the next major release. They should ask you to use the "superpowers brainstorming" skill instead.
+Use `tif:brainstorming`: project intake, PRD stories, story folders, draft specs, contract design, state check, then ask for approval before build.

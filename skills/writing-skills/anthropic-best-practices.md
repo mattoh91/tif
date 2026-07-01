@@ -575,7 +575,7 @@ This endpoint is no longer supported.
 </details>
 ```
 
-The old patterns section provides historical context without cluttering the main content.
+The old patterns section provides extra context without cluttering the main content.
 
 ### Use consistent terminology
 

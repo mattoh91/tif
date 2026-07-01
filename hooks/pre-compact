@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+project_slug() {
+  local remote
+  remote="$(git remote get-url origin 2>/dev/null || true)"
+  if [ -n "$remote" ]; then
+    printf '%s' "$remote" \
+      | sed -E 's#^[a-zA-Z]+://##; s#^git@##; s#:#/#; s#\.git$##; s#[^A-Za-z0-9._/-]+#-#g; s#[/]+#-#g' \
+      | tr '[:upper:]' '[:lower:]'
+  else
+    basename "$(pwd)" | tr '[:upper:]' '[:lower:]' | sed -E 's#[^a-z0-9._-]+#-#g'
+  fi
+}
+
+slug="$(project_slug)"
+memory_dir="${HOME}/.tif/memory/${slug}"
+session_dir="${memory_dir}/SESSIONS"
+mkdir -p "$session_dir"
+
+today="$(date -u +%Y-%m-%d)"
+now="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+session_file="${session_dir}/${today}.md"
+payload_file="${session_dir}/${today}-${now}-precompact.json"
+
+cat > "$payload_file" || true
+
+{
+  echo ""
+  echo "## PreCompact — ${now}"
+  echo ""
+  echo "- Event: context compaction requested"
+  echo "- Working directory: $(pwd)"
+  echo "- Git branch: $(git branch --show-current 2>/dev/null || echo unknown)"
+  echo "- Git status:"
+  git status --short 2>/dev/null | sed 's/^/  - /' || echo "  - unavailable"
+  echo "- Raw hook payload: ${payload_file}"
+} >> "$session_file"
+
+TIF_HOOK_EVENT=PreCompact "${BASH_SOURCE%/*}/update-state" --hook || true
+
+printf '{}\n'

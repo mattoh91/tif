@@ -1,198 +1,197 @@
-# Superpowers
+# Tif
 
-Superpowers is a complete software development methodology for your coding agents, built on top of a set of composable skills and some initial instructions that make sure your agent uses them.
+Tif is a personal SWE harness for Claude Code, Codex, Cursor, Copilot, Gemini, and similar agent hosts. It turns a user idea into PRD stories, story-local specs, contracts, implementation, documentation, cleanup, and approval-gated memory refresh.
 
-## How it works
-
-It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do. 
-
-Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest. 
-
-After you've signed off on the design, your agent puts together an implementation plan that's clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY. 
-
-Next up, once you say "go", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for Claude to be able to work autonomously for a couple hours at a time without deviating from the plan you put together.
-
-There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers.
-
-
-## Sponsorship
-
-If Superpowers has helped you do stuff that makes money and you are so inclined, I'd greatly appreciate it if you'd consider [sponsoring my opensource work](https://github.com/sponsors/obra).
-
-Thanks! 
-
-- Jesse
-
+Tif is intentionally story-scoped. It does not use a separate global feature list or global implementation plan.
 
 ## Installation
 
-**Note:** Installation differs by platform. 
+Full installation steps live in [docs/INSTALL.md](docs/INSTALL.md).
 
-### Claude Code Official Marketplace
-
-Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/superpowers)
-
-Install the plugin from Anthropic's official marketplace:
+Quick paths:
 
 ```bash
-/plugin install superpowers@claude-plugins-official
+# Codex local plugin install
+codex plugin marketplace add /absolute/path/to/tif
 ```
 
-### Claude Code (Superpowers Marketplace)
+OpenCode:
 
-The Superpowers marketplace provides Superpowers and some other related plugins for Claude Code.
-
-In Claude Code, register the marketplace first:
-
-```bash
-/plugin marketplace add obra/superpowers-marketplace
+```json
+{ "plugin": ["tif@git+https://github.com/mattoh91/tif.git"] }
 ```
 
-Then install the plugin from this marketplace:
-
-```bash
-/plugin install superpowers@superpowers-marketplace
-```
-
-### OpenAI Codex CLI
-
-- Open plugin search interface
-
-```bash
-/plugins
-```
-
-Search for Superpowers
-
-```bash
-superpowers
-```
-
-Select `Install Plugin`
-
-### OpenAI Codex App
-
-- In the Codex app, click on Plugins in the sidebar.
-- You should see `Superpowers` in the Coding section. 
-- Click the `+` next to Superpowers and follow the prompts.
-
-
-### Cursor (via Plugin Marketplace)
-
-In Cursor Agent chat, install from marketplace:
+Claude Code:
 
 ```text
-/add-plugin superpowers
+/plugin marketplace add /absolute/path/to/tif/.claude-plugin/marketplace.json
+/plugin install tif@tif-dev
+/reload-plugins
 ```
 
-or search for "superpowers" in the plugin marketplace.
-
-### OpenCode
-
-Tell OpenCode:
-
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
-```
-
-**Detailed docs:** [docs/README.opencode.md](docs/README.opencode.md)
-
-### GitHub Copilot CLI
+For Cursor, Copilot, and other hosts, generate host-native instruction files:
 
 ```bash
-copilot plugin marketplace add obra/superpowers-marketplace
-copilot plugin install superpowers@superpowers-marketplace
+python3 scripts/tif-compile.py skills --all --output /tmp/tif-skills
 ```
 
-### Gemini CLI
+## Core Contract
+
+Active state lives here:
+
+```text
+.tif/docs/
+  PRD.md
+  ARCHI.md
+  CONFIG.md
+
+.tif/plans/story_<nnn>_<slug>/
+  ADR.md
+  contracts.json
+  specs/
+    spec_<nnn>_<slug>.md
+```
+
+`PRD.md` owns human stories. Each story folder owns its own workflow, decisions, specs, and contracts. Spec frontmatter owns `completed: true/false` and acceptance-check `passes: true/false`.
+
+## Typical Flow
+
+```mermaid
+flowchart TD
+    A["User: I want to build X"] --> B["/socrates: requirements Q&A"]
+    B --> C["PRD stories"]
+    C --> D["/plato: research, ADR, specs"]
+    D --> E["contracts.json"]
+    E --> F["check-tif-state"]
+    F --> G{"User approves?"}
+    G -->|yes| H["/aristotle"]
+    H --> I["TDD per spec"]
+    I --> J["acceptance checks + e2e when needed"]
+    J --> K["completed flag update"]
+    K --> L["/finish"]
+    L --> M["docs + cleanup + update-state"]
+    M --> N["memory-review"]
+```
+
+## Commands
+
+```text
+/socrates   requirements Q&A, project intake, PRD stories, unresolved questions
+/plato      research-driven design, ADR decisions, specs, contracts, state check
+/aristotle  TDD implementation, focused tests, acceptance checks, Playwright/e2e
+/finish     documentation, cleanup, update-state, memory candidate review
+/memory-review approve/reject staged self-improvement candidates
+
+/onboard     classify greenfield/brownfield and personal/Heineken context (alias: /intake)
+/brainstorm  create/update PRD stories, story specs, and contracts
+/contracts   design or validate story contracts
+/build       implement the next dependency-ready incomplete spec
+/review      handle PR/code review feedback
+/document    generate local or approved Heineken Confluence docs
+/deck        render an opt-in docs/ppt/deck.html slide deck (verified diagram)
+/cleanup     remove stale/orphaned state before closeout
+/preamble    manual resume context when hooks are unavailable
+/update-state refresh memory and preamble
+```
+
+The older commands remain useful as expert shortcuts. The philosophical flow is the recommended start-to-finish path.
+
+## Project Intake
+
+Tif detects:
+
+- `greenfield` vs `brownfield`
+- `personal` vs `heineken`
+- `POC` vs `MVP`
+
+Brownfield projects get repo review and architecture baseline. Heineken projects get Brewery / GenAI Gateway setup when relevant, Atlassian MCP setup guidance, and Confluence documentation flow with explicit user approval before publish.
+
+Intake is adaptive: Tif inspects first, then asks only unresolved decision questions such as POC vs MVP mode, whether brownfield conventions are binding, and which GenAILab/Jira targets to use for confirmed Heineken projects.
+
+`multi-agent-adapter` normalizes Claude Code tasks, Codex workers, and inline fallback so the same story-spec task packet can run across hosts.
+
+## Spec Frontmatter
+
+Every story spec starts with:
+
+```yaml
+---
+story_id: story_001
+spec_id: spec_001
+title: Login API
+completed: false
+depends_on: []
+contracts:
+  provides:
+    - auth.login.response
+  consumes: []
+acceptance_checks:
+  - id: check_001
+    category: functional
+    description: User can log in and receive an active session.
+    steps:
+      - "Step 1: Navigate to the login page."
+      - "Step 2: Submit valid credentials."
+      - "Step 3: Verify the dashboard loads and session is active."
+    passes: false
+---
+```
+
+`completed: true` is allowed only when every acceptance check in the spec has `passes: true`.
+
+## Contracts
+
+`contracts.json` is created after specs are drafted. It aligns providers, consumers, schemas, dependencies, and safe parallel groups.
+
+Run:
 
 ```bash
-gemini extensions install https://github.com/obra/superpowers
+scripts/check-tif-state.sh .
 ```
 
-To update:
+The checker validates docs, story folders, specs, dependencies, contract references, and completion flags.
+
+## Memory Review
+
+Hooks and `/finish` may stage learning candidates in `~/.tif/memory/<project-slug>/CANDIDATES.jsonl`. Review them with:
 
 ```bash
-gemini extensions update superpowers
+scripts/tif-memory-review.sh
+scripts/tif-memory-review.sh --approve <candidate-id>
+scripts/tif-memory-review.sh --reject <candidate-id>
 ```
 
-## The Basic Workflow
+Promotion is explicit. Tif should not silently mutate durable memory, skills, docs, or tests.
 
-1. **brainstorming** - Activates before writing code. Refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves design document.
+## Skill Compiler
 
-2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
+Compile Tif skills into agent-native formats:
 
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
+```bash
+python3 scripts/tif-compile.py skills --all --output /tmp/tif-skills
+```
 
-4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
+Outputs:
 
-5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
+- Claude/Copilot: `<output>/<skill>/SKILL.md`
+- Cursor: `<output>/.cursor/rules/<skill>.md`
+- Codex: `<output>/AGENTS.md` with replaceable Tif markers
 
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
+## Verification
 
-7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
+Useful checks:
 
-**The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
+```bash
+node -e "for (const f of ['.agents/plugins/marketplace.json','package.json','.claude-plugin/plugin.json','.claude-plugin/marketplace.json','.codex-plugin/plugin.json','gemini-extension.json','.version-bump.json','hooks/hooks.json']) JSON.parse(require('fs').readFileSync(f,'utf8'))"
+bash -n hooks/session-start hooks/pre-compact hooks/session-end hooks/codex-stop hooks/update-state scripts/check-tif-state.sh scripts/check-tif-story-state.sh scripts/sync-to-codex-plugin.sh scripts/tif-memory-review.sh
+python3 scripts/tif-compile.py skills --agent codex --output "$(mktemp -d)"
+tests/tif-state/test-check-tif-state.sh
+tests/scaffolding-repo/test-scaffold-contract.sh
+tests/tif-compile/test-tif-compile.sh
+tests/multi-agent-adapter/test-multi-agent-adapter-contract.sh
+tests/story-flow/test-story-flow-contract.sh
+tests/memory-review/test-tif-memory-review.sh
+tests/codex-plugin-sync/test-sync-to-codex-plugin.sh
+```
 
-## What's Inside
-
-### Skills Library
-
-**Testing**
-- **test-driven-development** - RED-GREEN-REFACTOR cycle (includes testing anti-patterns reference)
-
-**Debugging**
-- **systematic-debugging** - 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
-- **verification-before-completion** - Ensure it's actually fixed
-
-**Collaboration** 
-- **brainstorming** - Socratic design refinement
-- **writing-plans** - Detailed implementation plans
-- **executing-plans** - Batch execution with checkpoints
-- **dispatching-parallel-agents** - Concurrent subagent workflows
-- **requesting-code-review** - Pre-review checklist
-- **receiving-code-review** - Responding to feedback
-- **using-git-worktrees** - Parallel development branches
-- **finishing-a-development-branch** - Merge/PR decision workflow
-- **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
-
-**Meta**
-- **writing-skills** - Create new skills following best practices (includes testing methodology)
-- **using-superpowers** - Introduction to the skills system
-
-## Philosophy
-
-- **Test-Driven Development** - Write tests first, always
-- **Systematic over ad-hoc** - Process over guessing
-- **Complexity reduction** - Simplicity as primary goal
-- **Evidence over claims** - Verify before declaring success
-
-Read [the original release announcement](https://blog.fsck.com/2025/10/09/superpowers/).
-
-## Contributing
-
-The general contribution process for Superpowers is below. Keep in mind that we don't generally accept contributions of new skills and that any updates to skills must work across all of the coding agents we support.
-
-1. Fork the repository
-2. Switch to the 'dev' branch
-3. Create a branch for your work
-4. Follow the `writing-skills` skill for creating and testing new and modified skills
-5. Submit a PR, being sure to fill in the pull request template.
-
-See `skills/writing-skills/SKILL.md` for the complete guide.
-
-## Updating
-
-Superpowers updates are somewhat coding-agent dependent, but are often automatic.
-
-## License
-
-MIT License - see LICENSE file for details
-
-## Community
-
-Superpowers is built by [Jesse Vincent](https://blog.fsck.com) and the rest of the folks at [Prime Radiant](https://primeradiant.com).
-
-- **Discord**: [Join us](https://discord.gg/35wsABTejz) for community support, questions, and sharing what you're building with Superpowers
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Release announcements**: [Sign up](https://primeradiant.com/superpowers/) to get notified about new versions
+Some checks require live agent hosts or authenticated tools. If unavailable, run static validation and document what was skipped.

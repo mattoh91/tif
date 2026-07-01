@@ -14,26 +14,26 @@ export XDG_CONFIG_HOME="$TEST_HOME/.config"
 export OPENCODE_CONFIG_DIR="$TEST_HOME/.config/opencode"
 
 # Standard install layout:
-#   $OPENCODE_CONFIG_DIR/superpowers/             ← package root
-#   $OPENCODE_CONFIG_DIR/superpowers/skills/      ← skills dir (../../skills from plugin)
-#   $OPENCODE_CONFIG_DIR/superpowers/.opencode/plugins/superpowers.js ← plugin file
-#   $OPENCODE_CONFIG_DIR/plugins/superpowers.js   ← symlink OpenCode reads
+#   $OPENCODE_CONFIG_DIR/tif/             ← package root
+#   $OPENCODE_CONFIG_DIR/tif/skills/      ← skills dir (../../skills from plugin)
+#   $OPENCODE_CONFIG_DIR/tif/.opencode/plugins/tif.js ← plugin file
+#   $OPENCODE_CONFIG_DIR/plugins/tif.js   ← symlink OpenCode reads
 
-SUPERPOWERS_DIR="$OPENCODE_CONFIG_DIR/superpowers"
-SUPERPOWERS_SKILLS_DIR="$SUPERPOWERS_DIR/skills"
-SUPERPOWERS_PLUGIN_FILE="$SUPERPOWERS_DIR/.opencode/plugins/superpowers.js"
+TIF_DIR="$OPENCODE_CONFIG_DIR/tif"
+TIF_SKILLS_DIR="$TIF_DIR/skills"
+TIF_PLUGIN_FILE="$TIF_DIR/.opencode/plugins/tif.js"
 
 # Install skills
-mkdir -p "$SUPERPOWERS_DIR"
-cp -r "$REPO_ROOT/skills" "$SUPERPOWERS_DIR/"
+mkdir -p "$TIF_DIR"
+cp -r "$REPO_ROOT/skills" "$TIF_DIR/"
 
 # Install plugin
-mkdir -p "$(dirname "$SUPERPOWERS_PLUGIN_FILE")"
-cp "$REPO_ROOT/.opencode/plugins/superpowers.js" "$SUPERPOWERS_PLUGIN_FILE"
+mkdir -p "$(dirname "$TIF_PLUGIN_FILE")"
+cp "$REPO_ROOT/.opencode/plugins/tif.js" "$TIF_PLUGIN_FILE"
 
 # Register plugin via symlink (what OpenCode actually reads)
 mkdir -p "$OPENCODE_CONFIG_DIR/plugins"
-ln -sf "$SUPERPOWERS_PLUGIN_FILE" "$OPENCODE_CONFIG_DIR/plugins/superpowers.js"
+ln -sf "$TIF_PLUGIN_FILE" "$OPENCODE_CONFIG_DIR/plugins/tif.js"
 
 # Create test skills in different locations for testing
 
@@ -67,10 +67,10 @@ EOF
 
 echo "Setup complete: $TEST_HOME"
 echo "OPENCODE_CONFIG_DIR:  $OPENCODE_CONFIG_DIR"
-echo "Superpowers dir:      $SUPERPOWERS_DIR"
-echo "Skills dir:           $SUPERPOWERS_SKILLS_DIR"
-echo "Plugin file:          $SUPERPOWERS_PLUGIN_FILE"
-echo "Plugin registered at: $OPENCODE_CONFIG_DIR/plugins/superpowers.js"
+echo "Tif dir:      $TIF_DIR"
+echo "Skills dir:           $TIF_SKILLS_DIR"
+echo "Plugin file:          $TIF_PLUGIN_FILE"
+echo "Plugin registered at: $OPENCODE_CONFIG_DIR/plugins/tif.js"
 echo "Test project at:      $TEST_HOME/test-project"
 
 # Helper function for cleanup (call from tests or trap)
@@ -83,6 +83,6 @@ cleanup_test_env() {
 # Export for use in tests
 export -f cleanup_test_env
 export REPO_ROOT
-export SUPERPOWERS_DIR
-export SUPERPOWERS_SKILLS_DIR
-export SUPERPOWERS_PLUGIN_FILE
+export TIF_DIR
+export TIF_SKILLS_DIR
+export TIF_PLUGIN_FILE

@@ -1,31 +1,36 @@
 {
-  "name": "superpowers",
+  "name": "tif",
   "version": "5.0.7",
-  "description": "An agentic skills framework & software development methodology that works: planning, TDD, debugging, and collaboration workflows.",
+  "description": "A personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
   "author": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com",
-    "url": "https://github.com/obra"
+    "name": "mattoh91",
+    "url": "https://github.com/mattoh91"
   },
-  "homepage": "https://github.com/obra/superpowers",
-  "repository": "https://github.com/obra/superpowers",
+  "homepage": "https://github.com/mattoh91/tif",
+  "repository": "https://github.com/mattoh91/tif",
   "license": "MIT",
   "keywords": [
+    "swe-harness",
     "brainstorming",
     "subagent-driven-development",
     "skills",
     "planning",
-    "tdd",
+    "spec-driven-development",
     "debugging",
     "code-review",
+    "build",
+    "review",
+    "multi-agent-adapter",
+    "poc-mvp",
+    "brewery-client",
     "workflow"
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Superpowers",
-    "shortDescription": "Planning, TDD, debugging, and delivery workflows for coding agents",
-    "longDescription": "Use Superpowers to guide agent work through brainstorming, implementation planning, test-driven development, systematic debugging, parallel execution, code review, and finish-the-branch workflows.",
-    "developerName": "Jesse Vincent",
+    "displayName": "Tif",
+    "shortDescription": "Structured SWE harness workflows for Codex and Claude Code",
+    "longDescription": "Use Tif to guide agent work through project intake, PRD stories, story-local specs/contracts/ADRs, research enrichment, architecture artifacts, internal TDD, memory, debugging, multi-agent adapter dispatch, build/review workflows, documentation, cleanup, and scaffolded Brewery/GenAI Gateway client setup.",
+    "developerName": "mattoh91",
     "category": "Coding",
     "capabilities": [
       "Interactive",
@@ -34,11 +39,11 @@
     ],
     "defaultPrompt": [
       "I've got an idea for something I'd like to build.",
-      "Let's add a feature to this project."
+      "Let's scaffold a Tif project workflow."
     ],
     "brandColor": "#F59E0B",
-    "composerIcon": "./assets/superpowers-small.svg",
-    "logo": "./assets/app-icon.png",
+    "composerIcon": "./assets/tif.png",
+    "logo": "./assets/tif.png",
     "screenshots": []
   }
 }

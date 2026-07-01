@@ -9,14 +9,15 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLUGIN_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+source "$SCRIPT_DIR/../tif-fixtures.sh"
 
 TIMESTAMP=$(date +%s)
-OUTPUT_DIR="/tmp/superpowers-tests/${TIMESTAMP}/explicit-skill-requests/multiturn"
+OUTPUT_DIR="/tmp/tif-tests/${TIMESTAMP}/explicit-skill-requests/multiturn"
 mkdir -p "$OUTPUT_DIR"
 
 # Create project directory (conversation is cwd-based)
 PROJECT_DIR="$OUTPUT_DIR/project"
-mkdir -p "$PROJECT_DIR/docs/superpowers/plans"
+create_tif_docs_fixture "$PROJECT_DIR"
 
 echo "=== Multi-Turn Explicit Skill Request Test ==="
 echo "Output dir: $OUTPUT_DIR"
@@ -25,23 +26,6 @@ echo "Plugin dir: $PLUGIN_DIR"
 echo ""
 
 cd "$PROJECT_DIR"
-
-# Create a dummy plan file
-cat > "$PROJECT_DIR/docs/superpowers/plans/auth-system.md" << 'EOF'
-# Auth System Implementation Plan
-
-## Task 1: Add User Model
-Create user model with email and password fields.
-
-## Task 2: Add Auth Routes
-Create login and register endpoints.
-
-## Task 3: Add JWT Middleware
-Protect routes with JWT validation.
-
-## Task 4: Write Tests
-Add comprehensive test coverage.
-EOF
 
 # Turn 1: Start a planning conversation
 echo ">>> Turn 1: Starting planning conversation..."
@@ -59,7 +43,7 @@ echo ""
 # Turn 2: Continue with more planning detail
 echo ">>> Turn 2: Continuing planning..."
 TURN2_LOG="$OUTPUT_DIR/turn2.json"
-claude -p "Good analysis. I've already written the plan to docs/superpowers/plans/auth-system.md. Now I'm ready to implement. What are my options for execution?" \
+claude -p "Good analysis. I've already written .tif/plans/story_001_auth/ specs and contracts. Now I'm ready to implement. What are my options for execution?" \
     --continue \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \

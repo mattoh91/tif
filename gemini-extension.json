@@ -1,6 +1,6 @@
 {
-  "name": "superpowers",
-  "description": "Core skills library: TDD, debugging, collaboration patterns, and proven techniques",
+  "name": "tif",
+  "description": "Personal cross-harness SWE workflow plugin: spec-driven features, canonical docs, memory, and agentic delivery skills.",
   "version": "5.0.7",
   "contextFileName": "GEMINI.md"
 }

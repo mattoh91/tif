@@ -1,13 +1,13 @@
-Great, the plan is complete. I've saved it to docs/superpowers/plans/auth-system.md.
+Great, the story plan, specs, and contracts are complete under .tif/plans/story_001_auth/.
 
 Here's a summary of what we designed:
-- Task 1: Add User Model with email/password fields
-- Task 2: Create auth routes for login/register
-- Task 3: Add JWT middleware for protected routes
-- Task 4: Write tests for all auth functionality
+- F001: Add User Model with email/password fields
+- F002: Create auth routes for login/register
+- F003: Add JWT middleware for protected routes
+- F004: Write tests for all auth functionality
 
 Two execution options:
-1. Subagent-Driven (this session) - dispatch a fresh subagent per task
+1. Subagent-Driven (this session) - dispatch fresh subagents per implementation phase
 2. Parallel Session (separate) - open new Claude Code session
 
 Which approach do you want?

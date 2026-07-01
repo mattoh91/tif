@@ -1,19 +1,17 @@
 {
-  "name": "superpowers-dev",
-  "description": "Development marketplace for Superpowers core skills library",
+  "name": "tif-dev",
+  "description": "Development marketplace for the Tif cross-harness SWE workflow plugin",
   "owner": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com"
+    "name": "mattoh91"
   },
   "plugins": [
     {
-      "name": "superpowers",
-      "description": "Core skills library for Claude Code: TDD, debugging, collaboration patterns, and proven techniques",
+      "name": "tif",
+      "description": "Personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
       "version": "5.0.7",
       "source": "./",
       "author": {
-        "name": "Jesse Vincent",
-        "email": "jesse@fsck.com"
+        "name": "mattoh91"
       }
     }
   ]

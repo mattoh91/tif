@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/hooks/session-start\"",
+            "statusMessage": "Loading Tif context"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$(git rev-parse --show-toplevel)/hooks/codex-stop\"",
+            "statusMessage": "Persisting Tif turn state",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

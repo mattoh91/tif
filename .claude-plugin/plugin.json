@@ -1,18 +1,23 @@
 {
-  "name": "superpowers",
-  "description": "Core skills library for Claude Code: TDD, debugging, collaboration patterns, and proven techniques",
+  "name": "tif",
+  "description": "Personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
   "version": "5.0.7",
   "author": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com"
+    "name": "mattoh91"
   },
-  "homepage": "https://github.com/obra/superpowers",
-  "repository": "https://github.com/obra/superpowers",
+  "homepage": "https://github.com/mattoh91/tif",
+  "repository": "https://github.com/mattoh91/tif",
   "license": "MIT",
   "keywords": [
     "skills",
-    "tdd",
+    "swe-harness",
+    "spec-driven-development",
     "debugging",
+    "build",
+    "review",
+    "multi-agent-adapter",
+    "poc-mvp",
+    "brewery-client",
     "collaboration",
     "best-practices",
     "workflows"

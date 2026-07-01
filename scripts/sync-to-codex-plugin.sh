@@ -2,7 +2,7 @@
 #
 # sync-to-codex-plugin.sh
 #
-# Sync this superpowers checkout → prime-radiant-inc/openai-codex-plugins.
+# Sync this Tif checkout → a Codex plugin repository.
 # Clones the fork fresh into a temp dir, rsyncs tracked upstream plugin content
 # (including committed Codex files under .codex-plugin/ and assets/), commits,
 # pushes a sync branch, and opens a PR.
@@ -20,8 +20,8 @@
 #   ./scripts/sync-to-codex-plugin.sh --bootstrap                  # create plugin dir if missing
 #
 # Bootstrap mode: skips the "plugin must exist on base" requirement and creates
-# plugins/superpowers/ when absent, then copies the tracked plugin files from
-# upstream just like a normal sync.
+# plugins/tif/ when absent, then copies the tracked plugin files from
+# this checkout just like a normal sync.
 #
 # Requires: bash, rsync, git, gh (authenticated), python3.
 
@@ -31,9 +31,9 @@ set -euo pipefail
 # Config — edit as upstream or canonical plugin shape evolves
 # =============================================================================
 
-FORK="prime-radiant-inc/openai-codex-plugins"
+FORK="${TIF_CODEX_PLUGIN_FORK:-mattoh91/openai-codex-plugins}"
 DEFAULT_BASE="main"
-DEST_REL="plugins/superpowers"
+DEST_REL="${TIF_CODEX_PLUGIN_DEST:-plugins/tif}"
 
 # Paths in upstream that should NOT land in the embedded plugin.
 # All patterns use a leading "/" to anchor them to the source root.
@@ -46,7 +46,6 @@ EXCLUDES=(
   "/.claude/"
   "/.claude-plugin/"
   "/.codex/"
-  "/.cursor-plugin/"
   "/.git/"
   "/.gitattributes"
   "/.github/"
@@ -302,9 +301,9 @@ prepare_preview_checkout
 
 TIMESTAMP="$(date -u +%Y%m%d-%H%M%S)"
 if [[ $BOOTSTRAP -eq 1 ]]; then
-  SYNC_BRANCH="bootstrap/superpowers-${UPSTREAM_SHORT}-${TIMESTAMP}"
+  SYNC_BRANCH="bootstrap/tif-${UPSTREAM_SHORT}-${TIMESTAMP}"
 else
-  SYNC_BRANCH="sync/superpowers-${UPSTREAM_SHORT}-${TIMESTAMP}"
+  SYNC_BRANCH="sync/tif-${UPSTREAM_SHORT}-${TIMESTAMP}"
 fi
 
 # =============================================================================
@@ -321,13 +320,13 @@ append_git_ignored_file_excludes
 # =============================================================================
 
 echo ""
-echo "Upstream: $UPSTREAM ($UPSTREAM_BRANCH @ $UPSTREAM_SHORT)"
+echo "Source:   $UPSTREAM ($UPSTREAM_BRANCH @ $UPSTREAM_SHORT)"
 echo "Version:  $UPSTREAM_VERSION"
 echo "Fork:     $FORK"
 echo "Base:     $BASE"
 echo "Branch:   $SYNC_BRANCH"
 if [[ $BOOTSTRAP -eq 1 ]]; then
-  echo "Mode:     BOOTSTRAP (creating plugins/superpowers/ when absent)"
+  echo "Mode:     BOOTSTRAP (creating $DEST_REL when absent)"
 fi
 echo ""
 echo "=== Preview (rsync --dry-run) ==="
@@ -356,7 +355,7 @@ if [[ -n "$LOCAL_CHECKOUT" ]]; then
 
   apply_to_preview_checkout
   if ! preview_checkout_has_changes; then
-    echo "No changes — embedded plugin was already in sync with upstream $UPSTREAM_SHORT (v$UPSTREAM_VERSION)."
+    echo "No changes — embedded plugin was already in sync with source $UPSTREAM_SHORT (v$UPSTREAM_VERSION)."
     exit 0
   fi
 fi
@@ -364,7 +363,7 @@ fi
 prepare_apply_checkout
 cd "$DEST_REPO"
 git checkout -q -b "$SYNC_BRANCH"
-echo "Syncing upstream content..."
+echo "Syncing source content..."
 if [[ $BOOTSTRAP -eq 1 ]]; then
   mkdir -p "$DEST"
 fi
@@ -373,7 +372,7 @@ rsync "${RSYNC_ARGS[@]}" "$UPSTREAM/" "$DEST/"
 # Bail early if nothing actually changed
 cd "$DEST_REPO"
 if [[ -z "$(git status --porcelain "$DEST_REL")" ]]; then
-  echo "No changes — embedded plugin was already in sync with upstream $UPSTREAM_SHORT (v$UPSTREAM_VERSION)."
+  echo "No changes — embedded plugin was already in sync with source $UPSTREAM_SHORT (v$UPSTREAM_VERSION)."
   exit 0
 fi
 
@@ -384,31 +383,31 @@ fi
 git add "$DEST_REL"
 
 if [[ $BOOTSTRAP -eq 1 ]]; then
-  COMMIT_TITLE="bootstrap superpowers v$UPSTREAM_VERSION from upstream main @ $UPSTREAM_SHORT"
-  PR_BODY="Initial bootstrap of the superpowers plugin from upstream \`main\` @ \`$UPSTREAM_SHORT\` (v$UPSTREAM_VERSION).
+  COMMIT_TITLE="bootstrap Tif v$UPSTREAM_VERSION from source main @ $UPSTREAM_SHORT"
+  PR_BODY="Initial bootstrap of the Tif plugin from source \`main\` @ \`$UPSTREAM_SHORT\` (v$UPSTREAM_VERSION).
 
-Creates \`plugins/superpowers/\` by copying the tracked plugin files from upstream, including \`.codex-plugin/plugin.json\` and \`assets/\`.
+Creates \`$DEST_REL\` by copying the tracked plugin files from this checkout, including \`.codex-plugin/plugin.json\` and \`assets/\`.
 
 Run via: \`scripts/sync-to-codex-plugin.sh --bootstrap\`
-Upstream commit: https://github.com/obra/superpowers/commit/$UPSTREAM_SHA
+Source commit: https://github.com/mattoh91/tif/commit/$UPSTREAM_SHA
 
-This is a one-time bootstrap. Subsequent syncs will be normal (non-bootstrap) runs using the same tracked upstream plugin files."
+This is a one-time bootstrap. Subsequent syncs will be normal (non-bootstrap) runs using the same tracked source plugin files."
 else
-  COMMIT_TITLE="sync superpowers v$UPSTREAM_VERSION from upstream main @ $UPSTREAM_SHORT"
-  PR_BODY="Automated sync from superpowers upstream \`main\` @ \`$UPSTREAM_SHORT\` (v$UPSTREAM_VERSION).
+  COMMIT_TITLE="sync Tif v$UPSTREAM_VERSION from source main @ $UPSTREAM_SHORT"
+  PR_BODY="Automated sync from Tif source \`main\` @ \`$UPSTREAM_SHORT\` (v$UPSTREAM_VERSION).
 
-Copies the tracked plugin files from upstream, including the committed Codex manifest and assets.
+Copies the tracked plugin files from this checkout, including the committed Codex manifest and assets.
 
 Run via: \`scripts/sync-to-codex-plugin.sh\`
-Upstream commit: https://github.com/obra/superpowers/commit/$UPSTREAM_SHA
+Source commit: https://github.com/mattoh91/tif/commit/$UPSTREAM_SHA
 
-Running the sync tool again against the same upstream SHA should produce a PR with an identical diff — use that to verify the tool is behaving."
+Running the sync tool again against the same source SHA should produce a PR with an identical diff — use that to verify the tool is behaving."
 fi
 
 git commit --quiet -m "$COMMIT_TITLE
 
 Automated sync via scripts/sync-to-codex-plugin.sh
-Upstream: https://github.com/obra/superpowers/commit/$UPSTREAM_SHA
+Source:   https://github.com/mattoh91/tif/commit/$UPSTREAM_SHA
 Branch:   $SYNC_BRANCH"
 
 echo "Pushing $SYNC_BRANCH to $FORK..."
