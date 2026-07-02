@@ -1,0 +1,20 @@
+{
+  "schema_version": "tif.contracts.v1",
+  "story_id": "story_010",
+  "contracts": [
+    {
+      "id": "tif.contracts.upstream_ref",
+      "provider": "spec_004",
+      "consumers": [],
+      "schema": {
+        "type": "object",
+        "required": ["id", "upstream"],
+        "properties": {
+          "id": { "type": "string" },
+          "upstream": { "type": "string", "description": "story_<nnn>/spec_<nnn> that provides id" }
+        }
+      }
+    }
+  ],
+  "parallel_groups": [["spec_001"], ["spec_002"], ["spec_003"], ["spec_004"], ["spec_005"]]
+}

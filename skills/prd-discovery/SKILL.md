@@ -43,3 +43,10 @@ with no upstream simply has no entry (or `[]`). `check-tif-state.sh` validates
 that referenced stories exist and the graph is acyclic.
 
 After the user approves PRD stories, use `story-planner`.
+
+## Parked Stories
+
+A story can be designed (ADR, maybe research) before its specs exist. List such
+stories in PRD frontmatter `parked_stories: [story_nnn]` — `check-tif-state.sh`
+then exempts them from the specs/ADR/contracts structural requirements (present
+files are still validated). Remove a story from the list once its specs land.

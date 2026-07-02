@@ -30,6 +30,14 @@ export function parseStoryDag(prdText) {
   return dag;
 }
 
+export function parseParkedStories(prdText) {
+  const fm = prdText.match(/^---\n([\s\S]*?)\n---/);
+  if (!fm) return [];
+  const m = fm[1].match(/^parked_stories:\s*\[([^\]]*)\]/m);
+  if (!m) return [];
+  return m[1].split(',').map((s) => s.trim()).filter(Boolean);
+}
+
 export function detectCycle(dag) {
   const WHITE = 0, GRAY = 1, BLACK = 2;
   const color = {};

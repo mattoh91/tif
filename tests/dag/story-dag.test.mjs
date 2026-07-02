@@ -5,6 +5,7 @@ import {
   detectCycle,
   danglingRefs,
   readySet,
+  parseParkedStories,
 } from '../../scripts/dag/story-dag.mjs';
 
 const PRD = `---
@@ -29,6 +30,17 @@ test('parseStoryDag reads the story_dag frontmatter block', () => {
 
 test('parseStoryDag returns empty when no block is present', () => {
   assert.deepEqual(parseStoryDag('---\nproject_mode: POC\n---\n# x'), {});
+});
+
+test('parseParkedStories reads the parked list', () => {
+  assert.deepEqual(
+    parseParkedStories('---\nproject_mode: MVP\nparked_stories: [story_003, story_009]\n---\n# x'),
+    ['story_003', 'story_009'],
+  );
+});
+
+test('parseParkedStories is empty when absent', () => {
+  assert.deepEqual(parseParkedStories('---\nproject_mode: POC\n---\n# x'), []);
 });
 
 test('detectCycle finds a cycle', () => {
