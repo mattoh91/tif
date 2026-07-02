@@ -1,0 +1,64 @@
+{
+  "schema_version": "tif.contracts.v1",
+  "story_id": "story_009",
+  "contracts": [
+    {
+      "id": "tif.story_dag.graph",
+      "provider": "spec_001",
+      "consumers": ["spec_002", "spec_003"],
+      "schema": {
+        "type": "object",
+        "required": ["nodes", "edges"],
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["story_id", "weight", "complete"],
+              "properties": {
+                "story_id": { "type": "string" },
+                "weight": { "type": "string", "enum": ["spike", "full"] },
+                "complete": { "type": "boolean" }
+              }
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["from", "to"],
+              "properties": {
+                "from": { "type": "string" },
+                "to": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "tif.story_dag.status",
+      "provider": "spec_002",
+      "consumers": ["spec_003"],
+      "schema": {
+        "type": "object",
+        "required": ["stories"],
+        "properties": {
+          "stories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["story_id", "status"],
+              "properties": {
+                "story_id": { "type": "string" },
+                "status": { "type": "string", "enum": ["blocked", "ready", "running", "done", "failed"] },
+                "phase": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "parallel_groups": [["spec_001"], ["spec_002"], ["spec_003"]]
+}
