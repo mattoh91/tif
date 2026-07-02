@@ -1,6 +1,6 @@
 {
   "name": "tif",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "description": "A personal cross-harness SWE workflow plugin: PRD stories, story specs/contracts, memory, build/review, documentation, cleanup, and scaffold helpers.",
   "author": {
     "name": "mattoh91",

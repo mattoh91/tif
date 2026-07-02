@@ -1,5 +1,27 @@
 # Tif Release Notes
 
+## v5.3.0 (2026-07-02)
+
+### Planning Affordances From Dogfooding (story_010)
+
+Cartographer dogfooding surfaced friction — all missing affordances, not model
+errors. Fixed:
+
+- **Category vocabulary**: acceptance checks accept `functional | integration |
+  e2e | style | security` (no more mislabeling live e2e as functional), plus a
+  completion rollup on the checker's summary line.
+- **Content-hash contract staleness**: `spec_contracts_sha` (hash of specs'
+  `provides`/`consumes`) replaces mtime — editing a `passes` flag no longer
+  false-reports `contracts.json` stale.
+- **Parked stories**: `parked_stories: [...]` in PRD frontmatter exempts
+  designed-but-not-built stories from the specs requirement — planning can precede
+  build.
+- **Cross-story upstream contracts**: `external_contracts` may declare
+  `upstream: story_nnn/spec_nnn`, validated against the provider spec and the
+  `story_dag` edge — cross-story contracts are checked, not silently trusted.
+- **Multi-repo awareness**: `repo_map` in PRD frontmatter, and a **warning** when
+  `.tif/` is not under version control.
+
 ## v5.2.0 (2026-07-02)
 
 ### Story-DAG Parallel Scheduler (story_009)
