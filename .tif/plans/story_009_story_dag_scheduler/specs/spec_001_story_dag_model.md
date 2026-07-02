@@ -2,7 +2,7 @@
 story_id: story_009
 spec_id: spec_001
 title: Story-level dependency graph and validation
-completed: false
+completed: true
 depends_on: []
 contracts:
   provides:
@@ -16,7 +16,7 @@ acceptance_checks:
       - "Step 1: Author a PRD with a story_dag block declaring inter-story depends_on."
       - "Step 2: Build the graph model over the .tif plans."
       - "Step 3: Verify nodes carry story_id, weight, and complete (all specs completed), and edges match the declared deps."
-    passes: false
+    passes: true
   - id: check_002
     category: functional
     description: The state checker rejects a cyclic or dangling story DAG.
@@ -24,7 +24,7 @@ acceptance_checks:
       - "Step 1: Declare story_dag with a cycle (story_a depends on story_b and vice versa)."
       - "Step 2: Run scripts/check-tif-state.sh."
       - "Step 3: Verify it fails; repeat with a dependency on a non-existent story and verify it fails."
-    passes: false
+    passes: true
   - id: check_003
     category: functional
     description: The ready set is computed correctly from completion state.
@@ -32,7 +32,7 @@ acceptance_checks:
       - "Step 1: Mark a dependency story complete and its dependent incomplete."
       - "Step 2: Compute the ready set."
       - "Step 3: Verify the dependent is ready only once every dependency story is complete."
-    passes: false
+    passes: true
 ---
 
 # Story-Level Dependency Graph And Validation

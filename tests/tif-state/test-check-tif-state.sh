@@ -82,3 +82,15 @@ full_needs_adr="$tmpdir/full-needs-adr"
 create_tif_docs_fixture "$full_needs_adr"
 rm -f "$full_needs_adr/.tif/plans/story_001_auth_system/ADR.md"
 assert_fails "$full_needs_adr" "full-weight story still requires ADR.md"
+
+# --- story-level DAG validation (story_009) ---
+
+dag_ok="$tmpdir/dag-ok"
+create_tif_docs_fixture "$dag_ok"
+perl -0pi -e 's/repo_kind: greenfield/repo_kind: greenfield\nstory_dag:\n  story_001: []/' "$dag_ok/.tif/docs/PRD.md"
+assert_passes "$dag_ok" "valid story_dag passes state contract"
+
+dag_dangling="$tmpdir/dag-dangling"
+create_tif_docs_fixture "$dag_dangling"
+perl -0pi -e 's/repo_kind: greenfield/repo_kind: greenfield\nstory_dag:\n  story_001: [story_777]/' "$dag_dangling/.tif/docs/PRD.md"
+assert_fails "$dag_dangling" "story_dag with a dangling reference fails"
