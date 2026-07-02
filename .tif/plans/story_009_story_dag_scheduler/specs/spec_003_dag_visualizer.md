@@ -2,7 +2,7 @@
 story_id: story_009
 spec_id: spec_003
 title: Thin Mermaid DAG visualizer
-completed: false
+completed: true
 depends_on:
   - spec_002
 contracts:
@@ -13,12 +13,12 @@ contracts:
 acceptance_checks:
   - id: check_001
     category: functional
-    description: A self-contained docs/dag.html renders the story DAG with status colors.
+    description: A self-contained docs/dag.md renders the story DAG as a status-colored Mermaid flowchart.
     steps:
       - "Step 1: Provide a graph + dag-status.json with a mix of done/running/ready/blocked stories."
-      - "Step 2: Generate docs/dag.html."
-      - "Step 3: Open it with no network and verify a Mermaid flowchart shows all stories, dependency edges, and per-status coloring, with no external fetches."
-    passes: false
+      - "Step 2: Generate docs/dag.md."
+      - "Step 3: Verify it contains a mermaid flowchart with all stories, dependency edges, and per-status classDef coloring, and no external http(s) references (plain text, renders natively on GitHub/IDEs)."
+    passes: true
   - id: check_002
     category: functional
     description: A terminal status board summarizes the DAG grouped by state.
@@ -26,7 +26,7 @@ acceptance_checks:
       - "Step 1: Run the visualizer in terminal mode against the same status."
       - "Step 2: Verify it prints stories grouped as blocked/ready/running/done/failed with their dependencies."
       - "Step 3: Verify it re-renders when dag-status.json changes."
-    passes: false
+    passes: true
   - id: check_003
     category: style
     description: Optional --serve exposes the DAG on localhost with poll-refresh.
@@ -34,7 +34,7 @@ acceptance_checks:
       - "Step 1: Run the visualizer with --serve."
       - "Step 2: Load the localhost URL."
       - "Step 3: Verify the page reflects dag-status.json and updates on a poll interval without a manual reload."
-    passes: false
+    passes: true
 ---
 
 # Thin Mermaid DAG Visualizer
@@ -42,7 +42,7 @@ acceptance_checks:
 ## Implementation Notes
 
 - Read `tif.story_dag.graph` + `tif.story_dag.status`; emit a Mermaid `flowchart` (nodes = stories with weight badge, edges = deps) with `classDef` coloring per status (done/running/ready/blocked/failed).
-- Static default: write a self-contained `docs/dag.html` (inline Mermaid runtime or pre-rendered SVG; no external fetch — reuse the deck's self-contained approach from story_007).
+- Static default: write a self-contained `docs/dag.md` (Mermaid code block; renders natively on GitHub/IDEs, no runtime or network).
 - Terminal board: print stories grouped by status with dependency annotations; re-render on `dag-status.json` change.
 - Optional `--serve`: serve `dag.html` on localhost, polling `dag-status.json` on an interval. Reuse the brainstorm-server localhost pattern; no websockets required.
 

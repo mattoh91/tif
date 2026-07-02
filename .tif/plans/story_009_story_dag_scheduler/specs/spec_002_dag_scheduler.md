@@ -2,7 +2,7 @@
 story_id: story_009
 spec_id: spec_002
 title: DAG scheduler with weight-gated subagent fan-out
-completed: false
+completed: true
 depends_on:
   - spec_001
 contracts:
@@ -18,7 +18,7 @@ acceptance_checks:
       - "Step 1: Build a DAG where story_001 gates story_002 and story_005, which are independent of each other."
       - "Step 2: Run the scheduler from a state where only story_001 is ready."
       - "Step 3: Verify story_001 runs first; on its completion story_002 and story_005 become ready and dispatch together; their dependents wait."
-    passes: false
+    passes: true
   - id: check_002
     category: functional
     description: Weight gates the plato-to-aristotle handoff.
@@ -26,7 +26,7 @@ acceptance_checks:
       - "Step 1: Schedule a spike story and a full story that are both ready."
       - "Step 2: Run the scheduler."
       - "Step 3: Verify the spike auto-advances plato->aristotle->verify without an approval pause, while the full story stops for approval before aristotle."
-    passes: false
+    passes: true
   - id: check_003
     category: functional
     description: The scheduler emits live status and never advances a dependent past an unvalidated dependency.
@@ -34,7 +34,7 @@ acceptance_checks:
       - "Step 1: Run the scheduler and force a dependency story's verify to fail."
       - "Step 2: Inspect dag-status.json."
       - "Step 3: Verify the failed story is 'failed', its dependents stay 'blocked', and no dependent design/build was started."
-    passes: false
+    passes: true
 ---
 
 # DAG Scheduler With Weight-Gated Subagent Fan-Out
