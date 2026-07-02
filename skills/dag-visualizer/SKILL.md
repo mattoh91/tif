@@ -13,6 +13,7 @@ Render the story-level DAG (`scripts/dag/visualize.mjs`) from the graph +
   Obsidian — no runtime, no network. Regenerate on each scheduler transition.
 - `node scripts/dag/visualize.mjs board .` → terminal status board grouped by
   status (running / ready / blocked / failed / done) with dependency notes.
+- `node scripts/dag/visualize.mjs watch .` → live in-terminal board that redraws on an interval as the scheduler updates `docs/dag-status.json` (Ctrl-C to stop).
 - `node scripts/dag/visualize.mjs serve .` → optional localhost board that
   poll-refreshes; for watching a parallel run in a browser. No external deps.
 
