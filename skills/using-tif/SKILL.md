@@ -72,7 +72,7 @@ contracts:
   consumes: []
 acceptance_checks:
   - id: check_001
-    category: functional
+    category: functional   # functional | integration | e2e | style | security
     description: High-level integration or e2e outcome.
     steps:
       - "Step 1: Do the setup."
@@ -146,3 +146,10 @@ Stop before implementation when:
 - A spec lacks acceptance checks.
 - A spec dependency is cyclic or incomplete.
 - Heineken publishing would happen without user-approved target and approval.
+
+## Multi-Repo Projects
+
+When tif runs at a container parent orchestrating sub-repos, declare them in PRD
+frontmatter `repo_map` (name → path/role). `check-tif-state.sh` emits a **warning**
+(not a failure) when `.tif/` is not under version control, so un-versioned planning
+state is surfaced before it is lost.

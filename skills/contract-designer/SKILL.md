@@ -61,3 +61,19 @@ Use this schema:
 - Parallel groups would edit overlapping files or contracts.
 
 Fix the specs first, then rerun contract design.
+
+## Contract Staleness Hash
+
+After writing `contracts.json`, set its `spec_contracts_sha` field to the output of
+`node <tif-root>/scripts/contracts-hash.mjs <story-dir>`. Staleness is then judged
+by this content hash (specs' `provides`/`consumes`), not file mtime — so editing
+non-contract fields like `passes` never falsely reports the contracts stale.
+
+## Cross-Story (Upstream) Contracts
+
+When a spec must satisfy a contract frozen by an earlier story, declare it in
+`external_contracts` with an `upstream` reference:
+`{"id": "<contract-id>", "upstream": "story_<nnn>/spec_<nnn>"}`. The checker
+validates that the upstream spec provides the id AND that the PRD `story_dag` has
+an edge from this story to the upstream story — so cross-story contracts are
+checked, not silently trusted.

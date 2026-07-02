@@ -8,6 +8,7 @@ core_status=0
 node - "$root" <<'NODE' || core_status=$?
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const root = process.argv[2];
 const docsDir = path.join(root, '.tif', 'docs');
@@ -198,7 +199,7 @@ function validateSpec(file, storyId) {
     if (!check.id) {
       emit('invalid', `${checkLabel} id is required.`);
     }
-    if (!['functional', 'style'].includes(check.category)) {
+    if (!['functional', 'integration', 'e2e', 'style', 'security'].includes(check.category)) {
       emit('invalid', `${checkLabel} category must be functional or style.`);
     }
     if (!check.description) {
@@ -254,7 +255,9 @@ function validateAcyclic(specsById, storyLabel) {
   }
 }
 
-function validateContracts(file, storyId, specsById, storyDir) {
+function validateContracts(file, storyId, specsById, storyDir, globalProvided, dagMap) {
+  globalProvided = globalProvided || new Map();
+  dagMap = dagMap || {};
   let raw;
   try {
     raw = JSON.parse(read(file));
@@ -312,6 +315,25 @@ function validateContracts(file, storyId, specsById, storyDir) {
   }
 
   const external = new Set((raw.external_contracts || []).map((contract) => contract.id || contract));
+
+  // Cross-story upstream references (story_010 spec_004): an external contract
+  // may declare `upstream: "story_nnn/spec_nnn"`. It must actually provide the
+  // id, and this story must depend on the upstream story in the PRD story_dag.
+  for (const ext of (raw.external_contracts || [])) {
+    if (!ext || typeof ext !== 'object' || !ext.upstream) continue;
+    const um = String(ext.upstream).match(/^(story_\d{3})\/(spec_\d{3})$/);
+    if (!um) {
+      emit('invalid', `${file} external contract ${ext.id} has malformed upstream "${ext.upstream}" (expected story_nnn/spec_nnn).`);
+      continue;
+    }
+    if (!(globalProvided.get(ext.id) || []).includes(`${um[1]}/${um[2]}`)) {
+      emit('invalid', `${file} upstream ${ext.upstream} does not provide contract ${ext.id}.`);
+    }
+    if (!(dagMap[storyId] || []).includes(um[1])) {
+      emit('invalid', `${file} upstream contract ${ext.id} needs a PRD story_dag edge ${storyId} -> ${um[1]}.`);
+    }
+  }
+
   for (const [specId, spec] of specsById.entries()) {
     for (const provided of spec.contracts.provides) {
       if (!ids.has(provided)) {
@@ -325,16 +347,21 @@ function validateContracts(file, storyId, specsById, storyDir) {
     }
   }
 
-  const contractsMtime = fs.statSync(file).mtimeMs;
-  const staleSpecs = [];
-  for (const specFile of fs.readdirSync(path.join(storyDir, 'specs')).filter((name) => name.endsWith('.md'))) {
-    const full = path.join(storyDir, 'specs', specFile);
-    if (fs.statSync(full).mtimeMs > contractsMtime + 1000) {
-      staleSpecs.push(specFile);
-    }
-  }
-  if (staleSpecs.length > 0) {
-    emit('warning', `${file} may be stale; specs changed after contracts.json: ${staleSpecs.join(', ')}`);
+  // Staleness by content hash of spec contract declarations (story_010 spec_002),
+  // NOT mtime: editing non-contract fields (e.g. passes) must not trip it.
+  // Formula mirrors scripts/contracts-hash.mjs (single source of truth).
+  const specHash = crypto.createHash('sha256').update(
+    [...specsById.values()]
+      .sort((a, b) => (a.spec_id < b.spec_id ? -1 : a.spec_id > b.spec_id ? 1 : 0))
+      .map((m) => {
+        const c = m.contracts || {};
+        return `${m.spec_id}|${[...(c.provides || [])].sort().join(',')}|${[...(c.consumes || [])].sort().join(',')}`;
+      })
+      .join('\n'),
+    'utf8',
+  ).digest('hex');
+  if (raw.spec_contracts_sha && raw.spec_contracts_sha !== specHash) {
+    emit('warning', `${file} may be stale; spec provides/consumes changed since contracts.json (spec_contracts_sha mismatch).`);
   }
 }
 
@@ -361,12 +388,70 @@ if (!exists(plansDir)) {
     emit('missing', `${plansDir} must contain at least one story_<nnn>_<slug> directory after planning.`);
   }
 
+  let totalStories = 0;
+  let completeStories = 0;
+  let incompleteSpecs = 0;
+
+  // Parked stories (PRD frontmatter `parked_stories: [...]`) are exempt from the
+  // specs/ADR/contracts structural requirements — planning can precede build.
+  const parked = new Set();
+  {
+    const prdPath = path.join(docsDir, 'PRD.md');
+    if (exists(prdPath)) {
+      const fm = read(prdPath).match(/^---\n([\s\S]*?)\n---/);
+      const m = fm && fm[1].match(/^parked_stories:\s*\[([^\]]*)\]/m);
+      if (m) m[1].split(',').map((s) => s.trim()).filter(Boolean).forEach((s) => parked.add(s));
+    }
+  }
+
+  // Global index of provided contracts (contractId -> ["story/spec"]) and the
+  // story DAG, for validating cross-story upstream references (story_010 spec_004).
+  const globalProvided = new Map();
+  for (const sName of storyDirs) {
+    const sId = sName.match(/^(story_\d{3})_/)[1];
+    const sDir = path.join(plansDir, sName, 'specs');
+    if (!exists(sDir)) continue;
+    for (const f of fs.readdirSync(sDir).filter((n) => /^spec_\d{3}_.*\.md$/.test(n))) {
+      const meta = parseFrontmatter(path.join(sDir, f));
+      if (!meta) continue;
+      for (const prov of (meta.contracts.provides || [])) {
+        if (!globalProvided.has(prov)) globalProvided.set(prov, []);
+        globalProvided.get(prov).push(`${sId}/${meta.spec_id}`);
+      }
+    }
+  }
+  const dagMap = {};
+  {
+    const prdPath = path.join(docsDir, 'PRD.md');
+    if (exists(prdPath)) {
+      const fmLines = (read(prdPath).match(/^---\n([\s\S]*?)\n---/) || [null, ''])[1].split(/\r?\n/);
+      const start = fmLines.findIndex((l) => /^story_dag:\s*$/.test(l));
+      if (start !== -1) {
+        for (let i = start + 1; i < fmLines.length && /^\s+\S/.test(fmLines[i]); i++) {
+          const mm = fmLines[i].match(/^\s+(story_\d{3}):\s*\[([^\]]*)\]/);
+          if (mm) dagMap[mm[1]] = mm[2].split(',').map((s) => s.trim()).filter(Boolean);
+        }
+      }
+    }
+  }
+
   for (const storyName of storyDirs) {
     const storyDir = path.join(plansDir, storyName);
     const storyId = storyName.match(/^(story_\d{3})_/)[1];
     const adrFile = path.join(storyDir, 'ADR.md');
     const contractsFile = path.join(storyDir, 'contracts.json');
     const specsDir = path.join(storyDir, 'specs');
+
+    if (parked.has(storyId)) {
+      if (exists(adrFile)) {
+        const adr = read(adrFile);
+        if (!/Status:/i.test(adr) || !/Decision:/i.test(adr)) {
+          emit('invalid', `${adrFile} must include Status and Decision sections.`);
+        }
+      }
+      console.log(`- [info] ${storyName}: parked.`);
+      continue;
+    }
 
     if (!exists(specsDir)) {
       emit('missing', `${storyName} is missing specs directory.`);
@@ -421,10 +506,31 @@ if (!exists(plansDir)) {
         emit('missing', `${storyName} has specs but is missing contracts.json; run contract-designer before build.`);
       }
     } else {
-      validateContracts(contractsFile, storyId, specsById, storyDir);
+      validateContracts(contractsFile, storyId, specsById, storyDir, globalProvided, dagMap);
     }
 
+    totalStories += 1;
+    incompleteSpecs += incomplete;
+    if (incomplete === 0) completeStories += 1;
     console.log(`- [info] ${storyName}: ${specFiles.length} spec(s), ${incomplete} incomplete.`);
+  }
+
+  console.log(`- [summary] ${totalStories} stories, ${completeStories} complete, ${incompleteSpecs} specs incomplete.`);
+}
+
+// Multi-repo awareness (story_010 spec_005): warn (not fail) when .tif/ planning
+// state is not under version control — common when tif runs at a container parent.
+if (exists(path.join(root, '.tif'))) {
+  const { execSync } = require('child_process');
+  try {
+    execSync(`git -C "${root}" rev-parse --is-inside-work-tree`, { stdio: 'ignore' });
+    try {
+      execSync(`git -C "${root}" ls-files --error-unmatch .tif`, { stdio: 'ignore' });
+    } catch {
+      emit('warning', `.tif/ exists but is not tracked by git — planning state is not under version control.`);
+    }
+  } catch {
+    emit('warning', `${root} is not a git repository — .tif/ planning state is not under version control.`);
   }
 }
 

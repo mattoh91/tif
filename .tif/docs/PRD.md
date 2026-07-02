@@ -4,6 +4,7 @@ project_context: personal
 repo_kind: brownfield
 story_dag:
   story_009: [story_008]
+  story_010: [story_008, story_009]
 ---
 
 # Tif Product Requirements
@@ -37,7 +38,8 @@ The harness should guide agents through one current path:
 | story_006 | As a developer, I want the harness streamlined around a Socrates, Plato, and Aristotle workflow with approval-gated self-improving memory and a new cute brand. | Redundant planning ownership is reduced, commands and hooks map clearly to requirements, research-driven design, empirical validation, closeout, and memory promotion, and rename options are reviewed before namespace migration. |
 | story_007 | As a developer, I want an opt-in slide-deck output from the documentation skill that renders a polished, value-oriented HTML presentation with a verified architecture diagram. | A dedicated `/deck` command produces a `docs/ppt/deck.html` styled with `ui-ux-pro-max`, embedding a hand-authored draw.io architecture SVG; a Playwright neatness gate verifies the diagram before the deck is accepted; the deck stays opt-in (`/finish` and `/document` never generate it) and ARCHI.md remains the canonical markdown source. |
 | story_008 | As a developer, I want planning weight to scale with the deliverable so small stories aren't buried in ceremony. | A story-level `weight: spike \| full` field (in spec frontmatter, default `full`); at `spike` weight `check-tif-state.sh` makes `ADR.md` and `contracts.json` optional; weight is auto-inferred from `project_mode` + story shape and stated for one-line override, not hand-assigned. |
-| story_009 | As a developer, I want tif to schedule independent stories in parallel instead of nudging me through them one at a time. | Machine-readable story-level `depends_on` (in PRD frontmatter); a DAG scheduler dispatches every ready story (deps complete) to its own subagent running `/plato → /aristotle → verify`, serializing dependents; spike stories auto-advance, full stories stay gated; a thin Mermaid `docs/dag.html` + terminal board visualize live state. |
+| story_009 | As a developer, I want tif to schedule independent stories in parallel instead of nudging me through them one at a time. | Machine-readable story-level `depends_on` (in PRD frontmatter); a DAG scheduler dispatches every ready story (deps complete) to its own subagent running `/plato → /aristotle → verify`, serializing dependents; spike stories auto-advance, full stories stay gated; a thin Mermaid `docs/dag.md` + terminal board visualize live state. |
+| story_010 | As a developer, I want the planning affordances dogfooding surfaced, so the checker fits how planning actually happens. | Richer acceptance-check `category` vocabulary (functional/integration/e2e/style/security); content-hash contract staleness (not mtime); `parked` stories exempt from the specs requirement; first-class cross-story/upstream contract references (validated, not silently ignored); `repo_map` + a warning when `.tif/` is un-versioned; a completion rollup on the summary line. |
 
 ## Success Criteria
 
