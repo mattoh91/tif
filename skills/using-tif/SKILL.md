@@ -112,6 +112,8 @@ If project context is Heineken:
 - Draft story folders directly: `story-planner`
 - Align contracts after specs: `contract-designer`
 - Build next work: `build`
+- Parallel story scheduling: `dag-scheduler` (fan ready stories to subagents by the story DAG instead of stepping through /plato and /aristotle one at a time)
+- Visualize the story DAG / live run: `dag-visualizer` (Mermaid `docs/dag.md` or a terminal board)
 - Langfuse/agent observability work: `langfuse-agent-instrumentation` (project-agnostic instrumentation conventions; pairs with the official `langfuse` skill for generic CLI/docs)
 - Inline execution compatibility: `executing-plans`
 - Worker execution compatibility: `subagent-driven-development`

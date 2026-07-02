@@ -2,8 +2,10 @@
 set -euo pipefail
 
 root="${1:-.}"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+core_status=0
 
-node - "$root" <<'NODE'
+node - "$root" <<'NODE' || core_status=$?
 const fs = require('fs');
 const path = require('path');
 
@@ -426,9 +428,15 @@ if (!exists(plansDir)) {
   }
 }
 
-if (status === 0) {
-  console.log('- [ok] Tif story state is mechanically valid.');
-}
-
 process.exit(status);
 NODE
+
+# Story-level DAG validation (story_009): acyclic + no dangling story refs.
+dag_status=0
+node "$script_dir/dag/story-dag.mjs" --check "$root" || dag_status=$?
+
+if [ "$core_status" -eq 0 ] && [ "$dag_status" -eq 0 ]; then
+  echo "- [ok] Tif story state is mechanically valid."
+  exit 0
+fi
+exit 1
