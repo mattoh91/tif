@@ -26,6 +26,16 @@ Active Tif state lives only in these locations:
 
 `PRD.md` owns human stories. Story `ADR.md` owns decisions and tradeoffs. Spec frontmatter owns dependencies, completion state, and acceptance checks. `contracts.json` owns cross-spec schemas and safe parallel groups. There is no separate global feature list, global implementation plan, or story `plan.md`.
 
+## Running Tif Scripts
+
+Skills reference helper scripts as `scripts/…` for brevity, but they ship **inside the Tif plugin, not your project**. When Tif is an installed plugin operating on another repo, `./scripts/…` will not exist there. Resolve against the **Tif plugin root** (printed as "Tif plugin root" in the session context above; `${CLAUDE_PLUGIN_ROOT}` in Claude Code hooks/commands) and pass your project dir as the argument:
+
+```text
+<tif-plugin-root>/scripts/check-tif-state.sh .     # not ./scripts/... under a plugin install
+```
+
+The SessionStart hook already runs the state check for you from the correct location; invoke scripts yourself only when a skill asks. When working from a Tif checkout (dogfooding), bare `scripts/…` resolves as-is.
+
 ## Required Trajectory
 
 For a new idea:

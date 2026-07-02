@@ -1,5 +1,29 @@
 # Tif Release Notes
 
+## v5.2.0 (2026-07-02)
+
+### Story-DAG Parallel Scheduler (story_009)
+
+- **Story-level `story_dag`** in PRD frontmatter — machine-readable inter-story
+  dependencies, validated by `check-tif-state.sh` (acyclic + refs exist).
+  `prd-discovery` now **emits** it (inferred from acceptance notes), so the graph
+  is produced automatically, not hand-written.
+- **DAG scheduler** (`scripts/dag/`): dispatches every ready story to its own
+  subagent (via `multi-agent-adapter`) running plato→aristotle→verify; independent
+  stories run **concurrently**, dependents wait on the graph, a failed dependency
+  blocks its dependents. Weight-gated: `spike` auto-advances, `full` stays gated.
+- **Thin visualizer**: self-contained `docs/dag.md` (status-colored Mermaid,
+  no runtime/network), a terminal `board`, a live `--watch` board, and an optional
+  localhost `serve`.
+- 19 unit tests + checker integration; a live 2-worker fan-out was verified
+  end-to-end.
+
+### Fixes
+
+- **Script resolution**: agent-invoked `scripts/…` now resolve against the Tif
+  plugin root (injected at SessionStart), so they work when Tif is an installed
+  plugin operating on another repo — not only from a Tif checkout.
+
 ## v5.1.0 (2026-07-01)
 
 ### Harness Renamed Gummy → Tif

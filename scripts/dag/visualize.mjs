@@ -90,6 +90,19 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.log(`wrote ${out}`);
   } else if (cmd === 'board') {
     console.log(terminalBoard(graph, statuses));
+  } else if (cmd === 'watch') {
+    // Live in-terminal board: re-read dag-status.json and redraw on an interval.
+    const render = () => {
+      const g = buildGraph(root);
+      const sf = path.join(root, 'docs', 'dag-status.json');
+      const sts = fs.existsSync(sf)
+        ? JSON.parse(fs.readFileSync(sf, 'utf8')).stories
+        : statusSnapshot(g, { done: [...initialDone(g)], running: [], failed: [] }).stories;
+      process.stdout.write('\x1b[2J\x1b[H'); // clear screen + cursor home
+      process.stdout.write(`${terminalBoard(g, sts)}\n\n(watching docs/dag-status.json — Ctrl-C to stop)\n`);
+    };
+    render();
+    setInterval(render, Number(process.env.INTERVAL_MS || 2000));
   } else if (cmd === 'serve') {
     const http = await import('node:http');
     const port = Number(process.env.PORT || 8199);

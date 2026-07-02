@@ -73,6 +73,7 @@ build_tif_context() {
         printf '<TIF_PROJECT_CONTEXT>\n'
         printf 'Project slug: %s\n' "$slug"
         printf 'Working directory: %s\n' "$(pwd)"
+        printf 'Tif plugin root (where scripts/ and skills/ live): %s\n' "${PLUGIN_ROOT}"
 
         if git rev-parse --git-dir >/dev/null 2>&1; then
             printf '\n## Git Status\n\n'

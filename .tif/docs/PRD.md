@@ -2,6 +2,8 @@
 project_mode: MVP
 project_context: personal
 repo_kind: brownfield
+story_dag:
+  story_009: [story_008]
 ---
 
 # Tif Product Requirements
