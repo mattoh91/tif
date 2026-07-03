@@ -96,6 +96,17 @@ flowchart TD
 
 The older commands remain useful as expert shortcuts. The philosophical flow is the recommended start-to-finish path.
 
+## Optional: research brain (brain-first `/plato`)
+
+If you keep a qmd-indexed markdown research brain (e.g. a cartographer `research/` brain), point Tif at it and `/plato`'s research step will query it **before** the open web, cite hits with their note provenance, and file genuinely-new web evidence back so the brain compounds with use.
+
+```bash
+# absolute path to a dir that has a .qmd/ index; qmd must be on PATH
+export TIF_RESEARCH_BRAIN="$HOME/Repos/cartographer/research"
+```
+
+Unset — or with `qmd` / the `.qmd/` index missing — Tif skips silently and behaves exactly as before (web-first). Full details: [`TIF_RESEARCH_BRAIN` in `.tif/docs/CONFIG.md`](.tif/docs/CONFIG.md).
+
 ## Project Intake
 
 Tif detects:
