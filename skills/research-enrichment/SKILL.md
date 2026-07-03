@@ -41,7 +41,15 @@ Use this when implementation choices affect simplicity or effectiveness:
    - security notes
    - verification plan
 6. Add concise research notes and implementation guidance to the spec body.
-7. Update contracts if the choice changes schemas or dependencies.
-8. Run `scripts/check-tif-state.sh .`.
+7. **File genuinely-new web evidence back into the brain (when configured).** For
+   a source the brain-first query in step 2 did **not** already have, write it
+   back so the brain compounds: build an evidence record `{title, source_url,
+   date, summary (verbatim, not paraphrased), tags, note_type}` and pass it
+   through `research/tools/ingest/enrich_writeback.py` (`write_back`), which
+   validates against the frozen write-contract and dedups by canonical url. Then
+   re-embed so it is retrievable: `qmd update && qmd embed` in the brain dir.
+   Skip when the brain is unconfigured or the evidence was already a brain hit.
+8. Update contracts if the choice changes schemas or dependencies.
+9. Run `scripts/check-tif-state.sh .`.
 
 Skip external research for trivial or purely local edits only when the ADR/spec records why research is unnecessary.
