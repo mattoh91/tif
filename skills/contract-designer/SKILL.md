@@ -64,10 +64,12 @@ Fix the specs first, then rerun contract design.
 
 ## Contract Staleness Hash
 
-After writing `contracts.json`, set its `spec_contracts_sha` field to the output of
-`node <tif-root>/scripts/contracts-hash.mjs <story-dir>`. Staleness is then judged
-by this content hash (specs' `provides`/`consumes`), not file mtime — so editing
-non-contract fields like `passes` never falsely reports the contracts stale.
+After writing `contracts.json`, stamp its `spec_contracts_sha` field with
+`node <tif-root>/scripts/contracts-hash.mjs <story-dir> --write`, which computes the
+hash and writes it into `contracts.json` in place (drop `--write` to just print it).
+Staleness is then judged by this content hash (specs' `provides`/`consumes`), not file
+mtime — so editing non-contract fields like `passes` never falsely reports the
+contracts stale. Re-run `--write` whenever a spec's `provides`/`consumes` changes.
 
 ## Cross-Story (Upstream) Contracts
 

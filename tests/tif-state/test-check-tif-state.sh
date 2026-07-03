@@ -95,6 +95,14 @@ create_tif_docs_fixture "$dag_dangling"
 perl -0pi -e 's/repo_kind: greenfield/repo_kind: greenfield\nstory_dag:\n  story_001: [story_777]/' "$dag_dangling/.tif/docs/PRD.md"
 assert_fails "$dag_dangling" "story_dag with a dangling reference fails"
 
+# A planned edge to a story that is declared in the PRD stories table but not yet
+# scaffolded as a folder must NOT be flagged dangling (lets you draw the DAG up front).
+dag_planned="$tmpdir/dag-planned"
+create_tif_docs_fixture "$dag_planned"
+printf '\n| story_042 | As a dev, do a future thing. | later |\n' >> "$dag_planned/.tif/docs/PRD.md"
+perl -0pi -e 's/repo_kind: greenfield/repo_kind: greenfield\nstory_dag:\n  story_042: [story_001]/' "$dag_planned/.tif/docs/PRD.md"
+assert_passes "$dag_planned" "story_dag edge to a table-declared (folderless) story passes"
+
 # --- story_010 spec_001: category vocabulary + rollup ---
 
 cat_e2e="$tmpdir/cat-e2e"

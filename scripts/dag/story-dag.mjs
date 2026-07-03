@@ -30,6 +30,18 @@ export function parseStoryDag(prdText) {
   return dag;
 }
 
+// Story IDs declared in the PRD stories table (rows like `| story_001 | … |`),
+// whether or not a story folder exists yet. Lets story_dag reference the planned
+// shape of the project before every folder is scaffolded.
+export function parseDeclaredStories(prdText) {
+  const ids = new Set();
+  for (const line of prdText.split(/\r?\n/)) {
+    const m = line.match(/^\|\s*(story_\d{3})\b/);
+    if (m) ids.add(m[1]);
+  }
+  return [...ids];
+}
+
 export function parseParkedStories(prdText) {
   const fm = prdText.match(/^---\n([\s\S]*?)\n---/);
   if (!fm) return [];
@@ -125,7 +137,11 @@ export function buildGraph(root) {
 
 export function validate(root) {
   const { nodes, dag } = buildGraph(root);
-  const known = new Set(nodes.map((n) => n.story_id));
+  const prdPath = path.join(root, '.tif', 'docs', 'PRD.md');
+  const prd = fs.existsSync(prdPath) ? fs.readFileSync(prdPath, 'utf8') : '';
+  // Known = scaffolded folders ∪ stories declared in the PRD table. Planned edges
+  // to a not-yet-scaffolded but declared story are valid; only truly unknown IDs dangle.
+  const known = new Set([...nodes.map((n) => n.story_id), ...parseDeclaredStories(prd)]);
   const issues = [];
   const dangling = danglingRefs(dag, known);
   if (dangling.length) issues.push(`story_dag references unknown stories: ${dangling.sort().join(', ')}`);
