@@ -6,6 +6,7 @@ import {
   danglingRefs,
   readySet,
   parseParkedStories,
+  parseDeclaredStories,
 } from '../../scripts/dag/story-dag.mjs';
 
 const PRD = `---
@@ -41,6 +42,27 @@ test('parseParkedStories reads the parked list', () => {
 
 test('parseParkedStories is empty when absent', () => {
   assert.deepEqual(parseParkedStories('---\nproject_mode: POC\n---\n# x'), []);
+});
+
+test('parseDeclaredStories reads story IDs from the PRD stories table', () => {
+  const prd = `---
+project_mode: MVP
+---
+# PRD
+
+## Stories
+
+| ID | Story | Acceptance Notes |
+| --- | --- | --- |
+| story_001 | As a dev, prove the loop. | notes |
+| story_002 | As a dev, ingest a source. | more notes |
+| story_007 | As a dev, wire it up. | final |
+`;
+  assert.deepEqual(parseDeclaredStories(prd).sort(), ['story_001', 'story_002', 'story_007']);
+});
+
+test('parseDeclaredStories is empty when there is no table', () => {
+  assert.deepEqual(parseDeclaredStories('# PRD\nno table here'), []);
 });
 
 test('detectCycle finds a cycle', () => {

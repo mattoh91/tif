@@ -39,8 +39,10 @@ stories in parallel instead of nudging through them one at a time (see
 Infer edges from the acceptance notes: if story B consumes, extends, freezes-a-
 contract-for, or "clones the pattern" from story A, add `story_B: [story_A]`. A
 foundational spike everything builds on is the root. Keep it acyclic; a story
-with no upstream simply has no entry (or `[]`). `check-tif-state.sh` validates
-that referenced stories exist and the graph is acyclic.
+with no upstream simply has no entry (or `[]`). You can draw the whole planned
+graph up front: `check-tif-state.sh` validates that every referenced story is
+**declared in the PRD stories table** (a folder need not exist yet) and that the
+graph is acyclic — so edges to not-yet-scaffolded stories are fine.
 
 After the user approves PRD stories, use `story-planner`.
 

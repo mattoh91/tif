@@ -1,5 +1,20 @@
 # Tif Release Notes
 
+## v5.3.1 (2026-07-03)
+
+### Dogfooding Nits (patch)
+
+Two v5.3.0 papercuts surfaced while dogfooding cartographer:
+
+- **`contracts-hash.mjs --write`**: the hash tool now stamps `spec_contracts_sha`
+  into `contracts.json` in place (`node …/contracts-hash.mjs <story-dir> --write`)
+  instead of only printing it — no more `set_json_field "$(node …)"` dance. Bare
+  invocation still prints; `--write` throws cleanly if there's no `contracts.json`.
+- **`story_dag` can reference planned stories**: `check-tif-state.sh` now treats
+  stories declared in the PRD stories table as known, not just scaffolded folders —
+  so you can draw the whole planned DAG up front. Edges to not-yet-created stories
+  validate; genuine unknown IDs still fail as dangling.
+
 ## v5.3.0 (2026-07-02)
 
 ### Planning Affordances From Dogfooding (story_010)

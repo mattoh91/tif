@@ -47,12 +47,35 @@ export function hashStoryDir(storyDir) {
   return specContractsHash(specs);
 }
 
-// CLI: node scripts/contracts-hash.mjs <storyDir>  → prints the hash
+// Stamp the freshly-computed hash into <storyDir>/contracts.json in place,
+// preserving every other field. Returns the hash. Throws when there is no
+// contracts.json to stamp (spike stories omit it and have no staleness check).
+export function writeStoryHash(storyDir) {
+  const contractsPath = path.join(storyDir, 'contracts.json');
+  if (!fs.existsSync(contractsPath)) {
+    throw new Error(`no contracts.json in ${storyDir} to stamp — spike stories have no contract staleness check`);
+  }
+  const sha = hashStoryDir(storyDir);
+  const json = JSON.parse(fs.readFileSync(contractsPath, 'utf8'));
+  json.spec_contracts_sha = sha;
+  fs.writeFileSync(contractsPath, JSON.stringify(json, null, 2) + '\n');
+  return sha;
+}
+
+// CLI: node scripts/contracts-hash.mjs <storyDir>          → prints the hash
+//      node scripts/contracts-hash.mjs <storyDir> --write  → stamps it into contracts.json
 if (import.meta.url === `file://${process.argv[1]}`) {
   const dir = process.argv[2];
+  const write = process.argv.includes('--write');
   if (!dir) {
-    console.error('usage: contracts-hash.mjs <storyDir>');
+    console.error('usage: contracts-hash.mjs <storyDir> [--write]');
     process.exit(2);
   }
-  console.log(hashStoryDir(dir));
+  try {
+    const sha = write ? writeStoryHash(dir) : hashStoryDir(dir);
+    console.log(write ? `spec_contracts_sha ← ${sha}` : sha);
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
 }
