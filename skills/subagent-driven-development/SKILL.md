@@ -15,12 +15,14 @@ This skill now executes story specs from `.tif/plans/story_*/specs/`.
 4. Use `multi-agent-adapter` for all worker dispatch decisions.
 5. Dispatch in parallel only when specs have non-overlapping files and contracts.
 6. Give each worker a self-contained task packet with:
-   - spec markdown and frontmatter
+   - spec markdown and frontmatter, passed whole (never a summary — see
+     `multi-agent-adapter` → Packet Fidelity)
+   - the PRD story row the spec implements, verbatim
    - relevant contract schemas
    - allowed/out-of-scope files
    - TDD expectations
    - acceptance checks and gate commands
-7. Parent session reviews results, runs integration gates, and updates spec frontmatter only when verified.
+7. Parent session reviews results, runs integration gates, and updates spec frontmatter only when verified. The final review compares the work against the spec and PRD story text, not against the packet.
 8. Run documentation, cleanup, and state refresh.
 
 ## Completion Rule

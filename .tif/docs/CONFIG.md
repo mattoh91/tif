@@ -3,6 +3,7 @@
 | Name | Owner | Type | Default | Required | Allowed Values | Used By | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `TIF_HOOK_EVENT` | lifecycle hooks | string | unset | no | `CodexStop`, `SessionEnd`, `PreCompact`, `manual`, or unset | `hooks/update-state` | Labels session notes written by hook-triggered state refreshes. |
+| `TIF_RESEARCH_BRAIN` | `skills/research-enrichment` | path | unset | no | absolute path to a qmd-indexed research brain, or unset | research-enrichment, `/plato` | When set to a dir that has a `.qmd/` index and `qmd` is on PATH, plato queries that brain (`qmd query`) before web search and cites hits with their note provenance. Unset (or missing qmd/index) → web-first behavior unchanged. |
 | `TIF_ALLOW_RISKY_MEMORY` | `scripts/tif-memory-review.sh` | boolean env flag | unset | no | `1` or unset | memory review | Allows promotion of candidates with high-risk flags only when explicitly set. Leave unset by default. |
 | `TIF_CODEX_PLUGIN_FORK` | `scripts/sync-to-codex-plugin.sh` | string | `mattoh91/openai-codex-plugins` | no | GitHub repo slug | Codex plugin sync | Overrides destination fork. |
 | `TIF_CODEX_PLUGIN_DEST` | `scripts/sync-to-codex-plugin.sh` | string | `plugins/tif` | no | repo-relative path | Codex plugin sync | Overrides destination plugin path. |
