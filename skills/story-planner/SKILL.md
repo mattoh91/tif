@@ -41,6 +41,20 @@ Record:
 - POC/MVP compromises
 - documentation and cleanup closeout notes
 
+## Distillation Fidelity
+
+A spec is a distillation of a PRD story, and distillation is where load-bearing
+words get dropped — everyone downstream (builders, reviewers) works from the spec,
+so an omission here is built and approved faithfully. Rules:
+
+- Carry every requirement from the PRD story's acceptance notes into some spec;
+  quote load-bearing phrases verbatim rather than paraphrasing them.
+- Every number, count, or limit names exactly what it counts ("documents the
+  user pinned", not "the pin count") — an ambiguous referent becomes wrong code
+  and a wrong user-facing message.
+- If a requirement is deliberately deferred, say so in the spec body; never drop
+  it silently.
+
 ## Spec Frontmatter
 
 Each spec must include:
@@ -73,6 +87,9 @@ Specs should also include body sections for:
 - research findings when libraries, modules, tools, databases, vector stores, ML algorithms, or frameworks are involved
 - design pattern, algorithm, and data-structure guidance
 - TDD unit-test plan
+- breaking inputs the implementation must survive (twin records with identical
+  attributes, denied permissions, mismatched counts, empty sets) — named at
+  planning time so the builder's tests cannot share the builder's blind spot
 - natural-language integration/e2e expectation, especially when both backend and frontend are involved
 - owned files, allowed files, and out-of-scope files
 

@@ -1,5 +1,39 @@
 # Tif Release Notes
 
+## v5.4.0 (2026-08-13)
+
+### Subagent Failure-Mode Guards
+
+Five inherent failure modes of subagent-driven development (observed dogfooding
+another harness) are now baked into the dispatch/review skills as standing rules:
+
+- **Telephone briefs**: task packets pass the spec file whole (never a summary);
+  the reviewer packet is a superset of the builder's, adding the verbatim PRD
+  story row — the final review compares work against the original story text,
+  not the packet (`multi-agent-adapter` Packet Fidelity,
+  `subagent-driven-development`, `requesting-code-review`).
+- **Paraphrase drops load-bearing words**: acceptance criteria and contract
+  fields are quoted verbatim into packets; every number names exactly what it
+  counts ("documents the user pinned", not "the pin count"). Same rule at
+  spec-writing time (`story-planner` Distillation Fidelity).
+- **Builders' tests share builders' blind spots**: specs name breaking inputs at
+  planning time (twin records, denied permissions, mismatched counts, empty
+  sets), before any builder exists (`story-planner`).
+- **Building and breaking are different directions**: reviewers get wider
+  context than builders and must make a deliberate attempt to break the work,
+  not re-run its green tests; `devils-advocate` is the lens for full-weight
+  stories (`requesting-code-review`).
+- **Copy is API**: every option, offer, or claim in user-facing text must trace
+  to a code path that honors it (`requesting-code-review`).
+- **Bug fixes reproduce first**: a fix starts with a red test that reproduces
+  the failure before asserting it is gone (`test-driven-development`).
+
+### Brain-First Research (from develop)
+
+- `TIF_RESEARCH_BRAIN` opt-in: `/plato`'s research-enrichment step queries the
+  configured knowledge brain via qmd before web search, and files new web
+  evidence back into the brain as validated notes.
+
 ## v5.3.1 (2026-07-03)
 
 ### Dogfooding Nits (patch)

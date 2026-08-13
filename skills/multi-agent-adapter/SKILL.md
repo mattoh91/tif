@@ -15,13 +15,28 @@ Every worker gets:
 - Goal: one concrete spec or review outcome.
 - Scope: allowed files, symbols, contracts, and behavior.
 - Out of scope: what not to touch.
-- Context: PRD/story/spec excerpts, contracts, ADR decisions, config, failing tests, review comments.
+- Context: the spec file whole, the PRD story row it implements (verbatim), contracts, ADR decisions, config, failing tests, review comments.
 - Inputs: contract schemas, function args, API payloads, UI state/props, external payloads.
 - Output contract: exact response format.
 - Gates: TDD tests, acceptance checks, lint/typecheck/build commands.
 - Integration rules: whether the worker may edit files or report only.
 
 Workers must not rely on hidden conversation history.
+
+## Packet Fidelity
+
+Distilling context into a packet is where load-bearing words get dropped. Rules:
+
+- Pass the spec file content whole, never a summary of it. A worker built from a
+  summary faithfully builds the summary's omissions.
+- Quote acceptance criteria and contract fields verbatim from the spec; do not
+  paraphrase them into the packet.
+- Every number, count, or limit in a packet names exactly what it counts
+  ("documents the user pinned", not "the pin count") — ambiguous referents become
+  wrong code.
+- A reviewer's packet must be a superset of the builder's packet, adding the PRD
+  story row and ADR decisions. A reviewer graded only against the builder's brief
+  inherits the brief's omissions and approves the wrong thing.
 
 ## Host Mapping
 
